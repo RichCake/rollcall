@@ -1,6 +1,6 @@
 default:
   image: python:3.12-alpine
-  before-script:
+  before_script:
     - pip install --upgrade pip
     - cd event_manager
 
