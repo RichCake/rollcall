@@ -1,0 +1,49 @@
+extend-exclude = [
+    "migrations",
+    "locale",
+    "fixtures",
+    "static_dev",
+    "media",
+]
+
+line-length = 79
+target-version = "py312"
+
+[lint]
+select = [
+    "F",  # Pyflakes
+    "E",  # pcodestyle
+    "I",  # isort
+    "N",  # pep8-naming
+    "B",  # flake8-bugbear
+    "A",  # flake8-builtins
+    "COM",  # flake8-commas
+    "C4",  # flake8-comprehensions
+    "DJ",  # flake8-django
+    "ISC",  # flake8-implicit-str-concat
+    "ICN",  # flake8-import-conventions
+    "T20",  # flake8-print
+    "Q",  # flake8-quotes
+    "RET",  # flake8-return
+    "PTH",  # flake8-use-pathlib
+    "FIX",  # flake8-fixme
+    "ERA",  # eradicate
+]
+
+ignore = [
+    "PTH123",
+]
+
+[lint.isort]
+known-first-party = [
+    "events",
+]
+
+force-sort-within-sections = true
+order-by-type = false
+
+[lint.flake8-quotes]
+inline-quotes = "single"
+
+[format]
+quote-style = "single"
