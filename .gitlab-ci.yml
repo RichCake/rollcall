@@ -12,6 +12,7 @@ stages:
 check:
   stage: setup
   script:
+    - sudo apt-get install libpq-dev
     - pip install -r ../requirements/prod.txt
     - python manage.py check
 
@@ -24,5 +25,6 @@ ruff:
 django_tests:
   stage: tests
   script:
+    - sudo apt-get install libpq-dev
     - pip install -r ../requirements/dev.txt
     - python manage.py test
