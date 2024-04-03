@@ -1,0 +1,28 @@
+default:
+  image: python:3.12-alpine
+  before_script:
+    - pip install --upgrade pip
+    - cd event_manager
+
+stages:
+  - setup
+  - linting
+  - tests
+
+check:
+  stage: setup
+  script:
+    - pip install -r ../requirements/prod.txt
+    - python manage.py check
+
+ruff:
+  stage: linting
+  script:
+    - pip install ruff
+    - ruff check .
+
+django_tests:
+  stage: tests
+  script:
+    - pip install -r ../requirements/dev.txt
+    - python manage.py test
