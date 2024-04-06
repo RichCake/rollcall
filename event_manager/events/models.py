@@ -34,9 +34,11 @@ class Event(models.Model):
     )
     is_private = models.BooleanField(
         default=False,
+        verbose_name='приватное',
     )
     is_canceled = models.BooleanField(
         default=False,
+        verbose_name='отменено',
     )
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
