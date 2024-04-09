@@ -2,7 +2,8 @@
 .vscode/
 .idea/
 .mypy_cashe
-lyceum/static/
+event_manager/static/
+event_manager/send_mail/
 .ruff_cache
 
 # Byte-compiled / optimized / DLL files
