@@ -13,3 +13,8 @@ class EventForm(forms.ModelForm):
             Event.end.field.name,
             Event.participants.field.name,
         )
+
+
+class AddParticipantForm(forms.Form):
+    event_id = forms.IntegerField()
+    user_id = forms.IntegerField()

@@ -2,6 +2,21 @@
   <div class="card-body">
     <h5 class="card-title">{{ event.title }}</h5>
     <p class="card-text">{{ event.description }}</p>
-    <a href="#" class="btn btn-primary">Записаться</a>
+    {% if request.user.is_authenticated %}
+        {% if request.user == event.author %}
+            <span class="text-success">Вы являетесь автором этого события</span>
+        {% elif request.user in event.participants.all %}
+            <span class="text-success">Вы уже участвуете в этом событии</span>
+        {% else %}
+        <form method="post" action="{% url 'events:add_part' %}">
+          {% csrf_token %}
+          <input type="hidden" name="event_id" value="{{ event.id }}">
+          <input type="hidden" name="user_id" value="{{ request.user.id }}">
+          <button type="submit" class="btn btn-primary">Записаться</button>
+      </form>
+        {% endif %}
+    {% else %}
+        <span class="text-warning">Чтобы записаться, пожалуйста, войдите на сайт</span>
+    {% endif %}
   </div>
 </div>
