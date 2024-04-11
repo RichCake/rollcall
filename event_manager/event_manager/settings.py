@@ -144,3 +144,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MAIL = 'info@event-manager.com'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'send_mail'
+
+
+LOGIN_URL = "auth/login/"
+LOGIN_REDIRECT_URL = "/"

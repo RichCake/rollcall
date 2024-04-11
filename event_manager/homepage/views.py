@@ -1,5 +1,9 @@
-from django.shortcuts import render
+from django.views.generic import ListView
+
+from events.models import Event
 
 
-def homepage(request):
-    return render(request, 'homepage/main.html')
+class HomeView(ListView):
+    template_name = 'homepage/main.html'
+    context_object_name = 'events'
+    queryset = Event.objects.all()

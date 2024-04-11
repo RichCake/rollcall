@@ -24,10 +24,6 @@ class Event(models.Model):
         auto_now=True,
         verbose_name='изменено',
     )
-    start = models.DateTimeField(
-        null=True,
-        verbose_name='начало',
-    )
     end = models.DateTimeField(
         null=True,
         verbose_name='конец',
@@ -88,6 +84,7 @@ class EventParticipants(models.Model):
     status = models.PositiveSmallIntegerField(
         choices=StatusChoices.choices,
         verbose_name='статус',
+        default=StatusChoices.DONT_KNOW
     )
     role = models.PositiveSmallIntegerField(
         choices=RoleChoices.choices,

@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(verbose_name='описание')),
                 ('created', models.DateTimeField(auto_now_add=True, verbose_name='создано')),
                 ('updated', models.DateTimeField(auto_now=True, verbose_name='изменено')),
-                ('start', models.DateTimeField(null=True, verbose_name='начало')),
+                # ('start', models.DateTimeField(null=True, verbose_name='начало')),
                 ('end', models.DateTimeField(null=True, verbose_name='конец')),
                 ('is_private', models.BooleanField(default=False)),
                 ('is_canceled', models.BooleanField(default=False)),
