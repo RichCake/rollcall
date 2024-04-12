@@ -15,39 +15,114 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Event',
+            name="Event",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=150, verbose_name='название')),
-                ('description', models.TextField(verbose_name='описание')),
-                ('created', models.DateTimeField(auto_now_add=True, verbose_name='создано')),
-                ('updated', models.DateTimeField(auto_now=True, verbose_name='изменено')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=150, verbose_name="название")),
+                ("description", models.TextField(verbose_name="описание")),
+                (
+                    "created",
+                    models.DateTimeField(auto_now_add=True, verbose_name="создано"),
+                ),
+                (
+                    "updated",
+                    models.DateTimeField(auto_now=True, verbose_name="изменено"),
+                ),
                 # ('start', models.DateTimeField(null=True, verbose_name='начало')),
-                ('end', models.DateTimeField(null=True, verbose_name='конец')),
-                ('is_private', models.BooleanField(default=False)),
-                ('is_canceled', models.BooleanField(default=False)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='created_events', to=settings.AUTH_USER_MODEL, verbose_name='автор')),
+                ("end", models.DateTimeField(null=True, verbose_name="конец")),
+                ("is_private", models.BooleanField(default=False)),
+                ("is_canceled", models.BooleanField(default=False)),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="created_events",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="автор",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'мероприятие',
-                'verbose_name_plural': 'мероприятия',
+                "verbose_name": "мероприятие",
+                "verbose_name_plural": "мероприятия",
             },
         ),
         migrations.CreateModel(
-            name='EventParticipants',
+            name="EventParticipants",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True, verbose_name='создано')),
-                ('updated', models.DateTimeField(auto_now=True, verbose_name='изменено')),
-                ('status', models.PositiveSmallIntegerField(choices=[(0, 'Обязательно буду'), (1, 'Пока решаю'), (2, 'Не пойду')], verbose_name='статус')),
-                ('role', models.PositiveSmallIntegerField(choices=[(0, 'Администратор'), (1, 'Организатор'), (2, 'Участник')], default=2, verbose_name='роль')),
-                ('event', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='events.event', verbose_name='мероприятие')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='участник')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    models.DateTimeField(auto_now_add=True, verbose_name="создано"),
+                ),
+                (
+                    "updated",
+                    models.DateTimeField(auto_now=True, verbose_name="изменено"),
+                ),
+                (
+                    "status",
+                    models.PositiveSmallIntegerField(
+                        choices=[
+                            (0, "Обязательно буду"),
+                            (1, "Пока решаю"),
+                            (2, "Не пойду"),
+                        ],
+                        verbose_name="статус",
+                    ),
+                ),
+                (
+                    "role",
+                    models.PositiveSmallIntegerField(
+                        choices=[
+                            (0, "Администратор"),
+                            (1, "Организатор"),
+                            (2, "Участник"),
+                        ],
+                        default=2,
+                        verbose_name="роль",
+                    ),
+                ),
+                (
+                    "event",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="events.event",
+                        verbose_name="мероприятие",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="участник",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='event',
-            name='participants',
-            field=models.ManyToManyField(related_name='events', through='events.EventParticipants', to=settings.AUTH_USER_MODEL),
+            model_name="event",
+            name="participants",
+            field=models.ManyToManyField(
+                related_name="events",
+                through="events.EventParticipants",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

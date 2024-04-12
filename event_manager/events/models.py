@@ -84,7 +84,7 @@ class EventParticipants(models.Model):
     status = models.PositiveSmallIntegerField(
         choices=StatusChoices.choices,
         verbose_name='статус',
-        default=StatusChoices.DONT_KNOW
+        default=StatusChoices.DONT_KNOW,
     )
     role = models.PositiveSmallIntegerField(
         choices=RoleChoices.choices,
