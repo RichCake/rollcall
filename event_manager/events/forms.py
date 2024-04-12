@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 
 from events.models import Event
 
@@ -15,6 +16,14 @@ class EventForm(forms.ModelForm):
             Event.participants.field.name,
             Event.is_private.field.name,
         )
+        widgets = {
+            Event.end.field.name: forms.widgets.DateTimeInput(
+                attrs={
+                    'type': 'datetime-local',
+                    'value': timezone.now().strftime('%Y-%m-%dT%H:%M'),
+                    },
+                ),
+        }
 
 
 class AddParticipantForm(forms.Form):
