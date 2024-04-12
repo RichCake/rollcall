@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -31,15 +32,24 @@ class Event(models.Model):
     is_private = models.BooleanField(
         default=False,
         verbose_name='приватное',
+        help_text='Доступ только по ссылке',
     )
     is_canceled = models.BooleanField(
         default=False,
         verbose_name='отменено',
     )
+    max_participants = models.PositiveIntegerField(
+        verbose_name='максимальное количество участников',
+        help_text='Больше 0',
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(1)],
+    )
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='EventParticipants',
         related_name='events',
+        blank=True,
     )
 
     class Meta:

@@ -21,6 +21,9 @@ class AddParticipantView(View):
             user_id = form.cleaned_data['user_id']
             event = get_object_or_404(Event, id=event_id)
             user = get_object_or_404(get_user_model(), id=user_id)
+            if event.max_participants:
+                if event.max_participants >= event.participants.count():
+                    return redirect(reverse('homepage:home'))
             event.participants.add(user)
         return redirect(reverse('homepage:home'))
 

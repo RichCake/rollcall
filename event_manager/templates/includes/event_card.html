@@ -3,7 +3,7 @@
     <h5 class="card-title">{{ event.title }}</h5>
     <p class="card-text">{{ event.description }}</p>
     <p>Автор: {% if request.user == event.author %}Вы{% else %}{{ event.author }}{% endif %}</p>
-    <p>{{ event.participants.count }} участников</p>
+    <p>{{ event.participants.count }}{% if event.max_participants %}/{{ event.max_participants }}{% endif %} участников</p>
     {% if request.user.is_authenticated %}
       {% if not request.user == event.author %}
         {% if request.user in event.participants.all %}
