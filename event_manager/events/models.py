@@ -1,5 +1,15 @@
 from django.conf import settings
+from django.core.validators import MinValueValidator
 from django.db import models
+
+
+class EventManager(models.Manager):
+    def get_public_events(self):
+        return (
+            self.get_queryset()
+            .select_related('author')
+            .prefetch_related('participants')
+        )
 
 
 class Event(models.Model):
@@ -24,10 +34,6 @@ class Event(models.Model):
         auto_now=True,
         verbose_name='изменено',
     )
-    start = models.DateTimeField(
-        null=True,
-        verbose_name='начало',
-    )
     end = models.DateTimeField(
         null=True,
         verbose_name='конец',
@@ -35,16 +41,29 @@ class Event(models.Model):
     is_private = models.BooleanField(
         default=False,
         verbose_name='приватное',
+        help_text='Доступ только по ссылке',
     )
     is_canceled = models.BooleanField(
         default=False,
         verbose_name='отменено',
     )
+    max_participants = models.PositiveIntegerField(
+        verbose_name='максимальное количество участников',
+        help_text=(
+            'Укажите кол-во участников, или оставьте пустым'
+            ),
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0)],
+    )
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='EventParticipants',
         related_name='events',
+        blank=True,
     )
+
+    objects = EventManager()
 
     class Meta:
         verbose_name = 'мероприятие'
@@ -88,6 +107,7 @@ class EventParticipants(models.Model):
     status = models.PositiveSmallIntegerField(
         choices=StatusChoices.choices,
         verbose_name='статус',
+        default=StatusChoices.DONT_KNOW,
     )
     role = models.PositiveSmallIntegerField(
         choices=RoleChoices.choices,

@@ -13,15 +13,21 @@
   <meta name="theme-color" content="#ffffff">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/features.css' %}" rel="stylesheet">
   {% block head %}{% endblock head %}
   <title>{% block title %}Events{% endblock %}</title>
 </head>
 <body>
-  <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+  <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="chevron-right" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+    </symbol>
+  </svg>
   {% include "includes/header.html" %}
   <main>
     {% block content %}No content{% endblock %}
   </main>
   {% include "includes/footer.html" %}
+  <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
 </body>
 </html>
