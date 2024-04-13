@@ -1,0 +1,37 @@
+{% load static %}
+
+<div class="container">
+  <header class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom">
+    <div class="d-flex align-items-center">
+      <div class="dropdown">
+        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <img class="bi me-2" width="50" height="50" src="{% static 'img/gamepad.png' %}" alt="logo">
+        </button>
+        <ul class="dropdown-menu text-small shadow">
+          {% with request.resolver_match.view_name as view_name %}
+            {% if request.user.is_staff %}
+              <li><a class="dropdown-item" href="{% url "admin:index" %}" target="_blank">Админка</a></li>
+            {% endif %}
+            <li><a class="dropdown-item {% if view_name == 'homepage:home' %}active{% endif %}" href="{% url 'homepage:home' %}">Главная</a></li>
+            <li><a class="dropdown-item {% if view_name == 'events:list' %}active{% endif %}" href="{% url 'events:list' %}">Список событий</a></li>
+            {% if request.user.is_authenticated %}
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item {% if view_name == 'events:create' %}active{% endif %}" href="{% url 'events:create' %}">Создать событие</a></li>
+            {% endif %}
+          {% endwith %}
+        </ul>
+      </div>
+      <a href="{% url "homepage:home" %}" class="d-flex align-items-center  text-dark text-decoration-none">
+          <span class="fs-3">RollCall</span>
+      </a>
+    </div>
+    <div class="col-md-3 text-end">
+      {% if request.user.is_authenticated %}
+        <a href="{% url "users:logout" %}" class="btn btn-outline-primary me-2">Logout</a>
+      {% else %}
+        <a href="{% url "users:login" %}" class="btn btn-outline-primary me-2">Login</a>
+        <a href="{% url "users:signup" %}" class="btn btn-primary">Sign-up</a>
+      {% endif %}
+    </div>
+  </header>
+</div>

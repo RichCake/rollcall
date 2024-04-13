@@ -5,6 +5,10 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('homepage.urls')),
+    path('event/', include('events.urls')),
+    path('auth/', include('users.urls')),
+    path('auth/', include('django.contrib.auth.urls')),
 ] + static(
     settings.MEDIA_URL,
     document_root=settings.MEDIA_ROOT,
