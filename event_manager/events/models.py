@@ -41,12 +41,11 @@ class Event(models.Model):
     max_participants = models.PositiveIntegerField(
         verbose_name='максимальное количество участников',
         help_text=(
-            'Введите число больше 0, '
-            'чтобы указать кол-во участников, или оставьте пустым'
+            'Укажите кол-во участников, или оставьте пустым'
             ),
         blank=True,
         null=True,
-        validators=[MinValueValidator(1)],
+        validators=[MinValueValidator(0)],
     )
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,

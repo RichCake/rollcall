@@ -4,8 +4,8 @@
   <header class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom">
     <div class="d-flex align-items-center">
       <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Меню
+        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <img class="bi me-2" width="50" height="50" src="{% static 'img/gamepad.png' %}" alt="logo">
         </button>
         <ul class="dropdown-menu text-small shadow">
           {% with request.resolver_match.view_name as view_name %}
@@ -13,6 +13,7 @@
               <li><a class="dropdown-item" href="{% url "admin:index" %}" target="_blank">Админка</a></li>
             {% endif %}
             <li><a class="dropdown-item {% if view_name == 'homepage:home' %}active{% endif %}" href="{% url 'homepage:home' %}">Главная</a></li>
+            <li><a class="dropdown-item {% if view_name == 'events:list' %}active{% endif %}" href="{% url 'events:list' %}">Список событий</a></li>
             {% if request.user.is_authenticated %}
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item {% if view_name == 'events:create' %}active{% endif %}" href="{% url 'events:create' %}">Создать событие</a></li>
@@ -20,9 +21,8 @@
           {% endwith %}
         </ul>
       </div>
-      <a href="{% url "homepage:home" %}" class="d-flex align-items-center ms-3 text-dark text-decoration-none">
-          <img class="bi me-2" width="40" height="32" src="{% static 'img/calendar3.svg' %}" alt="logo">
-          <span class="fs-4">RollCall</span>
+      <a href="{% url "homepage:home" %}" class="d-flex align-items-center  text-dark text-decoration-none">
+          <span class="fs-3">RollCall</span>
       </a>
     </div>
     <div class="col-md-3 text-end">

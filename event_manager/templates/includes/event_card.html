@@ -1,6 +1,10 @@
-<div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title">{{ event.title }}</h5>
+<div class="card h-100 d-flex flex-column">
+  <div class="card-body d-flex flex-column">
+      <div class="d-flex align-items-center">
+        <h5 class="card-title">{{ event.title }}</h5>
+        <a href="{% url "events:detail" pk=event.id %}" class="icon-link"><svg class="bi"><use xlink:href="#chevron-right"/></svg></a>
+      </div>
+    
     <p class="card-text">{{ event.description }}</p>
     <p>Автор: {% if request.user == event.author %}Вы{% else %}{{ event.author }}{% endif %}</p>
     <p>{{ event.participants.count }}{% if event.max_participants %}/{{ event.max_participants }}{% endif %} участников</p>
@@ -20,6 +24,11 @@
             <button type="submit" class="btn btn-outline-success">Записаться</button>
         {% endif %}
           </form>
+      {% else %}
+        <a href="{% url "events:update" pk=event.id %}" class="icon-link">
+          Редактировать
+          <svg class="bi"><use xlink:href="#chevron-right"/></svg>
+        </a>
       {% endif %}
     {% endif %}
   </div>
