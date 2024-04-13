@@ -27,9 +27,7 @@ class UpdateEventView(views.UpdateView):
         Event.is_private.field.name,
     )
     queryset = (
-        Event.objects
-        .select_related('author')
-        .prefetch_related('participants')
+        Event.objects.get_public_events()
         .only(
             'title',
             'description',
@@ -76,9 +74,7 @@ class EventsListView(views.ListView):
     template_name = 'events/event_list.html'
     context_object_name = 'events'
     queryset = (
-        Event.objects
-        .select_related('author')
-        .prefetch_related('participants')
+        Event.objects.get_public_events()
         .only(
             'title',
             'description',
@@ -111,8 +107,4 @@ class EventsListView(views.ListView):
 class DetailEventView(views.DetailView):
     template_name = 'events/event_detail.html'
     context_object_name = 'event'
-    queryset = (
-        Event.objects
-        .select_related('author')
-        .prefetch_related('participants')
-        )
+    queryset = Event.objects.get_public_events()

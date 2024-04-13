@@ -3,6 +3,15 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 
+class EventManager(models.Manager):
+    def get_public_events(self):
+        return (
+            self.get_queryset()
+            .select_related('author')
+            .prefetch_related('participants')
+        )
+
+
 class Event(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -53,6 +62,8 @@ class Event(models.Model):
         related_name='events',
         blank=True,
     )
+
+    objects = EventManager()
 
     class Meta:
         verbose_name = 'мероприятие'
