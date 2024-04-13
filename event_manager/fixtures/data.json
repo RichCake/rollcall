@@ -1,0 +1,161 @@
+[
+{
+    "model": "events.event",
+    "pk": 7,
+    "fields": {
+        "author": 4,
+        "title": "Поиграть в дотку",
+        "description": "Зарубимся жоска\r\nUPD: неопытных не принимаем\r\nUPD: canceled",
+        "created": "2024-04-09T16:07:19.296Z",
+        "updated": "2024-04-09T16:07:19.296Z",
+        "end": "2024-04-14T08:20:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": 8
+    }
+},
+{
+    "model": "events.event",
+    "pk": 8,
+    "fields": {
+        "author": 1,
+        "title": "Поиграть в фортнайте",
+        "description": "Соберемся и зарубимся",
+        "created": "2024-04-10T16:22:31.029Z",
+        "updated": "2024-04-10T16:22:31.029Z",
+        "end": "2011-09-30T20:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": null
+    }
+},
+{
+    "model": "events.event",
+    "pk": 9,
+    "fields": {
+        "author": 1,
+        "title": "Поиграть в фортнайте",
+        "description": "Соберемся и зарубимся второй раз",
+        "created": "2024-04-10T16:23:35.861Z",
+        "updated": "2024-04-10T16:23:35.861Z",
+        "end": "2011-09-30T20:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": 2
+    }
+},
+{
+    "model": "events.eventparticipants",
+    "pk": 18,
+    "fields": {
+        "user": 4,
+        "event": 8,
+        "created": "2024-04-13T12:53:34.809Z",
+        "updated": "2024-04-13T12:53:34.809Z",
+        "status": 1,
+        "role": 2
+    }
+},
+{
+    "model": "events.eventparticipants",
+    "pk": 28,
+    "fields": {
+        "user": 5,
+        "event": 8,
+        "created": "2024-04-13T14:11:46.160Z",
+        "updated": "2024-04-13T14:11:46.160Z",
+        "status": 1,
+        "role": 2
+    }
+},
+{
+    "model": "events.eventparticipants",
+    "pk": 29,
+    "fields": {
+        "user": 5,
+        "event": 9,
+        "created": "2024-04-13T14:11:46.926Z",
+        "updated": "2024-04-13T14:11:46.926Z",
+        "status": 1,
+        "role": 2
+    }
+},
+{
+    "model": "events.eventparticipants",
+    "pk": 30,
+    "fields": {
+        "user": 5,
+        "event": 7,
+        "created": "2024-04-13T14:11:47.816Z",
+        "updated": "2024-04-13T14:11:47.816Z",
+        "status": 1,
+        "role": 2
+    }
+},
+{
+    "model": "events.eventparticipants",
+    "pk": 31,
+    "fields": {
+        "user": 4,
+        "event": 9,
+        "created": "2024-04-13T14:12:34.491Z",
+        "updated": "2024-04-13T14:12:34.491Z",
+        "status": 1,
+        "role": 2
+    }
+},
+{
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$600000$8c0m9tqWNe0SW631yFwdo8$Pd6YH4IhBRXu45mL1oJvAgakz/imKPrx60PyRuPuhQ8=",
+        "last_login": "2024-04-13T14:19:14.914Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-04-04T14:42:34Z",
+        "email": "soupy.auspice_0h@icloud.com",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$600000$X7Rn1uiUrzTAkCfTe0yRIV$ywMEZhWSXFl2x4YJhIg2pxQaKFGv3r+PhQG54yZeXtU=",
+        "last_login": "2024-04-13T14:12:31.717Z",
+        "is_superuser": true,
+        "username": "RichCake",
+        "first_name": "",
+        "last_name": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-04-06T10:31:31Z",
+        "email": "abs2016123@gmail.com",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$600000$LevBfG1BwCQ0G7lDdGalQo$0KMFAmPK5DE5KXNO58U+bLAoHIMxZsEh/PcjgTd7ytM=",
+        "last_login": "2024-04-13T14:11:39.920Z",
+        "is_superuser": false,
+        "username": "Arsenii",
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-04-13T14:10:56.253Z",
+        "email": "example@example.com",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

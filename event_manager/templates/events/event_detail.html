@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event.title }}{% endblock title %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <h1>Событие</h1>
+      <p><strong>Заголовок: </strong>{{ event.title }}</p>
+      <p><strong>Описание: </strong></p>
+      <p>{{ event.description }}</p>
+      <p><strong>Автор: </strong>{{ event.author }}</p>
+      <p><strong>Создано: </strong>{{ event.created }}</p>
+      <p><strong>Дата события: </strong>{{ event.end }}</p>
+      <p>
+        <strong>Приватно: </strong>
+        {% if event.is_private %}<span class="badge bg-warning-subtle text-primary-emphasis rounded-pill">True</span>{% else %}<span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">False</span>{% endif %}
+      </p>
+      <p><strong>Максимально участников: </strong>{{ event.max_participants }}</p>
+      <p>
+        <strong>Участники: </strong>
+        {% for part in event.participants.all %}
+          <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{ part.username }}</span>
+        {% endfor %}
+      </p>
+      {% if request.user == event.author %}
+        <a href="{% url 'events:update' pk=event.id %}"><strong>Редактировать</strong></a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

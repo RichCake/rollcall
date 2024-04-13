@@ -135,7 +135,7 @@ AUTH_USER_MODEL = 'users.User'
 if DEBUG:
     INSTALLED_APPS.append('debug_toolbar')
     MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
-    INTERNAL_IPS = ['localhost']
+    INTERNAL_IPS = ['localhost', '127.0.0.1']
 
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'
@@ -144,3 +144,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MAIL = 'info@event-manager.com'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'send_mail'
+
+
+LOGIN_URL = 'auth/login/'
+LOGIN_REDIRECT_URL = '/'
