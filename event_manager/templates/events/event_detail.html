@@ -25,7 +25,10 @@
         {% endfor %}
       </p>
       {% if request.user == event.author %}
-        <a href="{% url 'events:update' pk=event.id %}"><strong>Редактировать</strong></a>
+        <a href="{% url 'events:update' pk=event.id %}"><strong>Редактировать</strong></a><br>
+        {% if event.is_past_due %}
+          <a href="{% url 'events:attendance' pk=event.id %}"><strong>Отметить присутствющих</strong></a>
+        {% endif %}
       {% endif %}
     </div>
   </div>

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+ {% block title %}Перекличка{% endblock title %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-10">
+      <hr class="mt-0 mb-4">
+      <h1 class="my-4">Перекличка события {{ event.id }}: {{ event.title }}</h1>
+      <p>Дата: {{ event.end }}</p>
+      <h2>Участники:</h2>
+      <div class="row justify-content-center">
+        <div class="col-5">
+          <form method="post">
+            {{ formset.management_form }}
+            {% csrf_token %}
+            {{ formset|crispy }}
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

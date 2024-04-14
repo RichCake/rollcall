@@ -1,11 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 import django.views.generic as views
 
-from events.forms import AddParticipantForm, EventForm
-from events.models import Event
+from events.forms import AddParticipantForm, AttendanceFormSet, EventForm
+from events.models import Event, EventParticipants
 
 
 class CreateEventView(views.CreateView):
@@ -108,3 +108,20 @@ class DetailEventView(views.DetailView):
     template_name = 'events/event_detail.html'
     context_object_name = 'event'
     queryset = Event.objects.get_public_events()
+
+
+def attendance_view(request, pk):
+    event = get_object_or_404(Event, id=pk)
+    formset = AttendanceFormSet(
+        request.POST or None,
+        queryset=EventParticipants.objects.filter(event__id=pk),
+        )
+
+    if request.method == 'POST' and formset.is_valid():
+        formset.save()
+
+    return render(
+        request,
+        'events/attendance.html',
+        {'event': event, 'formset': formset},
+        )
