@@ -48,7 +48,7 @@
           {% if request.user == event.author %}
             <a href="{% url 'events:update' pk=event.id %}" class="btn btn-primary">Редактировать</a>
             {% if event.is_past_due %}
-              <a href="{% url 'events:attendance' pk=event.id %}" class="btn btn-primary">Отметить присутствующих</a>
+              <a href="{% url 'events:attendance' pk=event.id %}" class="btn btn-success">Отметить присутствующих</a>
             {% endif %}
             <a href="{% url "events:delete" pk=event.id %}" class="btn btn-danger">Удалить</a>
           {% endif %}

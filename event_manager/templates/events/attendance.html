@@ -1,24 +1,31 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
- {% block title %}Перекличка{% endblock title %}
+{% block title %}Перекличка: {{ event.title }}{% endblock title %}
 
 {% block content %}
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-10">
+    <div class="col-md-8">
       <hr class="mt-0 mb-4">
-      <h1 class="my-4">Перекличка события {{ event.id }}: {{ event.title }}</h1>
-      <p>Дата: {{ event.end }}</p>
-      <h2>Участники:</h2>
-      <div class="row justify-content-center">
-        <div class="col-5">
-          <form method="post">
-            {{ formset.management_form }}
-            {% csrf_token %}
-            {{ formset|crispy }}
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-          </form>
+      <h1 class="my-4">
+        <a href="{% url "events:detail" pk=event.id %}"><svg class="bi me-2" width="24" height="24" fill="currentColor"><use xlink:href="#chevron-left"/></svg></a>
+        <span>Перекличка события ID:{{ event.id }} {{ event.title }}</span>
+      </h1>
+      <p><strong>Дата:</strong> {{ event.end }}</p>
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title">Участники:</h2>
+          <div class="row">
+            <div class="col-md-6">
+              <form method="post">
+                {{ formset.management_form }}
+                {% csrf_token %}
+                {{ formset|crispy }}
+                <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -10,7 +10,10 @@
       <form method="post">{% csrf_token %}
         <p>Вы уверены что хотите удалить "{{ object }}"?</p>
         {{ form }}
-        <input type="submit" value="Подтвердить" class="btn btn-danger">
+        <div class="btn-group" role="group" aria-label="Удаление события">
+          <button type="submit" class="btn btn-danger">Подтвердить</button>
+          <a href="{% url 'events:detail' pk=event.pk %}" class="btn btn-secondary">Отмена</a>
+        </div>
       </form>
     </div>
   </div>
