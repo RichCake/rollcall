@@ -32,7 +32,7 @@
         </div>
         <h3 class="fs-2 text-body-emphasis">Собирайтесь с друзьями</h3>
         <p>Создавайте события. Приглашайте друзей. Назначайте количество участников и открывайте доступ всем пользователям.</p>
-        <a href="#" class="icon-link">
+        <a href="{% url "events:create" %}" class="icon-link">
           Создать событие
           <svg class="bi"><use xlink:href="#chevron-right"/></svg>
         </a>
@@ -58,5 +58,6 @@
     </div>
   </div>
 </div>
+
 
 {% endblock %}

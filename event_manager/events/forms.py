@@ -8,7 +8,6 @@ class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = (
-            Event.author.field.name,
             Event.title.field.name,
             Event.description.field.name,
             Event.end.field.name,
