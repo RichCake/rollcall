@@ -37,7 +37,8 @@ ignore = [
 [lint.isort]
 known-first-party = [
     "events",
-    "homepage"
+    "homepage",
+    "notifications"
 ]
 
 force-sort-within-sections = true

@@ -8,6 +8,7 @@ from django.views.generic.edit import FormMixin
 
 from events.forms import AddParticipantForm, AttendanceFormSet, EventForm
 from events.models import Event, EventParticipants
+from notifications.tasks import send_email_task
 
 
 class CreateEventView(LoginRequiredMixin, views.CreateView):
@@ -72,6 +73,10 @@ class AddParticipantView(views.View):
                         request.META.get('HTTP_REFERER'),
                         )
             event.participants.add(user)
+            send_email_task.apply_async(
+                args=[user.email, f'Вы записались на {event.title}'],
+                countdown=60,
+                )
         return HttpResponseRedirect(
             reverse_lazy('events:detail', args=[event.id]))
 

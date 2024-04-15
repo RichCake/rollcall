@@ -33,8 +33,10 @@ INSTALLED_APPS = [
     'events.apps.EventsConfig',
     'users.apps.UsersConfig',
     'homepage.apps.HomepageConfig',
+    'notifications.apps.NotificationsConfig',
     'crispy_forms',
     'crispy_bootstrap4',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -148,3 +150,7 @@ EMAIL_FILE_PATH = BASE_DIR / 'send_mail'
 
 LOGIN_URL = 'auth/login/'
 LOGIN_REDIRECT_URL = '/'
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_BEAT_SCHEDULER='django_celery_beat.schedulers:DatabaseScheduler'
