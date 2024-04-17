@@ -3,6 +3,8 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 
+from categories.models import Category
+
 
 class EventManager(models.Manager):
     def get_public_events(self):
@@ -62,6 +64,14 @@ class Event(models.Model):
         through='EventParticipants',
         related_name='events',
         blank=True,
+    )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        verbose_name='категория',
+        related_name='events',
     )
 
     objects = EventManager()

@@ -30,6 +30,7 @@ class UpdateEventView(LoginRequiredMixin, views.UpdateView):
     template_name = 'events/update_event.html'
     model = Event
     fields = (
+        Event.category.field.name,
         Event.title.field.name,
         Event.description.field.name,
         Event.end.field.name,
