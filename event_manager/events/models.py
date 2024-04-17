@@ -13,6 +13,12 @@ class EventManager(models.Manager):
             .select_related('author')
             .prefetch_related('participants')
         )
+    
+    def get_future_events(self):
+        return (
+            self.get_public_events()
+            .filter(end__gte=timezone.now())
+        )
 
 
 class Event(models.Model):
@@ -127,6 +133,10 @@ class EventParticipants(models.Model):
     present = models.BooleanField(
         verbose_name='присутствовал',
         default=True,
+    )
+    notified = models.BooleanField(
+        verbose_name='уведомлен',
+        default=False,
     )
     role = models.PositiveSmallIntegerField(
         choices=RoleChoices.choices,
