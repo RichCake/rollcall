@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.utils import timezone
 
 
 class EventManager(models.Manager):
@@ -72,6 +73,10 @@ class Event(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def is_past_due(self):
+        return timezone.now() > self.end
+
 
 class StatusChoices(models.IntegerChoices):
     WILL_ATTEND = 0, 'Обязательно буду'
@@ -108,6 +113,10 @@ class EventParticipants(models.Model):
         choices=StatusChoices.choices,
         verbose_name='статус',
         default=StatusChoices.DONT_KNOW,
+    )
+    present = models.BooleanField(
+        verbose_name='присутствовал',
+        default=True,
     )
     role = models.PositiveSmallIntegerField(
         choices=RoleChoices.choices,

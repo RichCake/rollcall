@@ -5,28 +5,63 @@
 {% block content %}
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-6">
-      <h1>Событие</h1>
-      <p><strong>Заголовок: </strong>{{ event.title }}</p>
-      <p><strong>Описание: </strong></p>
-      <p>{{ event.description }}</p>
-      <p><strong>Автор: </strong>{{ event.author }}</p>
-      <p><strong>Создано: </strong>{{ event.created }}</p>
-      <p><strong>Дата события: </strong>{{ event.end }}</p>
-      <p>
-        <strong>Приватно: </strong>
-        {% if event.is_private %}<span class="badge bg-warning-subtle text-primary-emphasis rounded-pill">True</span>{% else %}<span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">False</span>{% endif %}
-      </p>
-      <p><strong>Максимально участников: </strong>{{ event.max_participants }}</p>
-      <p>
-        <strong>Участники: </strong>
-        {% for part in event.participants.all %}
-          <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{ part.username }}</span>
-        {% endfor %}
-      </p>
-      {% if request.user == event.author %}
-        <a href="{% url 'events:update' pk=event.id %}"><strong>Редактировать</strong></a>
-      {% endif %}
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h1 class="card-title">
+            <a href="{% url "events:list" %}"><svg class="bi me-2" width="24" height="24" fill="currentColor"><use xlink:href="#chevron-left"/></svg></a>
+            <span>{{ event.title }}</span>
+          </h1>
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{ event.description }}</p>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Автор:</strong> {{ event.author }}</li>
+            <li class="list-group-item"><strong>Дата создания:</strong> {{ event.created }}</li>
+            <li class="list-group-item"><strong>Дата события:</strong> {{ event.end }}</li>
+            <li class="list-group-item">
+              <strong>Приватное событие:</strong> 
+              {% if event.is_private %}
+                <span class="badge bg-warning text-dark">Да</span>
+              {% else %}
+                <span class="badge bg-success">Нет</span>
+              {% endif %}
+            </li>
+            {% if event.max_participants %}<li class="list-group-item"><strong>Максимальное количество участников:</strong> {{ event.max_participants }}</li>{% endif %}
+          </ul>
+          <div class="mt-3">
+            <h5>Участники:</h5>
+            <div class="row">
+              {% for part in event.participants.all %}
+                <div class="col-md-3">
+                  <div class="card">
+                    <div class="card-body">
+                      {{ part.username }}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          {% if request.user == event.author %}
+            <a href="{% url 'events:update' pk=event.id %}" class="btn btn-primary">Редактировать</a>
+            {% if event.is_past_due %}
+              <a href="{% url 'events:attendance' pk=event.id %}" class="btn btn-success">Отметить присутствующих</a>
+            {% endif %}
+            <a href="{% url "events:delete" pk=event.id %}" class="btn btn-danger">Удалить</a>
+          {% endif %}
+          {% if request.user != event.author %}
+            <form method="post" action="{% url 'events:add_part' %}">
+              {% csrf_token %}
+              <input type="hidden" name="event_id" value="{{ event.id }}">
+              <input type="hidden" name="user_id" value="{{ request.user.id }}">
+              <button type="submit" class="btn btn-success">Записаться</button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </div>
 </div>

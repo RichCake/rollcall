@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Удалить событие{% endblock title %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <h1>Удаление события {{ event }}</h1>
+      <form method="post">{% csrf_token %}
+        <p>Вы уверены что хотите удалить "{{ object }}"?</p>
+        {{ form }}
+        <div class="btn-group" role="group" aria-label="Удаление события">
+          <button type="submit" class="btn btn-danger">Подтвердить</button>
+          <a href="{% url 'events:detail' pk=event.pk %}" class="btn btn-secondary">Отмена</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

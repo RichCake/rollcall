@@ -1,14 +1,13 @@
 from django import forms
 from django.utils import timezone
 
-from events.models import Event
+from events.models import Event, EventParticipants
 
 
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = (
-            Event.author.field.name,
             Event.title.field.name,
             Event.description.field.name,
             Event.end.field.name,
@@ -29,3 +28,14 @@ class EventForm(forms.ModelForm):
 class AddParticipantForm(forms.Form):
     event_id = forms.IntegerField()
     user_id = forms.IntegerField()
+
+
+class AttendanceForm(forms.ModelForm):
+    class Meta:
+        model = EventParticipants
+        fields = ['user', 'present']
+
+
+AttendanceFormSet = forms.modelformset_factory(
+    EventParticipants, form=AttendanceForm, extra=1,
+    )

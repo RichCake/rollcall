@@ -7,3 +7,19 @@ class User(AbstractUser):
         'адрес электронной почты',
         unique=True,
         )
+    
+    def __str__(self):
+        str_ = super().__str__()
+        if self.rating:
+            str_ += f' ({self.rating:.2f})'
+        return str_
+    
+    @property
+    def rating(self):
+        events = self.events.all()
+        if events:
+            return (
+                len(events.filter(eventparticipants__present=True)) /
+                len(events) * 5
+                )
+        return None
