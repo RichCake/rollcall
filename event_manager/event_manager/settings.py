@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     'events.apps.EventsConfig',
     'users.apps.UsersConfig',
     'homepage.apps.HomepageConfig',
+
+    'categories.apps.CategoriesConfig',
     'crispy_forms',
     'crispy_bootstrap4',
 ]
