@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.utils import timezone
 
 from categories.models import Category
@@ -146,3 +148,11 @@ class EventParticipants(models.Model):
 
     def __str__(self):
         return f'{self.event} - {self.user}'
+    
+
+@receiver(pre_save, sender=Event)
+def update_notified_on_end_change(sender, instance, *args, **kwargs):
+    if instance.pk:
+        old_instance = Event.objects.get(pk=instance.pk)
+        if old_instance.end != instance.end:
+            instance.eventparticipants_set.filter(notified=True).update(notified=False)
