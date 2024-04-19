@@ -8,46 +8,93 @@
 <div class="container">
   <div class="container px-4 py-5">
     <h2 class="pb-2 border-bottom">Список событий</h2>
-    <div class="dropdown py-2">
-      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Фильтр
-      </button>
-      <ul class="dropdown-menu">
-        <form method="GET">
-          <div class="mb-3">
-            <label for="status">Статус:</label>
-            <select name="status" id="status">
-              <option value="">Любой</option>
-              <option value="status1">Я записан</option>
-              <option value="status2">Я не записан</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="author">Автор:</label>
-            <select name="author" id="author">
-              <option value="">Любой</option>
-              <option value="author1">Я</option>
-              <option value="author2">Не я</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="date">Дата:</label>
-            <input type="date" name="date" id="date">
-          </div>
-          <button type="submit" class="btn btn-primary">Применить фильтр</button>
-        </form>
-      </ul>
+    <div class="row justify-content-left">
+      <div class="col-1">
+        <div class="dropdown py-2">
+          <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
+              <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z"/>
+            </svg>
+          </button>
+          <form method="GET" class="dropdown-menu p-2">
+            <div class="mb-3">
+              <label for="status">Статус:</label>
+              <select name="status" id="status">
+                <option value="">Любой</option>
+                <option value="status1">Я записан</option>
+                <option value="status2">Я не записан</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="author">Автор:</label>
+              <select name="author" id="author">
+                <option value="">Любой</option>
+                <option value="author1">Я</option>
+                <option value="author2">Не я</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="date">Дата:</label>
+              <input type="date" name="date" id="date">
+            </div>
+            <button type="submit" class="btn btn-primary">Применить</button>
+          </form>
+        </div>
+      </div>
+      <div class="col-3">  
+        <div class="dropdown py-2">
+          <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-filter-left" viewBox="0 0 16 16">
+              <path d="M2 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
+            </svg>
+          </button>
+          <form method="GET" class="dropdown-menu p-2">
+            <div class="mb-3">
+              <input type="radio" id="title" name="sort" value="title">
+              <label for="title">По заголовку</label><br>
+              <input type="radio" id="category__name" name="sort" value="category__name">
+              <label for="category__name">По категории</label><br>
+              <input type="radio" id="none" name="sort" value="">
+              <label for="none">Отменить выбор</label><br>
+            </div>
+            <button type="submit" class="btn btn-primary">Применить</button>
+          </form>
+        </div>
+      </div>
     </div>
-    <div class="row row-cols-1 row-cols-md-4 g-4">
+    {% if sort == "category" %}
       {% for event in events %}
+        {% ifchanged event.category.name %}
+          {% if not forloop.first %}
+            </div>
+          {% endif %}
+          {% if event.category.name %}
+            <h2>{{ event.category.name }}</h2>
+          {% else %}
+          <h2>Без категории</h2>
+          {% endif %}
+          <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% endifchanged %}
         <div class="col">
             {% include "includes/event_card.html" %}
         </div>
       {% empty %}
         <h3>Не найдено</h3>
       {% endfor %}
+    {% else %}
+      <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% for event in events %}
+          <div class="col">
+              {% include "includes/event_card.html" %}
+          </div>
+        {% empty %}
+          <h3>Не найдено</h3>
+        {% endfor %}
+      </div>
+    {% endif %}
     </div>
   </div>
 </div>
+
 
 {% endblock %}

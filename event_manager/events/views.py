@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models.functions import Lower
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
@@ -109,6 +110,8 @@ class EventsListView(views.ListView):
         status = self.request.GET.get('status')
         author = self.request.GET.get('author')
         date = self.request.GET.get('date')
+        sort = self.request.GET.get('sort')
+
         if status:
             if status == 'status1':
                 queryset = queryset.filter(participants=self.request.user)
@@ -121,7 +124,14 @@ class EventsListView(views.ListView):
                 queryset = queryset.exclude(author=self.request.user)
         if date:
             queryset = queryset.filter(end=date)
+        if sort:
+            queryset = queryset.order_by(Lower(sort).asc())
         return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sort'] = self.request.GET.get('sort')
+        return context
 
 
 class DetailEventView(views.DetailView):
