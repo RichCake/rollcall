@@ -14,6 +14,11 @@ urlpatterns = [
     ),
     path('signup/', users_views.signup_view, name='signup'),
     path(
+        'signup/done/',
+        users_views.SignupSuccessView.as_view(),
+        name='signup_success',
+    ),
+    path(
         'login/',
         views.LoginView.as_view(
             template_name='users/login.html',

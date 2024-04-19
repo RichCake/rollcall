@@ -96,6 +96,7 @@ class EventsListView(views.ListView):
     context_object_name = 'events'
     queryset = (
         Event.objects.get_public_events()
+        .filter(is_private=False)
         .only(
             'title',
             'description',
