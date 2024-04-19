@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Моя статистика{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h1 class="mt-5 mb-4">Моя игровая статистика</h1>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Топ 5 игр за все время</h5>
+          <ul class="list-group">
+            {% for game in game_stat.top_5_hours %}
+              <li class="list-group-item"><a href="{{ game.url }}">{{ game.name }}</a> Наиграно: {{ game.playtime }} часов.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title">Топ 5 игр за последние 2 недели</h5>
+          <ul class="list-group">
+            {% for game in game_stat.top_5_last_2weeks %}
+            <li class="list-group-item"><a href="{{ game.url }}">{{ game.name }}</a> Наиграно: {{ game.playtime }} часов.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title">Любимая игра</h5>
+          <p class="card-text"><a href={{ game_stat.favorite_game_url }}>{{ game_stat.favorite_game_name }}</a> Наиграно: {{ game_stat.favorite_game_playtime }} часов.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

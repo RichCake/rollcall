@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'events.apps.EventsConfig',
     'users.apps.UsersConfig',
     'homepage.apps.HomepageConfig',
-
+    'gamestat.apps.GamestatConfig',
     'categories.apps.CategoriesConfig',
     'crispy_forms',
     'crispy_bootstrap4',
@@ -150,3 +150,7 @@ EMAIL_FILE_PATH = BASE_DIR / 'send_mail'
 
 LOGIN_URL = 'auth/login/'
 LOGIN_REDIRECT_URL = '/'
+
+# Steam
+
+STEAM_API_KEY = '9E815E84252FFAE2C9EF2DE830206DC1'
