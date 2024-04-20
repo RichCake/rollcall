@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from huey import SqliteHuey
 
 
 def str_to_bool(string):
@@ -35,8 +36,10 @@ INSTALLED_APPS = [
     'homepage.apps.HomepageConfig',
     'gamestat.apps.GamestatConfig',
     'categories.apps.CategoriesConfig',
+    'profiles.apps.ProfilesConfig',
     'crispy_forms',
     'crispy_bootstrap4',
+    'huey.contrib.djhuey',
 ]
 
 MIDDLEWARE = [
@@ -151,6 +154,4 @@ EMAIL_FILE_PATH = BASE_DIR / 'send_mail'
 LOGIN_URL = 'auth/login/'
 LOGIN_REDIRECT_URL = '/'
 
-# Steam
-
-STEAM_API_KEY = '9E815E84252FFAE2C9EF2DE830206DC1'
+HUEY = SqliteHuey(filename=BASE_DIR / 'tasks.sqlite3')

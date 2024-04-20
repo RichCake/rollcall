@@ -1,7 +1,8 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 
- {% block title %}Создние событие{% endblock title %}
+{% block title %}Список пользователей{% endblock %}
+
+{% load static %}
 
 {% block content %}
 <div class="container">
@@ -16,20 +17,20 @@
         </a>
       </li>
       <li class="breadcrumb-item active" aria-current="page">
-        Создать событие
+        Список пользователей
       </li>
     </ol>
   </nav>
-  <div class="row justify-content-center">
-    <div class="col-10">
-      <hr class="mt-0 mb-4">
-      <h1 class="my-4">Создание событие</h1>
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="btn btn-primary">Создать</button>
-      </form>
-    </div>
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for user in users %}
+      <div class="col">
+          {% include "includes/user_card.html" %}
+      </div>
+    {% empty %}
+      <h3>Не найдено</h3>
+    {% endfor %}
   </div>
 </div>
+
+
 {% endblock %}
