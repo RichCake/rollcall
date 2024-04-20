@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'homepage.apps.HomepageConfig',
     'notifications.apps.NotificationsConfig',
     'categories.apps.CategoriesConfig',
+    'profiles.apps.ProfilesConfig',
     'crispy_forms',
     'crispy_bootstrap4',
     'huey.contrib.djhuey',
