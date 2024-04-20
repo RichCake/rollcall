@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'events.apps.EventsConfig',
     'users.apps.UsersConfig',
     'homepage.apps.HomepageConfig',
-    'notifications.apps.NotificationsConfig',
+    'gamestat.apps.GamestatConfig',
     'categories.apps.CategoriesConfig',
     'profiles.apps.ProfilesConfig',
     'crispy_forms',

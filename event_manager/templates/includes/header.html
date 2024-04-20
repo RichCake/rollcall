@@ -17,6 +17,11 @@
             {% if request.user.is_authenticated %}
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item {% if view_name == 'events:create' %}active{% endif %}" href="{% url 'events:create' %}">Создать событие</a></li>
+              {% if request.user.gamestat %}
+                <li><a class="dropdown-item" href="{% url "gamestat:my_stats" %}">Моя статистика</a></li>
+              {% else %}
+                <li><a class="dropdown-item" href="{% url "gamestat:steam_login" %}">Войти через Steam</a></li>
+              {% endif %}
             {% endif %}
           {% endwith %}
         </ul>
