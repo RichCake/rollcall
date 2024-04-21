@@ -75,7 +75,7 @@
             {% endif %}
             <a href="{% url "events:delete" pk=event.id %}" class="btn btn-danger">Удалить</a>
           {% else %}
-            {% if request.user in event.participants.all %}
+            {% if request.user in event.participants %}
             <form method="post" action="{% url 'events:remove_part' %}">
               {% csrf_token %}
               <input type="hidden" name="event_id" value="{{ event.id }}">

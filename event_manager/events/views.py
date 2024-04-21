@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count
 from django.db.models.functions import Lower
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -29,7 +30,6 @@ class CreateEventView(LoginRequiredMixin, views.CreateView):
 
 class UpdateEventView(LoginRequiredMixin, views.UpdateView):
     template_name = 'events/update_event.html'
-    model = Event
     fields = (
         Event.category.field.name,
         Event.title.field.name,
@@ -41,13 +41,13 @@ class UpdateEventView(LoginRequiredMixin, views.UpdateView):
     )
     queryset = (
         Event.objects.get_public_events()
-        .only(
-            'title',
-            'description',
-            'max_participants',
-            'author__username',
-            'participants__username',
-            )
+        # .only(
+        #     'title',
+        #     'description',
+        #     'max_participants',
+        #     'author__username',
+        #     'participants__username',
+        #     )
         )
 
     def get_success_url(self):
@@ -97,13 +97,14 @@ class EventsListView(views.ListView):
     queryset = (
         Event.objects.get_public_events()
         .filter(is_private=False)
-        .only(
-            'title',
-            'description',
-            'max_participants',
-            'author__username',
-            'participants__username',
-            )
+        .annotate(part_count=Count('eventparticipants'))
+        # .only(
+        #     'title',
+        #     'description',
+        #     'max_participants',
+        #     'author__username',
+        #     'participants__username',
+        #     )
         )
 
     def get_queryset(self):
