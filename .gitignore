@@ -5,6 +5,7 @@
 event_manager/static/
 event_manager/send_mail/
 .ruff_cache
+event_manager/tasks.sqlite3
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

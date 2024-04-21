@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from huey import SqliteHuey
 
 
 def str_to_bool(string):
@@ -33,8 +34,11 @@ INSTALLED_APPS = [
     'events.apps.EventsConfig',
     'users.apps.UsersConfig',
     'homepage.apps.HomepageConfig',
+    'notifications.apps.NotificationsConfig',
+    'categories.apps.CategoriesConfig',
     'crispy_forms',
     'crispy_bootstrap4',
+    'huey.contrib.djhuey',
 ]
 
 MIDDLEWARE = [
@@ -148,3 +152,5 @@ EMAIL_FILE_PATH = BASE_DIR / 'send_mail'
 
 LOGIN_URL = 'auth/login/'
 LOGIN_REDIRECT_URL = '/'
+
+HUEY = SqliteHuey(filename=BASE_DIR / 'tasks.sqlite3')

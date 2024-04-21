@@ -1,7 +1,11 @@
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.utils import timezone
+
+from categories.models import Category
 
 
 class EventManager(models.Manager):
@@ -10,6 +14,12 @@ class EventManager(models.Manager):
             self.get_queryset()
             .select_related('author')
             .prefetch_related('participants')
+        )
+    
+    def get_future_events(self):
+        return (
+            self.get_public_events()
+            .filter(end__gte=timezone.now())
         )
 
 
@@ -62,6 +72,14 @@ class Event(models.Model):
         through='EventParticipants',
         related_name='events',
         blank=True,
+    )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        verbose_name='категория',
+        related_name='events',
     )
 
     objects = EventManager()
@@ -118,6 +136,10 @@ class EventParticipants(models.Model):
         verbose_name='присутствовал',
         default=True,
     )
+    notified = models.BooleanField(
+        verbose_name='уведомлен',
+        default=False,
+    )
     role = models.PositiveSmallIntegerField(
         choices=RoleChoices.choices,
         default=RoleChoices.PARTICIPANT,
@@ -126,3 +148,11 @@ class EventParticipants(models.Model):
 
     def __str__(self):
         return f'{self.event} - {self.user}'
+    
+
+@receiver(pre_save, sender=Event)
+def update_notified_on_end_change(sender, instance, *args, **kwargs):
+    if instance.pk:
+        old_instance = Event.objects.get(pk=instance.pk)
+        if old_instance.end != instance.end:
+            instance.eventparticipants_set.filter(notified=True).update(notified=False)
