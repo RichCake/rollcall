@@ -39,8 +39,10 @@ known-first-party = [
     "events",
     "homepage",
     "notifications",
-    "categories"
+    "categories",
+    "users"
 ]
+
 
 force-sort-within-sections = true
 order-by-type = false

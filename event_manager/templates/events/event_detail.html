@@ -59,7 +59,7 @@
                 <div class="col-md-3">
                   <div class="card">
                     <div class="card-body">
-                      {{ part.username }}
+                      {{ part }}
                     </div>
                   </div>
                 </div>
@@ -74,14 +74,22 @@
               <a href="{% url 'events:attendance' pk=event.id %}" class="btn btn-success">Отметить присутствующих</a>
             {% endif %}
             <a href="{% url "events:delete" pk=event.id %}" class="btn btn-danger">Удалить</a>
-          {% endif %}
-          {% if request.user != event.author %}
-            <form method="post" action="{% url 'events:add_part' %}">
+          {% else %}
+            {% if request.user in event.participants.all %}
+            <form method="post" action="{% url 'events:remove_part' %}">
               {% csrf_token %}
               <input type="hidden" name="event_id" value="{{ event.id }}">
               <input type="hidden" name="user_id" value="{{ request.user.id }}">
-              <button type="submit" class="btn btn-success">Записаться</button>
+              <button type="submit" class="btn btn-secondary">Отписаться</button>
             </form>
+            {% else %}
+              <form method="post" action="{% url 'events:add_part' %}">
+                {% csrf_token %}
+                <input type="hidden" name="event_id" value="{{ event.id }}">
+                <input type="hidden" name="user_id" value="{{ request.user.id }}">
+                <button type="submit" class="btn btn-success">Записаться</button>
+              </form>
+            {% endif %}
           {% endif %}
         </div>
       </div>
