@@ -1,8 +1,18 @@
+services:
+  - postgres:latest
+
+
+
 default:
   image: python:3.12-alpine
   before_script:
     - pip install --upgrade pip
     - cd event_manager
+
+variables:
+  POSTGRES_DB: project_ci_test
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: test
 
 stages:
   - setup
@@ -25,4 +35,6 @@ django_tests:
   stage: tests
   script:
     - pip install -r ../requirements/dev.txt
+    - python manage.py makemigrations
+    - python manage.py migrate
     - python manage.py test
