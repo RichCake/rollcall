@@ -75,10 +75,10 @@ WSGI_APPLICATION = 'event_manager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('PG_DB_NAME', 'tests'),
-        'USER': os.getenv('PG_USER', 'test'),
-        'PASSWORD': os.getenv('PG_PASSWORD', 'test'),
-        'HOST': os.getenv('PG_HOST', default='localhost'),
+        'NAME': os.getenv('PG_DB_NAME', 'project_ci_test'),
+        'USER': os.getenv('PG_USER', 'postgres'),
+        'PASSWORD': os.getenv('PG_PASSWORD', ''),
+        'HOST': os.getenv('PG_HOST', default='postgres'),
         'PORT': os.getenv('PG_PORT', default='5432'),
     },
 }
