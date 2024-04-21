@@ -13,7 +13,4 @@ class TestViews(TestCase):
                 'password2': 'testpassword123',
             },
         )
-        # ПОСЛЕ МЕРДЖА В dev ЗАМЕНИТЬ
-        # НА self.assertRedirects(response, reverse('users:signup_success'))
-        # !!!!!!!!!!!!!!!
-        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('users:signup_success'))
