@@ -7,6 +7,7 @@ class User(AbstractUser):
         'адрес электронной почты',
         unique=True,
         )
+    telegram_chat_id = models.CharField(max_length=255, blank=True)
     
     def __str__(self):
         str_ = super().__str__()

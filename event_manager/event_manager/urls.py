@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('homepage.urls')),
     path('event/', include('events.urls')),
+    path('notifications/', include('notifications.urls')),
     path('auth/', include('users.urls')),
     path('auth/', include('django.contrib.auth.urls')),
 ] + static(
