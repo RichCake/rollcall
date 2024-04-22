@@ -32,3 +32,4 @@ class Command(BaseCommand):
                 )
                 participant.notified = True
                 participant.save()
+        self.stdout.write('E-mail Report was sent.')

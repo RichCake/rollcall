@@ -1,23 +1,66 @@
-version: '3.7'
+# Определение версии Docker Compose и начало описания сервисов
+version: '3'
+
 services:
-  web:
-    build: .
-    command: python event_manager/manage.py runserver 0.0.0.0:8000
+  django:
+    # Сборка образа для сервиса django из текущей директории
+    build: ./event_manager
+    # Задание имени контейнера для сервиса django
+    container_name: django
+    # Задание команды, которую нужно запустить при запуске контейнера для сервиса django
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/usr/src/team-8-0/
+      - ./event_manager:/usr/src/app
+    # Открытие порта на хостовой машине и перенаправление на порт в контейнере
     ports:
       - 8000:8000
-    env_file:
-      - ./.env
+    # Зависимость от другого сервиса
     depends_on:
-      - db
-  db:
-    image: postgres:16.0-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - pgdb
+      - redis
+
+  pgdb:
+    # Использование готового образа postgres
+    image: postgres
+    # Задание переменных окружения для контейнера с postgres
     environment:
-      - POSTGRES_USER=hello_django
-      - POSTGRES_PASSWORD=hello_django
-      - POSTGRES_DB=hello_django_dev
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+     # Задание имени контейнера для сервиса pgdb
+    container_name: pgdb
+     # Связывание тома с директорией в контейнере для сохранения данных postgres
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+  celery:
+    build: .
+    command: celery -A event_manager worker -l info
+    volumes:
+      - ./event_manager:/usr/src/app/
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    container_name: celery
+    depends_on:
+      - redis
+
+  celery-beat:
+    build: .
+    command: celery -A event_manager beat -l info
+    volumes:
+      - ./event_manager:/usr/src/app/
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    container_name: celery-beat
+    depends_on:
+      - redis
+
 volumes:
-  postgres_data:
+  pgdbdata: null

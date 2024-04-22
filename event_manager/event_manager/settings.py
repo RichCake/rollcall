@@ -1,7 +1,10 @@
 import os
 from pathlib import Path
 
+from celery.schedules import crontab
 from dotenv import load_dotenv
+
+import notifications.tasks  # noqa: F401
 
 
 def str_to_bool(string):
@@ -17,10 +20,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', default='aaa')
 
 DEBUG = str_to_bool(os.getenv('DJANGO_DEBUG', default='false'))
 
-ALLOWED_HOSTS = os.getenv(
-    'DJANGO_ALLOWED_HOSTS',
-    default='localhost,127.0.0.1',
-).split(',')
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 
 INSTALLED_APPS = [
@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'events.apps.EventsConfig',
     'users.apps.UsersConfig',
     'homepage.apps.HomepageConfig',
@@ -73,11 +74,11 @@ WSGI_APPLICATION = 'event_manager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('PG_DB_NAME', ''),
-        'USER': os.getenv('PG_USER', ''),
-        'PASSWORD': os.getenv('PG_PASSWORD', ''),
-        'HOST': os.getenv('PG_HOST', default='localhost'),
-        'PORT': os.getenv('PG_PORT', default='5432'),
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'pgdb',
+        'PORT': '5432',
     },
 }
 
@@ -151,6 +152,13 @@ EMAIL_FILE_PATH = BASE_DIR / 'send_mail'
 LOGIN_URL = 'auth/login/'
 LOGIN_REDIRECT_URL = '/'
 
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_BROKER_URL = 'redis://redis:6379'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
 CELERY_BEAT_SCHEDULER='django_celery_beat.schedulers:DatabaseScheduler'
+
+CELERY_BEAT_SCHEDULE = {
+    'send_email_report': {
+        'task': 'notifications.tasks.send_email_task',
+        'schedule': crontab(minute='*/1'),
+    },
+}
