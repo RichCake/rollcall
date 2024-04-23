@@ -1,11 +1,14 @@
 import datetime as dt
+import os
 
-from django.core.mail import send_mail
 from django.core.management import BaseCommand
 from django.utils import timezone
-import telebot
+from dotenv import load_dotenv
+import requests
 
 from events.models import Event
+
+load_dotenv()
 
 
 class Command(BaseCommand):
@@ -14,7 +17,6 @@ class Command(BaseCommand):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.bot = telebot.TeleBot('6343049026:AAEQPW31DKskuXe-HYgpd_ZzIMgm3mseVtw')
 
     def handle(self, *args, **options):
         coming_events = Event.objects.get_public_events().filter(
@@ -23,28 +25,23 @@ class Command(BaseCommand):
             )
         for event in coming_events:
             minutes_to_event = (event.end - timezone.now()).seconds // 60
-            participants = event.eventparticipants_set.filter(notified=False)
-            for participant in participants:
-                user = participant.user
+            # participants = event.eventparticipants_set.filter(notified=False)
+            for user in event.participants.all():
                 if user.telegram_chat_id:
                     self.send_telegram_notification(user.telegram_chat_id, event.title, minutes_to_event)
                 else:
                     self.stdout.write(f"User {user.username} is not linked to Telegram.")
-                send_mail(
-                    'Уведомление!',
-                    f'\t{participant.user.username},\n'
-                    f'\tЧерез {minutes_to_event} минут будет {event.title}!'
-                    '\n\nПисьмо отправлено автоматически, '
-                    'не отвечайте на него.',
-                    'noreply@rollcall.com',
-                    [participant.user.email],
-                    fail_silently=False,
-                )
 
-                participant.notified = True
-                participant.save()
+                # participant.notified = True
+                # user.save()
         self.stdout.write('E-mail Report was sent.')
 
     def send_telegram_notification(self, chat_id, event_title, minutes_to_event):
-        message = f"Через {minutes_to_event} минут будет {event_title}!"
-        self.bot.send_message(chat_id, message)
+        message = f'Через {minutes_to_event} минут будет {event_title}!'
+        token = os.getenv('TG_TOKEN')
+        self.stdout.write(str(token))
+        self.stdout.write(str(chat_id))
+        self.stdout.write(str(message))
+        url = f'https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={message}'
+        response = requests.get(url)
+        self.stdout.write(str(response))

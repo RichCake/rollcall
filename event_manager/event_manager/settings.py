@@ -20,7 +20,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', default='aaa')
 
 DEBUG = str_to_bool(os.getenv('DJANGO_DEBUG', default='false'))
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'django']
 
 
 INSTALLED_APPS = [
@@ -162,3 +162,5 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/1'),
     },
 }
+
+TG_TOKEN = os.getenv('TG_TOKEN')
