@@ -12,7 +12,7 @@ class EventManager(models.Manager):
     def get_public_events(self):
         return (
             self.get_queryset()
-            .select_related('author')
+            .select_related('author', 'category')
             .prefetch_related('participants')
         )
     

@@ -39,7 +39,7 @@
         <div class="card-body">
           <p class="card-text">{{ event.description }}</p>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item"><strong>Автор:</strong> {{ event.author }}</li>
+            {% comment %} <li class="list-group-item"><strong>Автор:</strong> {{ event.author }}</li> {% endcomment %}
             <li class="list-group-item"><strong>Дата создания:</strong> {{ event.created }}</li>
             <li class="list-group-item"><strong>Дата события:</strong> {{ event.end }}</li>
             <li class="list-group-item">
@@ -59,7 +59,7 @@
                 <div class="col-md-3">
                   <div class="card">
                     <div class="card-body">
-                      {{ part }}
+                      {{ part.username }}
                     </div>
                   </div>
                 </div>
@@ -75,7 +75,7 @@
             {% endif %}
             <a href="{% url "events:delete" pk=event.id %}" class="btn btn-danger">Удалить</a>
           {% else %}
-            {% if request.user in event.participants.all %}
+            {% if request.user in event.participants %}
             <form method="post" action="{% url 'events:remove_part' %}">
               {% csrf_token %}
               <input type="hidden" name="event_id" value="{{ event.id }}">

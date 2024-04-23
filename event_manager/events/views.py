@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count
 from django.db.models.functions import Lower
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -29,7 +30,6 @@ class CreateEventView(LoginRequiredMixin, views.CreateView):
 
 class UpdateEventView(LoginRequiredMixin, views.UpdateView):
     template_name = 'events/update_event.html'
-    model = Event
     fields = (
         Event.category.field.name,
         Event.title.field.name,
@@ -42,13 +42,17 @@ class UpdateEventView(LoginRequiredMixin, views.UpdateView):
     queryset = (
         Event.objects.get_public_events()
         .only(
+            'category__name',
             'title',
             'description',
-            'max_participants',
+            'created',
+            'end',
+            'is_private',
             'author__username',
-            'participants__username',
+            'eventparticipants__user__username',
+            'max_participants',
             )
-        )
+    )
 
     def get_success_url(self):
         return reverse_lazy('events:update', args=[self.object.id])
@@ -95,14 +99,18 @@ class EventsListView(views.ListView):
     template_name = 'events/event_list.html'
     context_object_name = 'events'
     queryset = (
-        Event.objects.get_public_events()
+        Event.objects
+        .select_related('author', 'category')
+        .prefetch_related('participants')
         .filter(is_private=False)
+        .annotate(part_count=Count('eventparticipants'))
         .only(
+            'category__name',
             'title',
             'description',
-            'max_participants',
             'author__username',
-            'participants__username',
+            'eventparticipants__user__username',
+            'max_participants',
             )
         )
 
@@ -138,7 +146,20 @@ class EventsListView(views.ListView):
 class DetailEventView(views.DetailView):
     template_name = 'events/event_detail.html'
     context_object_name = 'event'
-    queryset = Event.objects.get_public_events()
+    queryset = (
+        Event.objects.get_public_events()
+        .only(
+            'category__name',
+            'title',
+            'description',
+            'created',
+            'end',
+            'is_private',
+            'author__username',
+            'eventparticipants__user__username',
+            'max_participants',
+            )
+    )
 
 
 def attendance_view(request, pk):
