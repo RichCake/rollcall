@@ -60,7 +60,7 @@ class DeleteEventView(LoginRequiredMixin, views.DeleteView):
     context_object_name = 'event'
 
 
-class AddParticipantView(views.View):
+class AddParticipantView(LoginRequiredMixin, views.View):
     def post(self, request):
         form = AddParticipantForm(request.POST)
         if form.is_valid():
@@ -78,7 +78,7 @@ class AddParticipantView(views.View):
             reverse_lazy('events:detail', args=[event.id]))
 
 
-class RemoveParticipantView(views.View):
+class RemoveParticipantView(LoginRequiredMixin, views.View):
     def post(self, request):
         form = AddParticipantForm(request.POST)
         if form.is_valid():

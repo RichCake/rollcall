@@ -150,7 +150,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'send_mail'
 
 
-LOGIN_URL = 'auth/login/'
+LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = '/'
 
 HUEY = SqliteHuey(filename=BASE_DIR / 'tasks.sqlite3')
