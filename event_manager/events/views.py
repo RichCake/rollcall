@@ -41,14 +41,18 @@ class UpdateEventView(LoginRequiredMixin, views.UpdateView):
     )
     queryset = (
         Event.objects.get_public_events()
-        # .only(
-        #     'title',
-        #     'description',
-        #     'max_participants',
-        #     'author__username',
-        #     'participants__username',
-        #     )
-        )
+        .only(
+            'category__name',
+            'title',
+            'description',
+            'created',
+            'end',
+            'is_private',
+            'author__username',
+            'eventparticipants__user__username',
+            'max_participants',
+            )
+    )
 
     def get_success_url(self):
         return reverse_lazy('events:update', args=[self.object.id])
@@ -95,16 +99,19 @@ class EventsListView(views.ListView):
     template_name = 'events/event_list.html'
     context_object_name = 'events'
     queryset = (
-        Event.objects.get_public_events()
+        Event.objects
+        .select_related('author', 'category')
+        .prefetch_related('participants')
         .filter(is_private=False)
         .annotate(part_count=Count('eventparticipants'))
-        # .only(
-        #     'title',
-        #     'description',
-        #     'max_participants',
-        #     'author__username',
-        #     'participants__username',
-        #     )
+        .only(
+            'category__name',
+            'title',
+            'description',
+            'author__username',
+            'eventparticipants__user__username',
+            'max_participants',
+            )
         )
 
     def get_queryset(self):
@@ -139,7 +146,20 @@ class EventsListView(views.ListView):
 class DetailEventView(views.DetailView):
     template_name = 'events/event_detail.html'
     context_object_name = 'event'
-    queryset = Event.objects.get_public_events()
+    queryset = (
+        Event.objects.get_public_events()
+        .only(
+            'category__name',
+            'title',
+            'description',
+            'created',
+            'end',
+            'is_private',
+            'author__username',
+            'eventparticipants__user__username',
+            'max_participants',
+            )
+    )
 
 
 def attendance_view(request, pk):
