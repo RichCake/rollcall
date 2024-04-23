@@ -25,7 +25,6 @@ class CreateEventView(LoginRequiredMixin, views.CreateView):
         event.save()
         self.object = event
         return FormMixin.form_valid(self, form)
-    
 
 
 class UpdateEventView(LoginRequiredMixin, views.UpdateView):

@@ -52,7 +52,7 @@ class Event(models.Model):
     is_private = models.BooleanField(
         default=False,
         verbose_name='приватное',
-        help_text='Доступ только по ссылке',
+        help_text='Доступ из профиля',
     )
     is_canceled = models.BooleanField(
         default=False,

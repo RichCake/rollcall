@@ -10,9 +10,9 @@
     </div>
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
       <li><a class="nav-link px-2 {% if view_name == 'homepage:home' %}link-secondary{% endif %}" href="{% url "homepage:home" %}">Главная</a></li>
-      <li><a class="nav-link px-2 {% if view_name == 'events:list' %}link-secondary{% endif %}" href="{% url "events:list" %}">Список событий</a></li>
+      <li><a class="nav-link px-2 {% if view_name == 'events:list' %}link-secondary{% endif %}" href="{% url "events:list" %}">Список</a></li>
       {% if request.user.is_authenticated %}
-        <li><a class="nav-link px-2 {% if view_name == 'events:create' %}link-secondary{% endif %}" href="{% url 'events:create' %}">Создать событие</a></li>
+        <li><a class="nav-link px-2 {% if view_name == 'events:create' %}link-secondary{% endif %}" href="{% url 'events:create' %}">Создать</a></li>
       {% endif %}
       {% if request.user.is_staff %}
         <li><a class="nav-link px-2" href="{% url "admin:index" %}" target="_blank">Админка</a></li>
