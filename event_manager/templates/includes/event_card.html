@@ -10,6 +10,7 @@
     
     <div class="card-text">
       <p>{{ event.description }}</p>
+      <p>Дата: {{ event.end }}</p>
     </div>
     <p>Автор: {% if request.user.username == event.author.username %}Вы{% else %}{{ event.author.username }}{% endif %}</p>
     <p>{{ event.part_count }}{% if event.max_participants %}/{{ event.max_participants }}{% endif %} участников</p>

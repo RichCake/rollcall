@@ -107,6 +107,7 @@ class EventsListView(views.ListView):
             'category__name',
             'title',
             'description',
+            'end',
             'author__username',
             'eventparticipants__user__username',
             'max_participants',
@@ -117,9 +118,7 @@ class EventsListView(views.ListView):
         queryset = super().get_queryset()
         status = self.request.GET.get('status')
         author = self.request.GET.get('author')
-        date = self.request.GET.get('date')
         sort = self.request.GET.get('sort')
-
         if status:
             if status == 'status1':
                 queryset = queryset.filter(participants=self.request.user)
@@ -130,10 +129,11 @@ class EventsListView(views.ListView):
                 queryset = queryset.filter(author=self.request.user)
             elif author == 'author2':
                 queryset = queryset.exclude(author=self.request.user)
-        if date:
-            queryset = queryset.filter(end=date)
         if sort:
-            queryset = queryset.order_by(Lower(sort).asc())
+            if sort == 'end':
+                queryset = queryset.order_by('-end')
+            else:
+                queryset = queryset.order_by(Lower(sort).asc())
         return queryset
     
     def get_context_data(self, **kwargs):

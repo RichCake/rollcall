@@ -1,17 +1,564 @@
 [
 {
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+        "action_time": "2024-04-23T17:38:13.971Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "1",
+        "object_repr": "Mincraft",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+        "action_time": "2024-04-23T17:38:19.800Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "2",
+        "object_repr": "CS:GO",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+        "action_time": "2024-04-23T17:38:25.785Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "3",
+        "object_repr": "Valorant",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+        "action_time": "2024-04-23T17:38:37.946Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "4",
+        "object_repr": "Fortnite",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+        "action_time": "2024-04-23T17:38:50.299Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "5",
+        "object_repr": "Dota 2",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+        "action_time": "2024-04-23T17:39:06.039Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "6",
+        "object_repr": "СМУТА",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 1,
+    "fields": {
+        "name": "Can add log entry",
+        "content_type": 1,
+        "codename": "add_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 2,
+    "fields": {
+        "name": "Can change log entry",
+        "content_type": 1,
+        "codename": "change_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 3,
+    "fields": {
+        "name": "Can delete log entry",
+        "content_type": 1,
+        "codename": "delete_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 4,
+    "fields": {
+        "name": "Can view log entry",
+        "content_type": 1,
+        "codename": "view_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 5,
+    "fields": {
+        "name": "Can add permission",
+        "content_type": 2,
+        "codename": "add_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 6,
+    "fields": {
+        "name": "Can change permission",
+        "content_type": 2,
+        "codename": "change_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 7,
+    "fields": {
+        "name": "Can delete permission",
+        "content_type": 2,
+        "codename": "delete_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 8,
+    "fields": {
+        "name": "Can view permission",
+        "content_type": 2,
+        "codename": "view_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 9,
+    "fields": {
+        "name": "Can add group",
+        "content_type": 3,
+        "codename": "add_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 10,
+    "fields": {
+        "name": "Can change group",
+        "content_type": 3,
+        "codename": "change_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 11,
+    "fields": {
+        "name": "Can delete group",
+        "content_type": 3,
+        "codename": "delete_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 12,
+    "fields": {
+        "name": "Can view group",
+        "content_type": 3,
+        "codename": "view_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 13,
+    "fields": {
+        "name": "Can add content type",
+        "content_type": 4,
+        "codename": "add_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 14,
+    "fields": {
+        "name": "Can change content type",
+        "content_type": 4,
+        "codename": "change_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 15,
+    "fields": {
+        "name": "Can delete content type",
+        "content_type": 4,
+        "codename": "delete_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 16,
+    "fields": {
+        "name": "Can view content type",
+        "content_type": 4,
+        "codename": "view_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 17,
+    "fields": {
+        "name": "Can add session",
+        "content_type": 5,
+        "codename": "add_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 18,
+    "fields": {
+        "name": "Can change session",
+        "content_type": 5,
+        "codename": "change_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 19,
+    "fields": {
+        "name": "Can delete session",
+        "content_type": 5,
+        "codename": "delete_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 20,
+    "fields": {
+        "name": "Can view session",
+        "content_type": 5,
+        "codename": "view_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 21,
+    "fields": {
+        "name": "Can add мероприятие",
+        "content_type": 6,
+        "codename": "add_event"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 22,
+    "fields": {
+        "name": "Can change мероприятие",
+        "content_type": 6,
+        "codename": "change_event"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 23,
+    "fields": {
+        "name": "Can delete мероприятие",
+        "content_type": 6,
+        "codename": "delete_event"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 24,
+    "fields": {
+        "name": "Can view мероприятие",
+        "content_type": 6,
+        "codename": "view_event"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 25,
+    "fields": {
+        "name": "Can add event participants",
+        "content_type": 7,
+        "codename": "add_eventparticipants"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 26,
+    "fields": {
+        "name": "Can change event participants",
+        "content_type": 7,
+        "codename": "change_eventparticipants"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 27,
+    "fields": {
+        "name": "Can delete event participants",
+        "content_type": 7,
+        "codename": "delete_eventparticipants"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 28,
+    "fields": {
+        "name": "Can view event participants",
+        "content_type": 7,
+        "codename": "view_eventparticipants"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 29,
+    "fields": {
+        "name": "Can add user",
+        "content_type": 8,
+        "codename": "add_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 30,
+    "fields": {
+        "name": "Can change user",
+        "content_type": 8,
+        "codename": "change_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 31,
+    "fields": {
+        "name": "Can delete user",
+        "content_type": 8,
+        "codename": "delete_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 32,
+    "fields": {
+        "name": "Can view user",
+        "content_type": 8,
+        "codename": "view_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 33,
+    "fields": {
+        "name": "Can add категория",
+        "content_type": 9,
+        "codename": "add_category"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 34,
+    "fields": {
+        "name": "Can change категория",
+        "content_type": 9,
+        "codename": "change_category"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 35,
+    "fields": {
+        "name": "Can delete категория",
+        "content_type": 9,
+        "codename": "delete_category"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 36,
+    "fields": {
+        "name": "Can view категория",
+        "content_type": 9,
+        "codename": "view_category"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 1,
+    "fields": {
+        "app_label": "admin",
+        "model": "logentry"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 2,
+    "fields": {
+        "app_label": "auth",
+        "model": "permission"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 3,
+    "fields": {
+        "app_label": "auth",
+        "model": "group"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 4,
+    "fields": {
+        "app_label": "contenttypes",
+        "model": "contenttype"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 5,
+    "fields": {
+        "app_label": "sessions",
+        "model": "session"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 6,
+    "fields": {
+        "app_label": "events",
+        "model": "event"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 7,
+    "fields": {
+        "app_label": "events",
+        "model": "eventparticipants"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 8,
+    "fields": {
+        "app_label": "users",
+        "model": "user"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 9,
+    "fields": {
+        "app_label": "categories",
+        "model": "category"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "8cdpees0idzl6ufe3r1ik9a4h60ndby2",
+    "fields": {
+        "session_data": ".eJxVjMsOwiAUBf-FtSFcoLS4dN9vaO4DpWogKe3K-O_apAvdnpk5LzXhtuZpa2mZZlFnBer0uxHyI5UdyB3LrWquZV1m0ruiD9r0WCU9L4f7d5Cx5W89dFdLAkzGdK6T4B1yJN87A-C85TgQhMEJRoi9gOFEjNb3AYJxMVr1_gDI7zbP:1rzJBU:MHQNooIrIBwe8qTmyVre7-yUhRDgziWZ9LJDCpPL1os",
+        "expire_date": "2024-05-07T16:39:56.862Z"
+    }
+},
+{
+    "model": "events.event",
+    "pk": 3,
+    "fields": {
+        "author": 1,
+        "title": "Турнир 1.0",
+        "description": "Отборочный тур",
+        "created": "2024-04-23T17:40:17.986Z",
+        "updated": "2024-04-23T17:40:17.986Z",
+        "end": "2024-04-28T16:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": 100,
+        "category": 2
+    }
+},
+{
+    "model": "events.event",
+    "pk": 4,
+    "fields": {
+        "author": 1,
+        "title": "Турнир 1.1",
+        "description": "Финал",
+        "created": "2024-04-23T17:41:01.886Z",
+        "updated": "2024-04-23T17:41:01.886Z",
+        "end": "2024-04-30T16:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": 10,
+        "category": 2
+    }
+},
+{
+    "model": "events.event",
+    "pk": 5,
+    "fields": {
+        "author": 1,
+        "title": "Просто игра",
+        "description": "Ищу людей в тиму",
+        "created": "2024-04-23T17:42:13.695Z",
+        "updated": "2024-04-23T17:42:13.695Z",
+        "end": "2024-04-25T18:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": 5,
+        "category": 5
+    }
+},
+{
+    "model": "events.event",
+    "pk": 6,
+    "fields": {
+        "author": 1,
+        "title": "Только бананы",
+        "description": "Собираю дуо бананов",
+        "created": "2024-04-23T17:43:15.801Z",
+        "updated": "2024-04-23T17:43:15.801Z",
+        "end": "2024-05-01T17:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": 1,
+        "category": 4
+    }
+},
+{
     "model": "events.event",
     "pk": 7,
     "fields": {
-        "author": 4,
-        "title": "Поиграть в дотку",
-        "description": "Зарубимся жоска\r\nUPD: неопытных не принимаем\r\nUPD: canceled",
-        "created": "2024-04-09T16:07:19.296Z",
-        "updated": "2024-04-09T16:07:19.296Z",
-        "end": "2024-04-14T08:20:00Z",
+        "author": 1,
+        "title": "Выживание",
+        "description": "Нужен друг на первую ночь",
+        "created": "2024-04-23T17:44:11.500Z",
+        "updated": "2024-04-23T17:44:11.500Z",
+        "end": "2024-05-06T21:00:00Z",
         "is_private": false,
         "is_canceled": false,
-        "max_participants": 8
+        "max_participants": null,
+        "category": 1
     }
 },
 {
@@ -19,143 +566,75 @@
     "pk": 8,
     "fields": {
         "author": 1,
-        "title": "Поиграть в фортнайте",
-        "description": "Соберемся и зарубимся",
-        "created": "2024-04-10T16:22:31.029Z",
-        "updated": "2024-04-10T16:22:31.029Z",
-        "end": "2011-09-30T20:00:00Z",
+        "title": "СМУТА",
+        "description": "Любимая игра",
+        "created": "2024-04-23T17:44:35.950Z",
+        "updated": "2024-04-23T17:44:35.951Z",
+        "end": "2024-04-01T08:11:00Z",
         "is_private": false,
         "is_canceled": false,
-        "max_participants": null
-    }
-},
-{
-    "model": "events.event",
-    "pk": 9,
-    "fields": {
-        "author": 1,
-        "title": "Поиграть в фортнайте",
-        "description": "Соберемся и зарубимся второй раз",
-        "created": "2024-04-10T16:23:35.861Z",
-        "updated": "2024-04-10T16:23:35.861Z",
-        "end": "2011-09-30T20:00:00Z",
-        "is_private": false,
-        "is_canceled": false,
-        "max_participants": 2
-    }
-},
-{
-    "model": "events.eventparticipants",
-    "pk": 18,
-    "fields": {
-        "user": 4,
-        "event": 8,
-        "created": "2024-04-13T12:53:34.809Z",
-        "updated": "2024-04-13T12:53:34.809Z",
-        "status": 1,
-        "role": 2
-    }
-},
-{
-    "model": "events.eventparticipants",
-    "pk": 28,
-    "fields": {
-        "user": 5,
-        "event": 8,
-        "created": "2024-04-13T14:11:46.160Z",
-        "updated": "2024-04-13T14:11:46.160Z",
-        "status": 1,
-        "role": 2
-    }
-},
-{
-    "model": "events.eventparticipants",
-    "pk": 29,
-    "fields": {
-        "user": 5,
-        "event": 9,
-        "created": "2024-04-13T14:11:46.926Z",
-        "updated": "2024-04-13T14:11:46.926Z",
-        "status": 1,
-        "role": 2
-    }
-},
-{
-    "model": "events.eventparticipants",
-    "pk": 30,
-    "fields": {
-        "user": 5,
-        "event": 7,
-        "created": "2024-04-13T14:11:47.816Z",
-        "updated": "2024-04-13T14:11:47.816Z",
-        "status": 1,
-        "role": 2
-    }
-},
-{
-    "model": "events.eventparticipants",
-    "pk": 31,
-    "fields": {
-        "user": 4,
-        "event": 9,
-        "created": "2024-04-13T14:12:34.491Z",
-        "updated": "2024-04-13T14:12:34.491Z",
-        "status": 1,
-        "role": 2
+        "max_participants": null,
+        "category": 6
     }
 },
 {
     "model": "users.user",
     "pk": 1,
     "fields": {
-        "password": "pbkdf2_sha256$600000$8c0m9tqWNe0SW631yFwdo8$Pd6YH4IhBRXu45mL1oJvAgakz/imKPrx60PyRuPuhQ8=",
-        "last_login": "2024-04-13T14:19:14.914Z",
+        "password": "pbkdf2_sha256$600000$TnuljGHvkEuODvh7roqMUg$J2Nx8N3LFXL4gs/hOg1GF1FUQEAjyUkq19QY6gEYYfI=",
+        "last_login": "2024-04-23T16:39:56.860Z",
         "is_superuser": true,
         "username": "admin",
         "first_name": "",
         "last_name": "",
         "is_staff": true,
         "is_active": true,
-        "date_joined": "2024-04-04T14:42:34Z",
-        "email": "soupy.auspice_0h@icloud.com",
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "users.user",
-    "pk": 4,
-    "fields": {
-        "password": "pbkdf2_sha256$600000$X7Rn1uiUrzTAkCfTe0yRIV$ywMEZhWSXFl2x4YJhIg2pxQaKFGv3r+PhQG54yZeXtU=",
-        "last_login": "2024-04-13T14:12:31.717Z",
-        "is_superuser": true,
-        "username": "RichCake",
-        "first_name": "",
-        "last_name": "",
-        "is_staff": true,
-        "is_active": true,
-        "date_joined": "2024-04-06T10:31:31Z",
-        "email": "abs2016123@gmail.com",
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "users.user",
-    "pk": 5,
-    "fields": {
-        "password": "pbkdf2_sha256$600000$LevBfG1BwCQ0G7lDdGalQo$0KMFAmPK5DE5KXNO58U+bLAoHIMxZsEh/PcjgTd7ytM=",
-        "last_login": "2024-04-13T14:11:39.920Z",
-        "is_superuser": false,
-        "username": "Arsenii",
-        "first_name": "",
-        "last_name": "",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2024-04-13T14:10:56.253Z",
+        "date_joined": "2024-04-23T16:39:41.770Z",
         "email": "example@example.com",
         "groups": [],
         "user_permissions": []
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 1,
+    "fields": {
+        "name": "Mincraft"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 2,
+    "fields": {
+        "name": "CS:GO"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 3,
+    "fields": {
+        "name": "Valorant"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 4,
+    "fields": {
+        "name": "Fortnite"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 5,
+    "fields": {
+        "name": "Dota 2"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 6,
+    "fields": {
+        "name": "СМУТА"
     }
 }
 ]
