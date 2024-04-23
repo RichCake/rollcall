@@ -49,6 +49,7 @@ class TestViews(TestCase):
         self.assertEqual(updated_event.title, 'Updated Test Event')
 
     def test_add_participant_view(self):
+        self.client.force_login(self.user)
         response = self.client.post(reverse('events:add_part'), {
             'event_id': self.event.pk,
             'user_id': self.user.pk,
@@ -57,6 +58,7 @@ class TestViews(TestCase):
         self.assertTrue(self.event.participants.filter(pk=self.user.pk).exists())
 
     def test_remove_participant_view(self):
+        self.client.force_login(self.user)
         response = self.client.post(reverse('events:remove_part'), {
             'event_id': self.event.pk,
             'user_id': self.user.pk,
