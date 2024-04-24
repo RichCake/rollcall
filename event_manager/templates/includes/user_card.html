@@ -13,48 +13,17 @@
         </svg>
       {% endif %}
       <div class="flex-grow-1 ms-3">
-        <h5 class="mb-1">{{ user.username }}</h5>
+        <h5 class="mb-1"><a href="{% url 'profiles:detail' pk=user.pk %}">{{ user.username }}</a></h5>
         <p class="mb-2 pb-1" style="color: #2b2a2a;">{{ user.first_name }} {{ user.last_name }}</p>
-        <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
-          style="background-color: #efefef;">
-          <div>
-            <p class="small text-muted mb-1">Articles</p>
-            <p class="mb-0">41</p>
-          </div>
-          <div class="px-3">
-            <p class="small text-muted mb-1">Followers</p>
-            <p class="mb-0">976</p>
-          </div>
+        <a href="mailto:{{ user.email }}"">{{ user.email }}</a>
+        <div class="d-flex justify-content-start rounded-3 p-2 mb-2">
           <div>
             <p class="small text-muted mb-1">Rating</p>
             <p class="mb-0">{% if user.rating %}{{ user.rating }}{% else %}5{% endif %}</p>
           </div>
         </div>
         {% if user.gamestat %}
-        <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
-          style="background-color: #efefef;">
-          <div>
-            <p class="small text-muted mb-1">Топ 5 игр по часам</p>
-            <ul class="list-unstyled mb-0">
-              {% for game in user.gamestat.top_5_hours %}
-              <li>
-                <a href="{{ game.url }}">{{ game.name }}</a>
-                <span class="text-muted">({{ game.playtime }} ч.)</span>
-              </li>
-              {% endfor %}
-            </ul>
-          </div>
-          <div class="px-3">
-            <p class="small text-muted mb-1">Топ 5 игр за последние 2 недели</p>
-            <ul class="list-unstyled mb-0">
-              {% for game in user.gamestat.top_5_last_2weeks %}
-              <li>
-                <a href="{{ game.url }}">{{ game.name }}</a>
-                <span class="text-muted">({{ game.playtime }} ч.)</span>
-              </li>
-              {% endfor %}
-            </ul>
-          </div>
+        <div class="d-flex justify-content-start rounded-3 p-2 mb-2">
           <div>
             <p class="small text-muted mb-1">Любимая игра</p>
             <a href="{{ user.gamestat.favorite_game_url }}">{{ user.gamestat.favorite_game_name }}</a>
@@ -62,10 +31,6 @@
           </div>
         </div>
         {% endif %}
-        <div class="d-flex pt-1">
-          <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary me-1 flex-grow-1">Chat</button>
-          <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary flex-grow-1">Follow</button>
-        </div>
       </div>
     </div>
   </div>
