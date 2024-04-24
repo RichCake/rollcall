@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'gamestat.apps.GamestatConfig',
     'categories.apps.CategoriesConfig',
     'profiles.apps.ProfilesConfig',
+    'notifications.apps.NotificationsConfig',
     'crispy_forms',
     'crispy_bootstrap4',
     'huey.contrib.djhuey',
