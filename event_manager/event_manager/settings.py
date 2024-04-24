@@ -34,8 +34,9 @@ INSTALLED_APPS = [
     'events.apps.EventsConfig',
     'users.apps.UsersConfig',
     'homepage.apps.HomepageConfig',
-    'notifications.apps.NotificationsConfig',
+    'gamestat.apps.GamestatConfig',
     'categories.apps.CategoriesConfig',
+    'profiles.apps.ProfilesConfig',
     'crispy_forms',
     'crispy_bootstrap4',
     'huey.contrib.djhuey',
@@ -154,3 +155,7 @@ LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = '/'
 
 HUEY = SqliteHuey(filename=BASE_DIR / 'tasks.sqlite3')
+
+# STEAM
+
+STEAM_API_KEY = 'CABD06FB6653C1104C89CAEA1242FDA7'

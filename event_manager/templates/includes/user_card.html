@@ -1,0 +1,37 @@
+<div class="card" style="border-radius: 15px;">
+  <div class="card-body p-4">
+    <div class="d-flex text-black">
+      {% if user.avatar %}
+        <div class="flex-shrink-0">
+          <img src="{{ user.avatar.url }}"
+            alt="Generic placeholder image" class="img-fluid"
+            style="width: 180px; border-radius: 10px;">
+        </div>
+      {% else %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+          <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+        </svg>
+      {% endif %}
+      <div class="flex-grow-1 ms-3">
+        <h5 class="mb-1"><a href="{% url 'profiles:detail' pk=user.pk %}">{{ user.username }}</a></h5>
+        <p class="mb-2 pb-1" style="color: #2b2a2a;">{{ user.first_name }} {{ user.last_name }}</p>
+        <a href="mailto:{{ user.email }}"">{{ user.email }}</a>
+        <div class="d-flex justify-content-start rounded-3 p-2 mb-2">
+          <div>
+            <p class="small text-muted mb-1">Rating</p>
+            <p class="mb-0">{% if user.rating %}{{ user.rating }}{% else %}5{% endif %}</p>
+          </div>
+        </div>
+        {% if user.gamestat %}
+        <div class="d-flex justify-content-start rounded-3 p-2 mb-2">
+          <div>
+            <p class="small text-muted mb-1">Любимая игра</p>
+            <a href="{{ user.gamestat.favorite_game_url }}">{{ user.gamestat.favorite_game_name }}</a>
+            <span class="text-muted">({{ user.gamestat.favorite_game_playtime }} ч.)</span>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
