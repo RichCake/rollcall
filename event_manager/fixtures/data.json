@@ -1,17 +1,82 @@
 [
 {
     "model": "events.event",
-    "pk": 7,
+    "pk": 3,
     "fields": {
-        "author": 4,
-        "title": "Поиграть в дотку",
-        "description": "Зарубимся жоска\r\nUPD: неопытных не принимаем\r\nUPD: canceled",
-        "created": "2024-04-09T16:07:19.296Z",
-        "updated": "2024-04-09T16:07:19.296Z",
-        "end": "2024-04-14T08:20:00Z",
+        "author": 1,
+        "title": "Турнир 1.0",
+        "description": "Отборочный тур",
+        "created": "2024-04-23T17:40:17.986Z",
+        "updated": "2024-04-23T17:40:17.986Z",
+        "end": "2024-04-28T16:00:00Z",
         "is_private": false,
         "is_canceled": false,
-        "max_participants": 8
+        "max_participants": 100,
+        "category": 2
+    }
+},
+{
+    "model": "events.event",
+    "pk": 4,
+    "fields": {
+        "author": 1,
+        "title": "Турнир 1.1",
+        "description": "Финал",
+        "created": "2024-04-23T17:41:01.886Z",
+        "updated": "2024-04-23T17:41:01.886Z",
+        "end": "2024-04-30T16:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": 10,
+        "category": 2
+    }
+},
+{
+    "model": "events.event",
+    "pk": 5,
+    "fields": {
+        "author": 1,
+        "title": "Просто игра",
+        "description": "Ищу людей в тиму",
+        "created": "2024-04-23T17:42:13.695Z",
+        "updated": "2024-04-23T17:42:13.695Z",
+        "end": "2024-04-25T18:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": 5,
+        "category": 5
+    }
+},
+{
+    "model": "events.event",
+    "pk": 6,
+    "fields": {
+        "author": 1,
+        "title": "Только бананы",
+        "description": "Собираю дуо бананов",
+        "created": "2024-04-23T17:43:15.801Z",
+        "updated": "2024-04-23T17:43:15.801Z",
+        "end": "2024-05-01T17:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": 1,
+        "category": 4
+    }
+},
+{
+    "model": "events.event",
+    "pk": 7,
+    "fields": {
+        "author": 1,
+        "title": "Выживание",
+        "description": "Нужен друг на первую ночь",
+        "created": "2024-04-23T17:44:11.500Z",
+        "updated": "2024-04-23T17:44:11.500Z",
+        "end": "2024-05-06T21:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": null,
+        "category": 1
     }
 },
 {
@@ -19,73 +84,23 @@
     "pk": 8,
     "fields": {
         "author": 1,
-        "title": "Поиграть в фортнайте",
-        "description": "Соберемся и зарубимся",
-        "created": "2024-04-10T16:22:31.029Z",
-        "updated": "2024-04-10T16:22:31.029Z",
-        "end": "2011-09-30T20:00:00Z",
+        "title": "СМУТА",
+        "description": "Любимая игра",
+        "created": "2024-04-23T17:44:35.950Z",
+        "updated": "2024-04-23T17:44:35.951Z",
+        "end": "2024-04-01T08:11:00Z",
         "is_private": false,
         "is_canceled": false,
-        "max_participants": null
-    }
-},
-{
-    "model": "events.event",
-    "pk": 9,
-    "fields": {
-        "author": 1,
-        "title": "Поиграть в фортнайте",
-        "description": "Соберемся и зарубимся второй раз",
-        "created": "2024-04-10T16:23:35.861Z",
-        "updated": "2024-04-10T16:23:35.861Z",
-        "end": "2011-09-30T20:00:00Z",
-        "is_private": false,
-        "is_canceled": false,
-        "max_participants": 2
+        "max_participants": null,
+        "category": 6
     }
 },
 {
     "model": "events.eventparticipants",
-    "pk": 18,
+    "pk": 1,
     "fields": {
-        "user": 4,
-        "event": 8,
-        "created": "2024-04-13T12:53:34.809Z",
-        "updated": "2024-04-13T12:53:34.809Z",
-        "status": 1,
-        "role": 2
-    }
-},
-{
-    "model": "events.eventparticipants",
-    "pk": 28,
-    "fields": {
-        "user": 5,
-        "event": 8,
-        "created": "2024-04-13T14:11:46.160Z",
-        "updated": "2024-04-13T14:11:46.160Z",
-        "status": 1,
-        "role": 2
-    }
-},
-{
-    "model": "events.eventparticipants",
-    "pk": 29,
-    "fields": {
-        "user": 5,
-        "event": 9,
-        "created": "2024-04-13T14:11:46.926Z",
-        "updated": "2024-04-13T14:11:46.926Z",
-        "status": 1,
-        "role": 2
-    }
-},
-{
-    "model": "events.eventparticipants",
-    "pk": 30,
-    "fields": {
-        "user": 5,
-        "event": 7,
+        "user": 1,
+        "event": 3,
         "created": "2024-04-13T14:11:47.816Z",
         "updated": "2024-04-13T14:11:47.816Z",
         "status": 1,
@@ -94,12 +109,48 @@
 },
 {
     "model": "events.eventparticipants",
-    "pk": 31,
+    "pk": 2,
     "fields": {
-        "user": 4,
-        "event": 9,
-        "created": "2024-04-13T14:12:34.491Z",
-        "updated": "2024-04-13T14:12:34.491Z",
+        "user": 1,
+        "event": 4,
+        "created": "2024-04-13T14:11:47.816Z",
+        "updated": "2024-04-13T14:11:47.816Z",
+        "status": 1,
+        "role": 2
+    }
+},
+{
+    "model": "events.eventparticipants",
+    "pk": 3,
+    "fields": {
+        "user": 1,
+        "event": 5,
+        "created": "2024-04-13T14:11:47.816Z",
+        "updated": "2024-04-13T14:11:47.816Z",
+        "status": 1,
+        "role": 2
+    }
+},
+{
+    "model": "events.eventparticipants",
+    "pk": 4,
+    "fields": {
+        "user": 1,
+        "event": 6,
+        "created": "2024-04-13T14:11:47.816Z",
+        "updated": "2024-04-13T14:11:47.816Z",
+        "status": 1,
+        "role": 2
+    }
+},
+{
+    "model": "events.eventparticipants",
+    "pk": 5,
+    "fields": {
+        "user": 1,
+        "event": 8,
+        "created": "2024-04-13T14:11:47.816Z",
+        "updated": "2024-04-13T14:11:47.816Z",
         "status": 1,
         "role": 2
     }
@@ -122,40 +173,47 @@
         "user_permissions": []
     }
 },
+
 {
-    "model": "users.user",
-    "pk": 4,
+    "model": "categories.category",
+    "pk": 1,
     "fields": {
-        "password": "pbkdf2_sha256$600000$X7Rn1uiUrzTAkCfTe0yRIV$ywMEZhWSXFl2x4YJhIg2pxQaKFGv3r+PhQG54yZeXtU=",
-        "last_login": "2024-04-13T14:12:31.717Z",
-        "is_superuser": true,
-        "username": "RichCake",
-        "first_name": "",
-        "last_name": "",
-        "is_staff": true,
-        "is_active": true,
-        "date_joined": "2024-04-06T10:31:31Z",
-        "email": "abs2016123@gmail.com",
-        "groups": [],
-        "user_permissions": []
+        "name": "Mincraft"
     }
 },
 {
-    "model": "users.user",
+    "model": "categories.category",
+    "pk": 2,
+    "fields": {
+        "name": "CS:GO"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 3,
+    "fields": {
+        "name": "Valorant"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 4,
+    "fields": {
+        "name": "Fortnite"
+    }
+},
+{
+    "model": "categories.category",
     "pk": 5,
     "fields": {
-        "password": "pbkdf2_sha256$600000$LevBfG1BwCQ0G7lDdGalQo$0KMFAmPK5DE5KXNO58U+bLAoHIMxZsEh/PcjgTd7ytM=",
-        "last_login": "2024-04-13T14:11:39.920Z",
-        "is_superuser": false,
-        "username": "Arsenii",
-        "first_name": "",
-        "last_name": "",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2024-04-13T14:10:56.253Z",
-        "email": "example@example.com",
-        "groups": [],
-        "user_permissions": []
+        "name": "Dota 2"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 6,
+    "fields": {
+        "name": "СМУТА"
     }
 }
 ]

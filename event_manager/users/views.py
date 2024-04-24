@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.views.generic import TemplateView
 
 from users.forms import SignUpForm
 
@@ -26,13 +27,17 @@ def signup_view(request):
                     [user.email],
                     fail_silently=False,
                 )
-            return redirect('homepage:home')
+            return redirect('users:signup_success')
 
     return render(
         request,
         'users/signup.html',
         {'form': form},
     )
+
+
+class SignupSuccessView(TemplateView):
+    template_name = 'users/signup_done.html'
 
 
 def activate_view(request, userid):

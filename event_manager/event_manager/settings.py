@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from huey import SqliteHuey
 
 
 def str_to_bool(string):
@@ -33,8 +34,13 @@ INSTALLED_APPS = [
     'events.apps.EventsConfig',
     'users.apps.UsersConfig',
     'homepage.apps.HomepageConfig',
+    'gamestat.apps.GamestatConfig',
+    'categories.apps.CategoriesConfig',
+    'profiles.apps.ProfilesConfig',
+    'notifications.apps.NotificationsConfig',
     'crispy_forms',
     'crispy_bootstrap4',
+    'huey.contrib.djhuey',
 ]
 
 MIDDLEWARE = [
@@ -71,10 +77,10 @@ WSGI_APPLICATION = 'event_manager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('PG_DB_NAME', ''),
-        'USER': os.getenv('PG_USER', ''),
-        'PASSWORD': os.getenv('PG_PASSWORD', ''),
-        'HOST': os.getenv('PG_HOST', default='localhost'),
+        'NAME': os.getenv('PG_DB_NAME', 'project_ci_test'),
+        'USER': os.getenv('PG_USER', 'postgres'),
+        'PASSWORD': os.getenv('PG_PASSWORD', 'test'),
+        'HOST': os.getenv('PG_HOST', default='postgres'),
         'PORT': os.getenv('PG_PORT', default='5432'),
     },
 }
@@ -146,5 +152,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'send_mail'
 
 
-LOGIN_URL = 'auth/login/'
+LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = '/'
+
+HUEY = SqliteHuey(filename=BASE_DIR / 'tasks.sqlite3')
+
+# STEAM
+
+STEAM_API_KEY = 'CABD06FB6653C1104C89CAEA1242FDA7'
