@@ -15,11 +15,11 @@
       <div class="flex-grow-1 ms-3">
         <h5 class="mb-1"><a href="{% url 'profiles:detail' pk=user.pk %}">{{ user.username }}</a></h5>
         <p class="mb-2 pb-1" style="color: #2b2a2a;">{{ user.first_name }} {{ user.last_name }}</p>
-        <a href="mailto:{{ user.email }}"">{{ user.email }}</a>
+        <a href="mailto:{{ user.email }}">{{ user.email }}</a>
         <div class="d-flex justify-content-start rounded-3 p-2 mb-2">
           <div>
             <p class="small text-muted mb-1">Rating</p>
-            <p class="mb-0">{% if user.rating %}{{ user.rating }}{% else %}5{% endif %}</p>
+            <p class="mb-0">{{ user.rating|default_if_none:"5,0" }}</p>
           </div>
         </div>
         {% if user.gamestat %}
