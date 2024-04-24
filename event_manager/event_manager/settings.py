@@ -155,3 +155,7 @@ LOGIN_URL = 'auth/login/'
 LOGIN_REDIRECT_URL = '/'
 
 HUEY = SqliteHuey(filename=BASE_DIR / 'tasks.sqlite3')
+
+# STEAM
+
+STEAM_API_KEY = 'CABD06FB6653C1104C89CAEA1242FDA7'

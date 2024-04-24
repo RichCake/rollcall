@@ -50,6 +50,42 @@
             </div>
           </div>
         </div>
+        {% if user.gamestat %}
+        <div class="card mb-4 mb-lg-0">
+          <div class="card-body p-0">
+            <ul class="list-group list-group-flush rounded-3">
+              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                <i class="fas fa-gamepad fa-lg text-warning"></i>
+                <p class="mb-0">Топ 5 игр по часам</p>
+              </li>
+              {% for game in user.gamestat.top_5_hours %}
+              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                <a href="{{ game.url }}">{{ game.name }}</a>
+                <span class="text-muted">({{ game.playtime }} ч.)</span>
+              </li>
+              {% endfor %}
+              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                <i class="fas fa-gamepad fa-lg text-warning"></i>
+                <p class="mb-0">Топ 5 игр за последние 2 недели</p>
+              </li>
+              {% for game in user.gamestat.top_5_last_2weeks %}
+              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                <a href="{{ game.url }}">{{ game.name }}</a>
+                <span class="text-muted">({{ game.playtime }} ч.)</span>
+              </li>
+              {% endfor %}
+              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                <i class="fas fa-gamepad fa-lg text-warning"></i>
+                <p class="mb-0">Любимая игра</p>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                <a href="{{ user.gamestat.favorite_game_url }}">{{ user.gamestat.favorite_game_name }}</a>
+                <span class="text-muted">({{ user.gamestat.favorite_game_playtime }} ч.)</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        {% endif %}
         <div class="card mb-4 mb-lg-0">
           <div class="card-body p-0">
             <ul class="list-group list-group-flush rounded-3">
