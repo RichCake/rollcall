@@ -1,7 +1,7 @@
 [![pipeline status](https://gitlab.crja72.ru/django/2024/spring/course/projects/team-8/badges/main/pipeline.svg)](https://gitlab.crja72.ru/django/2024/spring/course/projects/team-8/-/pipelines)
 
 # Менеджер мероприятий
-Создавайте свои мероприятия, записывайтесь на чужие!
+RollCall — сайт для геймеров. Планируйте катки с дузьями легко и быстро!
 
 # Инструкция по запуску проекта
 ## Настройка виртуального окружения
@@ -35,13 +35,21 @@ pip install -r requirements/dev.txt
 ```
 7. Скопируйте содержимое файла .env.example в .env.
 ```bash
-cp .env.example .env
+cp .env.template .env
 ```
 8. Откройте .env файл и добавьте значение SECRET_KEY и установите DEBUG в нужное положение (рекомендуется установить **DEBUG=True**, для этого установите **dev** зависимости).
    
 ## Настройка базы данных
-9. Скачайте **PostgreSQL**, создайте юзера.
-10. В файле .env укажите имя пользователя, пароль.
+9. Скачайте **PostgreSQL**, и перейдите в интерфейс командной строки.
+10. Создайте юзера, если его нет.
+```sql
+CREATE USER test WITH PASSWORD 'test';
+```
+11. Создайте базу данных event_manager.
+```sql
+CREATE DATABASE event_manager OWNER test;
+```
+12. В файле .env укажите имя пользователя, пароль.
 
 ## Запуск сервера
 1. **Команды `python manage.py ...` выполняются из каталога event_manager!**
@@ -68,7 +76,6 @@ python manage.py run_huey
 После того как внесли изменения в структуру моделей, выполните миграции.
 1. Создайте миграцию.
 ```bash
-cd event_manager
 python manage.py makemigrations
 ```
 2. Мигрируйте базу данный.
@@ -79,13 +86,11 @@ python manage.py migrate
 
 Чтобы загрузить фикстуру выполните команду.
 ```bash
-cd event_manager
 python manage.py loaddata fixtures/data.json
 ```
 ## Создать пользователя с правами админа
 1. Создайте админа. Введите логин, почту и пароль.
 ```bash
-cd event_manager
 python manage.py createsuperuser
 ```
 ## Использование админки
@@ -97,7 +102,6 @@ python manage.py createsuperuser
 Тесты находятся в файлах, начинающихся на test. Чтобы запустить тесты:
 1. Запустите тесты.
 ```bash
-cd event_manager
 python manage.py test
 ```
 

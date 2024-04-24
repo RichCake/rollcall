@@ -153,6 +153,9 @@ class EventParticipants(models.Model):
 @receiver(pre_save, sender=Event)
 def update_notified_on_end_change(sender, instance, *args, **kwargs):
     if instance.pk:
-        old_instance = Event.objects.get(pk=instance.pk)
-        if old_instance.end != instance.end:
-            instance.eventparticipants_set.filter(notified=True).update(notified=False)
+        try:
+            old_instance = Event.objects.get(pk=instance.pk)
+            if old_instance.end != instance.end:
+                instance.eventparticipants_set.filter(notified=True).update(notified=False)
+        except Event.DoesNotExist:
+            pass
