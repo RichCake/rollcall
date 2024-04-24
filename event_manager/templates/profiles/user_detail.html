@@ -33,7 +33,7 @@
         <div class="card mb-4">
           <div class="card-body text-center">
             {% if user.first_name %}
-              <img src="user.avatar" alt="avatar"
+              <img src="{{ user.avatar.url }}" alt="avatar"
                 class="rounded-circle img-fluid" style="width: 150px;">
             {% else %}
               <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
