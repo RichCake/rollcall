@@ -16,7 +16,7 @@
     <p>{{ event.part_count }}{% if event.max_participants %}/{{ event.max_participants }}{% endif %} участников</p>
     {% if request.user.is_authenticated %}
       {% if not request.user == event.author %}
-        {% if request.user in event.participants %}
+        {% if request.user in event.participants.all %}
           <form method="post" action="{% url 'events:remove_part' %}">
             {% csrf_token %}
             <input type="hidden" name="event_id" value="{{ event.id }}">

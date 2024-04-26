@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -30,7 +32,7 @@ class TestViews(TestCase):
             'end': timezone.now() + timezone.timedelta(days=2),
             'max_participants': 20,
         })
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertTrue(Event.objects.filter(title='New Test Event').exists())
 
     def test_update_event_view(self):
@@ -44,7 +46,7 @@ class TestViews(TestCase):
                 'max_participants': 15,
             },
         )
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
         updated_event = Event.objects.get(pk=self.event.pk)
         self.assertEqual(updated_event.title, 'Updated Test Event')
 
@@ -54,7 +56,7 @@ class TestViews(TestCase):
             'event_id': self.event.pk,
             'user_id': self.user.pk,
         })
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertTrue(self.event.participants.filter(pk=self.user.pk).exists())
 
     def test_remove_participant_view(self):
@@ -63,23 +65,23 @@ class TestViews(TestCase):
             'event_id': self.event.pk,
             'user_id': self.user.pk,
         })
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertFalse(self.event.participants.filter(pk=self.user.pk).exists())
 
     def test_events_list_view(self):
         response = self.client.get(reverse('events:list'))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_detail_event_view(self):
         response = self.client.get(
             reverse('events:detail', args=[self.event.pk]),
             )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(response.context['event'], self.event)
 
     def test_attendance_view(self):
         response = self.client.get(
             reverse('events:attendance', args=[self.event.pk]),
             )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(response, 'events/attendance.html')

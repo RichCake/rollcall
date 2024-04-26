@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from gamestat import views
 
 app_name = 'gamestat'
 

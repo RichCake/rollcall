@@ -7,8 +7,6 @@ class ParticipantsInline(admin.TabularInline):
     model = models.EventParticipants
     can_delete = False
     extra = 1
-    verbose_name = 'участник мероприятия'
-    verbose_name_plural = 'участники мероприятия'
 
 
 @admin.register(models.Event)

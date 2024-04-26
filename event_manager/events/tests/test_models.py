@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from events.models import Event, EventParticipants, StatusChoices
+from events.models import Event, EventParticipants
 
 
 class TestModels(TestCase):
@@ -39,4 +39,7 @@ class TestModels(TestCase):
             user=self.user,
         )
         self.assertEqual(EventParticipants.objects.count(), count + 1)
-        self.assertEqual(event_participant.status, StatusChoices.DONT_KNOW)
+        self.assertEqual(
+            event_participant.status,
+            EventParticipants.StatusChoices.DONT_KNOW,
+        )
