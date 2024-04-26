@@ -91,7 +91,7 @@ class RemoveParticipantView(LoginRequiredMixin, views.View):
             user = get_object_or_404(get_user_model(), id=user_id)
             event.participants.remove(user)
         return HttpResponseRedirect(
-            reverse_lazy('events:detail', args=[event.id]))
+            reverse_lazy('events:list'))
 
 
 class EventsListView(views.ListView):
