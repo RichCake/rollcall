@@ -38,5 +38,5 @@ class AttendanceForm(forms.ModelForm):
 
 
 AttendanceFormSet = forms.modelformset_factory(
-    EventParticipants, form=AttendanceForm, extra=1,
+        EventParticipants, form=AttendanceForm, extra=0,
     )

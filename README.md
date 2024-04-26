@@ -72,16 +72,6 @@ python manage.py runserver
 python manage.py run_huey
 ```
 
-## Миграции
-После того как внесли изменения в структуру моделей, выполните миграции.
-1. Создайте миграцию.
-```bash
-python manage.py makemigrations
-```
-2. Мигрируйте базу данный.
-```bash
-python manage.py migrate
-```
 ## Фикстуры
 
 Чтобы загрузить фикстуру выполните команду.

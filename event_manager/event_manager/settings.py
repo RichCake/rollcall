@@ -80,8 +80,8 @@ DATABASES = {
         'NAME': os.getenv('PG_DB_NAME', 'project_ci_test'),
         'USER': os.getenv('PG_USER', 'postgres'),
         'PASSWORD': os.getenv('PG_PASSWORD', 'test'),
-        'HOST': os.getenv('PG_HOST', default='postgres'),
-        'PORT': os.getenv('PG_PORT', default='5432'),
+        'HOST': os.getenv('PG_HOST', 'postgres'),
+        'PORT': os.getenv('PG_PORT', '5432'),
     },
 }
 
