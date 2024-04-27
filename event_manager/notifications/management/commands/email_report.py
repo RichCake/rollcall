@@ -38,10 +38,7 @@ class Command(BaseCommand):
 
     def send_telegram_notification(self, chat_id, event_title, minutes_to_event):
         message = f'Через {minutes_to_event} минут будет {event_title}!'
-        token = os.getenv('TG_TOKEN')
-        self.stdout.write(str(token))
-        self.stdout.write(str(chat_id))
-        self.stdout.write(str(message))
+        token = '6343049026:AAEQPW31DKskuXe-HYgpd_ZzIMgm3mseVtw'
         url = f'https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={message}'
         response = requests.get(url)
         self.stdout.write(str(response))
