@@ -38,8 +38,11 @@ ignore = [
 known-first-party = [
     "events",
     "homepage",
-    "notifications"
+    "notifications",
+    "categories",
+    "users"
 ]
+
 
 force-sort-within-sections = true
 order-by-type = false

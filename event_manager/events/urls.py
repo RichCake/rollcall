@@ -12,9 +12,9 @@ urlpatterns = [
     path('<int:pk>/attendance/', views.attendance_view, name='attendance'),
     path('add_part/', views.AddParticipantView.as_view(), name='add_part'),
     path(
-         'remove_part/',
-         views.RemoveParticipantView.as_view(),
-         name='remove_part',
-         ),
+        'remove_part/',
+        views.RemoveParticipantView.as_view(),
+        name='remove_part',
+    ),
     path('list/', views.EventsListView.as_view(), name='list'),
 ]

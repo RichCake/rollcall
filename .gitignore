@@ -2,9 +2,10 @@
 .vscode/
 .idea/
 .mypy_cashe
-event_manager/static/
-event_manager/send_mail/
+*/static/
+*/send_mail/
 .ruff_cache
+*/tasks.sqlite3
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

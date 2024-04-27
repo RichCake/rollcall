@@ -34,6 +34,9 @@ INSTALLED_APPS = [
     'events.apps.EventsConfig',
     'users.apps.UsersConfig',
     'homepage.apps.HomepageConfig',
+    'gamestat.apps.GamestatConfig',
+    'categories.apps.CategoriesConfig',
+    'profiles.apps.ProfilesConfig',
     'notifications.apps.NotificationsConfig',
     'crispy_forms',
     'crispy_bootstrap4',
@@ -149,7 +152,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'send_mail'
 
 
-LOGIN_URL = 'auth/login/'
+LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = '/'
 
 CELERY_BROKER_URL = 'redis://redis:6379'
@@ -164,3 +167,7 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 TG_TOKEN = os.getenv('TG_TOKEN')
+
+# STEAM
+
+STEAM_API_KEY = 'CABD06FB6653C1104C89CAEA1242FDA7'

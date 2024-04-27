@@ -8,6 +8,7 @@ class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = (
+            Event.category.field.name,
             Event.title.field.name,
             Event.description.field.name,
             Event.end.field.name,
@@ -37,5 +38,5 @@ class AttendanceForm(forms.ModelForm):
 
 
 AttendanceFormSet = forms.modelformset_factory(
-    EventParticipants, form=AttendanceForm, extra=1,
+        EventParticipants, form=AttendanceForm, extra=0,
     )

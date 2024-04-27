@@ -25,16 +25,16 @@ class Command(BaseCommand):
             )
         for event in coming_events:
             minutes_to_event = (event.end - timezone.now()).seconds // 60
-            # participants = event.eventparticipants_set.filter(notified=False)
-            for user in event.participants.all():
-                if user.telegram_chat_id:
-                    self.send_telegram_notification(user.telegram_chat_id, event.title, minutes_to_event)
+            participants = event.eventparticipants_set.filter(notified=False)
+            for participant in participants:
+                if participant.user.telegram_chat_id:
+                    self.send_telegram_notification(participant.user.telegram_chat_id, event.title, minutes_to_event)
                 else:
-                    self.stdout.write(f"User {user.username} is not linked to Telegram.")
+                    self.stdout.write(f"User {participant.user.username} is not linked to Telegram.")
 
-                # participant.notified = True
-                # user.save()
-        self.stdout.write('E-mail Report was sent.')
+                participant.notified = True
+                participant.save()
+        self.stdout.write('Notifications were sent.')
 
     def send_telegram_notification(self, chat_id, event_title, minutes_to_event):
         message = f'Через {minutes_to_event} минут будет {event_title}!'

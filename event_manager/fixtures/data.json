@@ -1,0 +1,219 @@
+[
+{
+    "model": "events.event",
+    "pk": 3,
+    "fields": {
+        "author": 1,
+        "title": "Турнир 1.0",
+        "description": "Отборочный тур",
+        "created": "2024-04-23T17:40:17.986Z",
+        "updated": "2024-04-23T17:40:17.986Z",
+        "end": "2024-04-28T16:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": 100,
+        "category": 2
+    }
+},
+{
+    "model": "events.event",
+    "pk": 4,
+    "fields": {
+        "author": 1,
+        "title": "Турнир 1.1",
+        "description": "Финал",
+        "created": "2024-04-23T17:41:01.886Z",
+        "updated": "2024-04-23T17:41:01.886Z",
+        "end": "2024-04-30T16:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": 10,
+        "category": 2
+    }
+},
+{
+    "model": "events.event",
+    "pk": 5,
+    "fields": {
+        "author": 1,
+        "title": "Просто игра",
+        "description": "Ищу людей в тиму",
+        "created": "2024-04-23T17:42:13.695Z",
+        "updated": "2024-04-23T17:42:13.695Z",
+        "end": "2024-04-25T18:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": 5,
+        "category": 5
+    }
+},
+{
+    "model": "events.event",
+    "pk": 6,
+    "fields": {
+        "author": 1,
+        "title": "Только бананы",
+        "description": "Собираю дуо бананов",
+        "created": "2024-04-23T17:43:15.801Z",
+        "updated": "2024-04-23T17:43:15.801Z",
+        "end": "2024-05-01T17:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": 1,
+        "category": 4
+    }
+},
+{
+    "model": "events.event",
+    "pk": 7,
+    "fields": {
+        "author": 1,
+        "title": "Выживание",
+        "description": "Нужен друг на первую ночь",
+        "created": "2024-04-23T17:44:11.500Z",
+        "updated": "2024-04-23T17:44:11.500Z",
+        "end": "2024-05-06T21:00:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": null,
+        "category": 1
+    }
+},
+{
+    "model": "events.event",
+    "pk": 8,
+    "fields": {
+        "author": 1,
+        "title": "СМУТА",
+        "description": "Любимая игра",
+        "created": "2024-04-23T17:44:35.950Z",
+        "updated": "2024-04-23T17:44:35.951Z",
+        "end": "2024-04-01T08:11:00Z",
+        "is_private": false,
+        "is_canceled": false,
+        "max_participants": null,
+        "category": 6
+    }
+},
+{
+    "model": "events.eventparticipants",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "event": 3,
+        "created": "2024-04-13T14:11:47.816Z",
+        "updated": "2024-04-13T14:11:47.816Z",
+        "status": 1,
+        "role": 2
+    }
+},
+{
+    "model": "events.eventparticipants",
+    "pk": 2,
+    "fields": {
+        "user": 1,
+        "event": 4,
+        "created": "2024-04-13T14:11:47.816Z",
+        "updated": "2024-04-13T14:11:47.816Z",
+        "status": 1,
+        "role": 2
+    }
+},
+{
+    "model": "events.eventparticipants",
+    "pk": 3,
+    "fields": {
+        "user": 1,
+        "event": 5,
+        "created": "2024-04-13T14:11:47.816Z",
+        "updated": "2024-04-13T14:11:47.816Z",
+        "status": 1,
+        "role": 2
+    }
+},
+{
+    "model": "events.eventparticipants",
+    "pk": 4,
+    "fields": {
+        "user": 1,
+        "event": 6,
+        "created": "2024-04-13T14:11:47.816Z",
+        "updated": "2024-04-13T14:11:47.816Z",
+        "status": 1,
+        "role": 2
+    }
+},
+{
+    "model": "events.eventparticipants",
+    "pk": 5,
+    "fields": {
+        "user": 1,
+        "event": 8,
+        "created": "2024-04-13T14:11:47.816Z",
+        "updated": "2024-04-13T14:11:47.816Z",
+        "status": 1,
+        "role": 2
+    }
+},
+{
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$600000$8c0m9tqWNe0SW631yFwdo8$Pd6YH4IhBRXu45mL1oJvAgakz/imKPrx60PyRuPuhQ8=",
+        "last_login": "2024-04-13T14:19:14.914Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-04-04T14:42:34Z",
+        "email": "soupy.auspice_0h@icloud.com",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+
+{
+    "model": "categories.category",
+    "pk": 1,
+    "fields": {
+        "name": "Mincraft"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 2,
+    "fields": {
+        "name": "CS:GO"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 3,
+    "fields": {
+        "name": "Valorant"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 4,
+    "fields": {
+        "name": "Fortnite"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 5,
+    "fields": {
+        "name": "Dota 2"
+    }
+},
+{
+    "model": "categories.category",
+    "pk": 6,
+    "fields": {
+        "name": "СМУТА"
+    }
+}
+]
