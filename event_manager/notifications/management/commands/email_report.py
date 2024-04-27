@@ -29,11 +29,11 @@ class Command(BaseCommand):
             for participant in participants:
                 if participant.user.telegram_chat_id:
                     self.send_telegram_notification(participant.user.telegram_chat_id, event.title, minutes_to_event)
+
+                    participant.notified = True
+                    participant.save()
                 else:
                     self.stdout.write(f"User {participant.user.username} is not linked to Telegram.")
-
-                participant.notified = True
-                participant.save()
         self.stdout.write('Notifications were sent.')
 
     def send_telegram_notification(self, chat_id, event_title, minutes_to_event):

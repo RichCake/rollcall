@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 import django.views.generic as views
 from django.views.generic.edit import FormMixin
+import requests
 
 from events.forms import AddParticipantForm, AttendanceFormSet, EventForm
 from events.models import Event, EventParticipants
@@ -78,10 +79,15 @@ class AddParticipantView(LoginRequiredMixin, views.View):
                         request.META.get('HTTP_REFERER'),
                         )
             event.participants.add(user)
-            send_email_task.apply_async(
-                args=[user.email, f'Вы записались на {event.title}'],
-                countdown=60,
-                )
+
+            for tguser in event.participants.all():
+                if tguser.telegram_chat_id and tguser.id != user.id:
+                    text = f'{tguser.username} присоединился к событию {event.title}'
+                    token = '6343049026:AAEQPW31DKskuXe-HYgpd_ZzIMgm3mseVtw'
+                    chat_id = tguser.telegram_chat_id
+                    url = f'https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={text}'
+
+                    response = requests.get(url)
         return HttpResponseRedirect(
             reverse_lazy('events:detail', args=[event.id]))
 

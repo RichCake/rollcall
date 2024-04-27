@@ -156,25 +156,6 @@
     }
 },
 {
-    "model": "users.user",
-    "pk": 1,
-    "fields": {
-        "password": "pbkdf2_sha256$600000$8c0m9tqWNe0SW631yFwdo8$Pd6YH4IhBRXu45mL1oJvAgakz/imKPrx60PyRuPuhQ8=",
-        "last_login": "2024-04-13T14:19:14.914Z",
-        "is_superuser": true,
-        "username": "admin",
-        "first_name": "",
-        "last_name": "",
-        "is_staff": true,
-        "is_active": true,
-        "date_joined": "2024-04-04T14:42:34Z",
-        "email": "soupy.auspice_0h@icloud.com",
-        "groups": [],
-        "user_permissions": []
-    }
-},
-
-{
     "model": "categories.category",
     "pk": 1,
     "fields": {
