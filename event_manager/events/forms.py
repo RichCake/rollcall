@@ -35,6 +35,10 @@ class AttendanceForm(forms.ModelForm):
         model = EventParticipants
         fields = ['user', 'present']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["user"].disabled = True
+
 
 AttendanceFormSet = forms.modelformset_factory(
         EventParticipants, form=AttendanceForm, extra=0,

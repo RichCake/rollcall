@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
 from django.utils import timezone
+from django_celery_beat.models import PeriodicTask
+import datetime as dt
 
 from categories.models import Category
 
@@ -104,8 +104,21 @@ class Event(models.Model):
 
     @property
     def is_past_due(self):
+        """
+        Used in templates. Check if event is over
+        :return: bool
+        """
         return timezone.now() > self.end
 
+    def save(self, **kwargs):
+        # TODO: починить. почему-то не работает
+        print("PRE_SAVE")
+        if (
+                update_fields := kwargs.get("update_fields")
+        ) is not None and "end" in update_fields and self.end != update_fields["end"]:
+            print(f"for {self.pk}", self.end - dt.timedelta(minutes=30))
+            PeriodicTask.objects.filter(name__endswith=f"for {self.pk}").update(start_time=self.end - dt.timedelta(minutes=30))
+        super().save(**kwargs)
 
 
 class EventParticipants(models.Model):
@@ -169,14 +182,3 @@ class EventParticipants(models.Model):
 
     def __str__(self):
         return f'{self.event} - {self.user}'
-    
-
-@receiver(pre_save, sender=Event)
-def update_notified_on_end_change(sender, instance, *args, **kwargs):
-    if instance.pk:
-        try:
-            old_instance = Event.objects.get(pk=instance.pk)
-            if old_instance.end != instance.end:
-                instance.eventparticipants_set.filter(notified=True).update(notified=False)
-        except Event.DoesNotExist:
-            pass

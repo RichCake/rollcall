@@ -8,7 +8,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 import django.views.generic as views
-from django.utils import timezone
 from django.views.generic.edit import FormMixin
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
 import datetime as dt
@@ -94,16 +93,6 @@ class AddParticipantView(LoginRequiredMixin, views.View):
                     task="event_manager.celery.send_notification",
                     args=json.dumps([30, event.title, user.telegram_chat_id]),
                 )
-
-            # TODO: починить или переработать
-            # for tguser in event.participants.all():
-            #     if tguser.telegram_chat_id and tguser.id != user.id:
-            #         text = f'{tguser.username} присоединился к событию {event.title}'
-            #         token = '6343049026:AAEQPW31DKskuXe-HYgpd_ZzIMgm3mseVtw'
-            #         chat_id = tguser.telegram_chat_id
-            #         url = f'https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={text}'
-
-                    # response = requests.get(url)
         return HttpResponseRedirect(reverse_lazy('events:detail', args=[event.id]))
 
 
