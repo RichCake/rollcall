@@ -13,7 +13,6 @@ class EventForm(forms.ModelForm):
             Event.description.field.name,
             Event.end.field.name,
             Event.max_participants.field.name,
-            Event.participants.field.name,
             Event.is_private.field.name,
         )
         widgets = {

@@ -4,11 +4,9 @@ from pathlib import Path
 from celery.schedules import crontab
 from dotenv import load_dotenv
 
-import notifications.tasks  # noqa: F401
-
 
 def str_to_bool(string):
-    return string.lower() in ['true', '1', 't', 'y', 'yes', '']
+    return string.lower() in ['true', '1', 't', 'y', 'yes']
 
 
 load_dotenv(override=True)
@@ -73,13 +71,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'event_manager.wsgi.application'
 
+PG_DB_NAME = os.getenv("PG_DB_NAME")
+PG_USER = os.getenv("PG_USER")
+PG_PASSWORD = os.getenv("PG_PASSWORD")
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'NAME': PG_DB_NAME,
+        'USER': PG_USER,
+        'PASSWORD': PG_PASSWORD,
         'HOST': 'pgdb',
         'PORT': '5432',
     },
@@ -111,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -142,6 +143,9 @@ if DEBUG:
     INSTALLED_APPS.append('debug_toolbar')
     MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
     INTERNAL_IPS = ['localhost', '127.0.0.1']
+    DEBUG_TOOLBAR_CONFIG = {
+        "SHOW_TOOLBAR_CALLBACK": lambda _request: DEBUG,
+    }
 
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'
@@ -157,16 +161,18 @@ LOGIN_REDIRECT_URL = '/'
 
 CELERY_BROKER_URL = 'redis://redis:6379'
 CELERY_RESULT_BACKEND = 'redis://redis:6379'
-CELERY_BEAT_SCHEDULER='django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_RESULT_EXPIRES = 18000
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
-CELERY_BEAT_SCHEDULE = {
-    'send_email_report': {
-        'task': 'notifications.tasks.send_email_task',
-        'schedule': crontab(minute='*/1'),
-    },
-}
+# CELERY_BEAT_SCHEDULE = {
+#     'send_email_report': {
+#         'task': 'notifications.tasks.send_email_task',
+#         'schedule': crontab(minute='*/1'),
+#     },
+# }
 
-TG_TOKEN = os.getenv('TG_TOKEN')
+TG_TOKEN = os.getenv('TG_BOT_TOKEN')
 
 # STEAM
 

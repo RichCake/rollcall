@@ -1,17 +1,20 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.db.models.functions import Lower
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 import django.views.generic as views
+from django.utils import timezone
 from django.views.generic.edit import FormMixin
-import requests
+from django_celery_beat.models import PeriodicTask, IntervalSchedule
+import datetime as dt
 
 from events.forms import AddParticipantForm, AttendanceFormSet, EventForm
 from events.models import Event, EventParticipants
-from notifications.tasks import send_email_task
 
 
 class CreateEventView(LoginRequiredMixin, views.CreateView):
@@ -31,15 +34,15 @@ class CreateEventView(LoginRequiredMixin, views.CreateView):
 
 class UpdateEventView(LoginRequiredMixin, views.UpdateView):
     template_name = 'events/update_event.html'
-    fields = (
-        Event.category.field.name,
-        Event.title.field.name,
-        Event.description.field.name,
-        Event.end.field.name,
-        Event.max_participants.field.name,
-        Event.participants.field.name,
-        Event.is_private.field.name,
-    )
+    # fields = (
+    #     Event.category.field.name,
+    #     Event.title.field.name,
+    #     Event.description.field.name,
+    #     Event.end.field.name,
+    #     Event.max_participants.field.name,
+    #     Event.is_private.field.name,
+    # )
+    form_class = EventForm
     queryset = (
         Event.objects.get_public_events()
         .only(
@@ -50,7 +53,6 @@ class UpdateEventView(LoginRequiredMixin, views.UpdateView):
             'end',
             'is_private',
             'author__username',
-            'eventparticipants__user__username',
             'max_participants',
             )
     )
@@ -73,23 +75,36 @@ class AddParticipantView(LoginRequiredMixin, views.View):
             user_id = form.cleaned_data['user_id']
             event = get_object_or_404(Event, id=event_id)
             user = get_object_or_404(get_user_model(), id=user_id)
-            if event.max_participants:
-                if event.participants.count() >= event.max_participants:
-                    return HttpResponseRedirect(
-                        request.META.get('HTTP_REFERER'),
-                        )
+
+            if event.max_participants and event.participants.count() >= event.max_participants:
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
             event.participants.add(user)
 
-            for tguser in event.participants.all():
-                if tguser.telegram_chat_id and tguser.id != user.id:
-                    text = f'{tguser.username} присоединился к событию {event.title}'
-                    token = '6343049026:AAEQPW31DKskuXe-HYgpd_ZzIMgm3mseVtw'
-                    chat_id = tguser.telegram_chat_id
-                    url = f'https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={text}'
+            if user.telegram_chat_id:
+                schedule, created = IntervalSchedule.objects.get_or_create(
+                    every=1,
+                    period=IntervalSchedule.SECONDS,
+                )
+                PeriodicTask.objects.create(
+                    interval=schedule,
+                    name=f"Send notification to {user.id} for {event.id}",
+                    start_time=event.end - dt.timedelta(minutes=30),
+                    one_off=True,
+                    task="event_manager.celery.send_notification",
+                    args=json.dumps([30, event.title, user.telegram_chat_id]),
+                )
 
-                    response = requests.get(url)
-        return HttpResponseRedirect(
-            reverse_lazy('events:detail', args=[event.id]))
+            # TODO: починить или переработать
+            # for tguser in event.participants.all():
+            #     if tguser.telegram_chat_id and tguser.id != user.id:
+            #         text = f'{tguser.username} присоединился к событию {event.title}'
+            #         token = '6343049026:AAEQPW31DKskuXe-HYgpd_ZzIMgm3mseVtw'
+            #         chat_id = tguser.telegram_chat_id
+            #         url = f'https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={text}'
+
+                    # response = requests.get(url)
+        return HttpResponseRedirect(reverse_lazy('events:detail', args=[event.id]))
 
 
 class RemoveParticipantView(LoginRequiredMixin, views.View):
@@ -101,6 +116,7 @@ class RemoveParticipantView(LoginRequiredMixin, views.View):
             event = get_object_or_404(Event, id=event_id)
             user = get_object_or_404(get_user_model(), id=user_id)
             event.participants.remove(user)
+            PeriodicTask.objects.filter(name=f"Send notification to {user.id} for {event.id}").update(enabled=False)
         return HttpResponseRedirect(
             reverse_lazy('events:list'))
 
@@ -181,6 +197,7 @@ def attendance_view(request, pk):
 
     if request.method == 'POST' and formset.is_valid():
         formset.save()
+        return redirect("events:detail", pk=pk)
 
     return render(
         request,

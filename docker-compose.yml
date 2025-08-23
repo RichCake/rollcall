@@ -1,15 +1,10 @@
-# Определение версии Docker Compose и начало описания сервисов
-version: '3'
-
 services:
   tgbot:
-    build: ./event_manager
+    build: ./tgbot
     container_name: tgbot
-    command: python tgbot/bot.py
+    command: python3 bot.py
     env_file:
       - ./.env
-    volumes:
-      - ./event_manager:/usr/src/app
     depends_on:
       - django
 
@@ -22,8 +17,6 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     env_file:
       - ./.env
-    volumes:
-      - ./event_manager:/usr/src/app
     # Открытие порта на хостовой машине и перенаправление на порт в контейнере
     ports:
       - 8000:8000
@@ -33,31 +26,35 @@ services:
       - redis
 
   pgdb:
-    # Использование готового образа postgres
     image: postgres
-    # Задание переменных окружения для контейнера с postgres
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-     # Задание имени контейнера для сервиса pgdb
+      POSTGRES_DB: ${PG_DB_NAME}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
     container_name: pgdb
-     # Связывание тома с директорией в контейнере для сохранения данных postgres
+    ports:
+      - 5432:5432
     volumes:
       - pgdbdata:/var/lib/postgresql/data/
+    # Чтобы дождаться запуска postgres. TODO: не работает потому что юзера postgres нет
+#    healthcheck:
+#      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+#      interval: 5s
+#      timeout: 5s
+#      retries: 5
+    restart: on-failure
 
   redis:
     image: redis:alpine
     container_name: redis
+    ports:
+      - 6379:6379
+
   celery:
     build: ./event_manager
     command: celery -A event_manager worker -l info
-    volumes:
-      - ./event_manager:/usr/src/app/
-    environment:
-      - DEBUG=1
-      - SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
-      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1] django
+    env_file:
+      - ./.env
     container_name: celery
     depends_on:
       - redis
@@ -65,15 +62,23 @@ services:
   celery-beat:
     build: ./event_manager
     command: celery -A event_manager beat -l info
-    volumes:
-      - ./event_manager:/usr/src/app/
-    environment:
-      - DEBUG=1
-      - SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
-      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1] django
+    env_file:
+      - ./.env
     container_name: celery-beat
     depends_on:
       - redis
 
+  flower:
+    container_name: flower
+    build: ./event_manager
+    command: celery -A event_manager.celery flower --basic-auth=admin:${PG_PASSWORD}
+    env_file:
+      - ./.env
+    ports:
+      - 5555:5555
+    depends_on:
+      - celery
+      - celery-beat
+
 volumes:
-  pgdbdata: null
+  pgdbdata:

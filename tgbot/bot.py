@@ -6,7 +6,10 @@ import telebot
 
 dotenv.load_dotenv()
 
-bot = telebot.TeleBot('6343049026:AAEQPW31DKskuXe-HYgpd_ZzIMgm3mseVtw')
+TOKEN = os.getenv("TG_BOT_TOKEN")
+print(f"TOOOOOOOOOOKEEEEEN {TOKEN}")
+
+bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):

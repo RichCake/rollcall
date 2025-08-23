@@ -17,7 +17,10 @@
             <button type="submit" class="btn btn-primary">Сохранить</button>
           </div>
           <div class="col">
-            <a class="btn btn-link"href="{% url "users:password_change" %}">Сменить пароль</a>
+            <a class="btn btn-link" href="{% url "users:password_change" %}">Сменить пароль</a>
+          </div>
+          <div class="col">
+            <a class="btn btn-danger" href="{% url "profiles:detail" pk=user.id %}">Отменить</a>
           </div>
         </div>
       </form>

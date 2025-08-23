@@ -28,10 +28,10 @@ venv\Scripts\activate
 ```
 6. На этом этапе вы должны установить зависимости. Существует два файла с зависимости, prod и dev. Просто скачайте один из файлов. Prod - для простого запуска, dev - для разработки.
 ```bash
-pip install -r requirements/prod.txt
+pip install -r requirements.txt/prod.txt
 ```
 ```bash
-pip install -r requirements/dev.txt
+pip install -r requirements.txt/dev.txt
 ```
 7. Скопируйте содержимое файла .env.example в .env.
 ```bash

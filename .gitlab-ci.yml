@@ -22,7 +22,7 @@ stages:
 check:
   stage: setup
   script:
-    - pip install -r ../requirements/prod.txt
+    - pip install -r ../requirements.txt/prod.txt
     - python manage.py check
 
 ruff:
@@ -34,6 +34,6 @@ ruff:
 django_tests:
   stage: tests
   script:
-    - pip install -r ../requirements/dev.txt
+    - pip install -r ../requirements.txt/dev.txt
     - python manage.py migrate
     - python manage.py test
