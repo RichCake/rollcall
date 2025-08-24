@@ -118,7 +118,6 @@ class Event(models.Model):
         return timezone.now() > self.end
 
     def save(self, **kwargs):
-        logger.info("SAVE", self.end, self.old_end, self.end != self.old_end)
         if self.end != self.old_end:
             logger.info(f"for {self.pk}", self.end - dt.timedelta(minutes=30))
             PeriodicTask.objects.filter(name__endswith=f"for {self.pk}").update(start_time=self.end - dt.timedelta(minutes=30), enabled=True)

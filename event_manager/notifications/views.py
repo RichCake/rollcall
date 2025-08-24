@@ -7,9 +7,9 @@ from django.shortcuts import get_object_or_404
 def link_telegram_user(request):
     if request.method == 'POST':
         chat_id = request.POST.get('chat_id')
-        username = request.POST.get('username')
+        id = request.POST.get('id')
         
-        user = get_object_or_404(get_user_model(), username=username)
+        user = get_object_or_404(get_user_model(), pk=id)
         user.telegram_chat_id = chat_id
         user.save()
         

@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.views.generic.edit import FormMixin
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
 import datetime as dt
+from django.http import Http404
 
 from events.forms import AddParticipantForm, AttendanceFormSet, EventForm
 from events.models import Event, EventParticipants
@@ -179,6 +180,9 @@ class DetailEventView(views.DetailView):
 
 def attendance_view(request, pk):
     event = get_object_or_404(Event, id=pk)
+    logger.info("USER", request.user.pk, event.author.pk, request.user.pk != event.author.pk)
+    if request.user.pk != event.author.pk:
+        raise Http404()
     formset = AttendanceFormSet(
         request.POST or None,
         queryset=EventParticipants.objects.filter(event__id=pk),

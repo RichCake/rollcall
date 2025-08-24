@@ -7,19 +7,15 @@ import telebot
 dotenv.load_dotenv()
 
 TOKEN = os.getenv("TG_BOT_TOKEN")
-print(f"TOOOOOOOOOOKEEEEEN {TOKEN}")
 
 bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
-    bot.reply_to(message, 'Please enter your username.')
-    bot.register_next_step_handler(message, save_username)
-
-def save_username(message):
-    username = message.text
+    user_id = message.text.lstrip("/start ")
+    print(user_id)
     chat_id = message.chat.id
-    response = requests.post('http://django:8000/notifications/link_telegram_user/', data={'chat_id': chat_id, 'username': username})
+    response = requests.post('http://django:8000/notifications/link_telegram_user/', data={'chat_id': chat_id, 'id': user_id})
     if response.status_code == 200:
         bot.reply_to(message, 'You have been linked to your Django user account.')
     else:

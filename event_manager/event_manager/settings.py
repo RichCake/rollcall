@@ -170,13 +170,6 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_RESULT_EXPIRES = 18000
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
-# CELERY_BEAT_SCHEDULE = {
-#     'send_email_report': {
-#         'task': 'notifications.tasks.send_email_task',
-#         'schedule': crontab(minute='*/1'),
-#     },
-# }
-
 TG_TOKEN = os.getenv('TG_BOT_TOKEN')
 
 # STEAM
