@@ -113,6 +113,7 @@ class RemoveParticipantView(LoginRequiredMixin, views.View):
 class EventsListView(views.ListView):
     template_name = 'events/event_list.html'
     context_object_name = 'events'
+    paginate_by = 12  # Показывать 12 событий на страницу
     queryset = (
         Event.objects
         .select_related('author', 'category')
@@ -163,6 +164,7 @@ class DetailEventView(views.DetailView):
     context_object_name = 'event'
     queryset = (
         Event.objects.get_public_events()
+        .prefetch_related('eventparticipants_set')
         .only(
             'category__name',
             'title',
@@ -172,6 +174,7 @@ class DetailEventView(views.DetailView):
             'is_private',
             'author__username',
             'eventparticipants__user__username',
+            'eventparticipants__present',
             'max_participants',
             )
     )
