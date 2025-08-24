@@ -68,7 +68,7 @@
                   <div class="card">
                     <div class="card-body">
                       <div class="d-flex justify-content-between align-items-center">
-                        <span>{{ part.user.username }}</span>
+                        <a href="{% url 'profiles:detail' pk=part.user.pk %}">{{ part.user.username }}</a>
                         {% if event.is_past_due %}
                           {% if part.present %}
                             <span class="badge bg-success">Присутствовал</span>

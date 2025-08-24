@@ -19,10 +19,16 @@ class EventForm(forms.ModelForm):
             Event.end.field.name: forms.widgets.DateTimeInput(
                 attrs={
                     'type': 'datetime-local',
-                    'value': timezone.now().strftime('%Y-%m-%dT%H:%M'),
-                    },
-                ),
+                },
+                format='%Y-%m-%dT%H:%M',
+            ),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Устанавливаем значение по умолчанию только для новых событий
+        if not self.instance.pk:  # Если это новое событие
+            self.fields['end'].initial = timezone.now().strftime('%Y-%m-%dT%H:%M')
 
 
 class AddParticipantForm(forms.Form):

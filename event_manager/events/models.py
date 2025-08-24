@@ -4,8 +4,11 @@ from django.db import models
 from django.utils import timezone
 from django_celery_beat.models import PeriodicTask
 import datetime as dt
+import logging
 
 from categories.models import Category
+
+logger = logging.getLogger(__name__)
 
 
 class EventManager(models.Manager):
@@ -102,6 +105,10 @@ class Event(models.Model):
     def __str__(self):
         return self.title
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.old_end = self.end
+
     @property
     def is_past_due(self):
         """
@@ -111,13 +118,10 @@ class Event(models.Model):
         return timezone.now() > self.end
 
     def save(self, **kwargs):
-        # TODO: починить. почему-то не работает
-        print("PRE_SAVE")
-        if (
-                update_fields := kwargs.get("update_fields")
-        ) is not None and "end" in update_fields and self.end != update_fields["end"]:
-            print(f"for {self.pk}", self.end - dt.timedelta(minutes=30))
-            PeriodicTask.objects.filter(name__endswith=f"for {self.pk}").update(start_time=self.end - dt.timedelta(minutes=30))
+        logger.info("SAVE", self.end, self.old_end, self.end != self.old_end)
+        if self.end != self.old_end:
+            logger.info(f"for {self.pk}", self.end - dt.timedelta(minutes=30))
+            PeriodicTask.objects.filter(name__endswith=f"for {self.pk}").update(start_time=self.end - dt.timedelta(minutes=30), enabled=True)
         super().save(**kwargs)
 
 

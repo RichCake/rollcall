@@ -182,3 +182,17 @@ TG_TOKEN = os.getenv('TG_BOT_TOKEN')
 # STEAM
 
 STEAM_API_KEY = 'CABD06FB6653C1104C89CAEA1242FDA7'
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+}

@@ -1,19 +1,24 @@
 import json
+import logging
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.db.models.functions import Lower
+from django import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 import django.views.generic as views
+from django.utils import timezone
 from django.views.generic.edit import FormMixin
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
 import datetime as dt
 
 from events.forms import AddParticipantForm, AttendanceFormSet, EventForm
 from events.models import Event, EventParticipants
+
+logger = logging.getLogger(__name__)
 
 
 class CreateEventView(LoginRequiredMixin, views.CreateView):
@@ -33,14 +38,6 @@ class CreateEventView(LoginRequiredMixin, views.CreateView):
 
 class UpdateEventView(LoginRequiredMixin, views.UpdateView):
     template_name = 'events/update_event.html'
-    # fields = (
-    #     Event.category.field.name,
-    #     Event.title.field.name,
-    #     Event.description.field.name,
-    #     Event.end.field.name,
-    #     Event.max_participants.field.name,
-    #     Event.is_private.field.name,
-    # )
     form_class = EventForm
     queryset = (
         Event.objects.get_public_events()
