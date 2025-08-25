@@ -37,10 +37,12 @@ class Event(models.Model):
     title = models.CharField(
         verbose_name='название',
         max_length=150,
+        help_text="Короткий заголовок. Макс. 150 симв.",
     )
 
     description = models.TextField(
         verbose_name='описание',
+        help_text="Подробное описание",
     )
 
     created = models.DateTimeField(
@@ -90,10 +92,9 @@ class Event(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
-        null=True,
-        blank=True,
         verbose_name='категория',
         related_name='events',
+        default=""
     )
 
     objects = EventManager()

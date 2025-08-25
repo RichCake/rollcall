@@ -9,7 +9,7 @@
     </div>
     
     <div class="card-text">
-      <p>{{ event.description }}</p>
+      <p>{{ event.description|truncatechars:100 }}</p>
       <p>Дата: {{ event.end }}</p>
     </div>
     <p>Автор: {% if request.user.username == event.author.username %}Вы{% else %}{{ event.author.username }}{% endif %}</p>
