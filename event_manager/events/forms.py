@@ -9,6 +9,7 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = (
             Event.category.field.name,
+            Event.game.field.name,
             Event.title.field.name,
             Event.description.field.name,
             Event.end.field.name,
@@ -22,6 +23,7 @@ class EventForm(forms.ModelForm):
                 },
                 format='%Y-%m-%dT%H:%M',
             ),
+            # Event.game.field.name: None
         }
 
     def __init__(self, *args, **kwargs):

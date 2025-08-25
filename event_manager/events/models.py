@@ -7,6 +7,7 @@ import datetime as dt
 import logging
 
 from categories.models import Category
+from games.models import Game
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +95,13 @@ class Event(models.Model):
         on_delete=models.CASCADE,
         verbose_name='категория',
         related_name='events',
-        default=""
+    )
+
+    game = models.ForeignKey(
+        Game,
+        on_delete=models.CASCADE,
+        verbose_name="игра",
+        related_name="events",
     )
 
     objects = EventManager()
@@ -102,6 +109,9 @@ class Event(models.Model):
     class Meta:
         verbose_name = 'мероприятие'
         verbose_name_plural = 'мероприятия'
+        indexes = [
+            models.Index(fields=["id"], condition=models.Q("is_private=false"), name="public_events_idx"),
+        ]
 
     def __str__(self):
         return self.title

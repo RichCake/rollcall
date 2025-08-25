@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'homepage.apps.HomepageConfig',
     'gamestat.apps.GamestatConfig',
+    'games.apps.GamesConfig',
     'categories.apps.CategoriesConfig',
     'profiles.apps.ProfilesConfig',
     'notifications.apps.NotificationsConfig',

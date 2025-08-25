@@ -136,3 +136,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+/event_manager/games_data.json
