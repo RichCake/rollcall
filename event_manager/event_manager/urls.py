@@ -12,6 +12,7 @@ urlpatterns = [
     path('auth/', include('users.urls')),
     path('auth/', include('django.contrib.auth.urls')),
     path('gamestat/', include('gamestat.urls')),
+    path('games/', include('games.urls')),
 ]
 
 if settings.DEBUG:

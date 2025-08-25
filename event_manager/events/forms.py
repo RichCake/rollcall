@@ -1,5 +1,6 @@
 from django import forms
 from django.utils import timezone
+from dal import autocomplete
 
 from events.models import Event, EventParticipants
 
@@ -23,7 +24,7 @@ class EventForm(forms.ModelForm):
                 },
                 format='%Y-%m-%dT%H:%M',
             ),
-            # Event.game.field.name: None
+            Event.game.field.name: autocomplete.ModelSelect2(url='game-autocomplete')
         }
 
     def __init__(self, *args, **kwargs):
