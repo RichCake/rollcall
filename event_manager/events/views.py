@@ -3,8 +3,9 @@ import logging
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 from django.db.models.functions import Lower
+from django.utils.translation import gettext as _
 from django import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
@@ -111,7 +112,7 @@ class RemoveParticipantView(LoginRequiredMixin, views.View):
 class EventsListView(views.ListView):
     template_name = 'events/event_list.html'
     context_object_name = 'events'
-    paginate_by = 12  # Показывать 12 событий на страницу
+    paginate_by = 12
     queryset = (
         Event.objects
         .select_related('author', 'category')
@@ -161,8 +162,8 @@ class DetailEventView(views.DetailView):
     template_name = 'events/event_detail.html'
     context_object_name = 'event'
     queryset = (
-        Event.objects.get_public_events()
-        .prefetch_related('eventparticipants_set')
+        Event.objects
+        .select_related('author', 'category')
         .only(
             'category__name',
             'title',
@@ -171,11 +172,37 @@ class DetailEventView(views.DetailView):
             'end',
             'is_private',
             'author__username',
-            'eventparticipants__user__username',
-            'eventparticipants__present',
             'max_participants',
             )
     )
+
+    def get_context_data(self, **kwargs):
+        contex = super().get_context_data(**kwargs)
+        contex["participants"] = (EventParticipants.objects
+                                  .select_related("user")
+                                  .filter(event__id=self.object.id)
+                                  .only("present", "user__username", "user__id")).all()[:5]
+        return contex
+
+
+class EventParticipantsListView(views.ListView):
+    template_name = "events/participants_list.html"
+    context_object_name = "participants"
+    queryset = EventParticipants.objects.select_related("user")
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        pk = self.kwargs.get("pk")
+        logger.info(self.request.GET)
+        queryset = queryset.filter(event__pk=pk)
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=None, **kwargs)
+        pk = self.kwargs.get("pk")
+        context["event"] = Event.objects.filter(pk=pk).only("title", "id").get()
+        return context
 
 
 def attendance_view(request, pk):
