@@ -22,3 +22,6 @@ class EventAdmin(admin.ModelAdmin):
         models.Event.is_private.field.name,
         models.Event.is_canceled.field.name,
     )
+    exclude = (
+        models.Event.game.field.name,
+    )

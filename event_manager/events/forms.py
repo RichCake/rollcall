@@ -34,8 +34,8 @@ class EventForm(forms.ModelForm):
             self.fields['end'].initial = timezone.now().strftime('%Y-%m-%dT%H:%M')
 
 
-class AddParticipantForm(forms.Form):
-    event_id = forms.IntegerField()
+class ParticipantForm(forms.Form):
+    event_id = forms.UUIDField()
     user_id = forms.IntegerField()
 
 

@@ -17,7 +17,7 @@ from django_celery_beat.models import PeriodicTask, IntervalSchedule
 import datetime as dt
 from django.http import Http404
 
-from events.forms import AddParticipantForm, AttendanceFormSet, EventForm
+from events.forms import ParticipantForm, AttendanceFormSet, EventForm
 from events.models import Event, EventParticipants
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ class CreateEventView(LoginRequiredMixin, views.CreateView):
     form_class = EventForm
 
     def get_success_url(self):
-        return reverse_lazy('events:detail', args=[self.object.id])
+        return reverse_lazy('events:detail', args=[self.object.pk])
 
     def form_valid(self, form):
         event = form.save(commit=False)
@@ -52,12 +52,12 @@ class UpdateEventView(LoginRequiredMixin, views.UpdateView):
             'is_private',
             'author__username',
             'max_participants',
-            )
+        )
     )
 
     def get_success_url(self):
         return reverse_lazy('events:update', args=[self.object.id])
-    
+
 
 class DeleteEventView(LoginRequiredMixin, views.DeleteView):
     model = Event
@@ -65,48 +65,90 @@ class DeleteEventView(LoginRequiredMixin, views.DeleteView):
     context_object_name = 'event'
 
 
-class AddParticipantView(LoginRequiredMixin, views.View):
+class SendRequestView(LoginRequiredMixin, views.View):
     def post(self, request):
-        form = AddParticipantForm(request.POST)
+        form = ParticipantForm(request.POST)
         if form.is_valid():
             event_id = form.cleaned_data['event_id']
             user_id = form.cleaned_data['user_id']
             event = get_object_or_404(Event, id=event_id)
             user = get_object_or_404(get_user_model(), id=user_id)
 
-            if event.max_participants and event.participants.count() >= event.max_participants:
+            accepted_participants = (EventParticipants.objects
+                                     .filter(status=EventParticipants.StatusChoices.REQUEST_ACCEPTED,
+                                             event=event)
+                                     )
+            logger.info("INFOOOOOOO", user, event)
+            logger.info("INFOOO", event.max_participants and accepted_participants.count() >= event.max_participants, user in event.participants.all())
+            if ((event.max_participants and accepted_participants.count() >= event.max_participants)
+                    or user in event.participants.all()):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-            event.participants.add(user)
+            EventParticipants.objects.create(
+                user=user,
+                event=event,
+                status=EventParticipants.StatusChoices.REQUEST_SENT,
+            )
 
-            if user.telegram_chat_id:
-                schedule, created = IntervalSchedule.objects.get_or_create(
-                    every=1,
-                    period=IntervalSchedule.SECONDS,
-                )
-                PeriodicTask.objects.create(
-                    interval=schedule,
-                    name=f"Send notification to {user.id} for {event.id}",
-                    start_time=event.end - dt.timedelta(minutes=30),
-                    one_off=True,
-                    task="event_manager.celery.send_notification",
-                    args=json.dumps([30, event.title, user.telegram_chat_id]),
-                )
-        return HttpResponseRedirect(reverse_lazy('events:detail', args=[event.id]))
+            # if user.telegram_chat_id:
+            #     schedule, created = IntervalSchedule.objects.get_or_create(
+            #         every=1,
+            #         period=IntervalSchedule.SECONDS,
+            #     )
+            #     PeriodicTask.objects.create(
+            #         interval=schedule,
+            #         name=f"Send notification to {user.id} for {event.id}",
+            #         start_time=event.end - dt.timedelta(minutes=30),
+            #         one_off=True,
+            #         task="event_manager.celery.send_notification",
+            #         args=json.dumps([30, event.title, user.telegram_chat_id]),
+            #     )
+            return HttpResponseRedirect(reverse_lazy('events:detail', args=[event.id]))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-class RemoveParticipantView(LoginRequiredMixin, views.View):
+class RevokeRequestView(LoginRequiredMixin, views.View):
     def post(self, request):
-        form = AddParticipantForm(request.POST)
+        form = ParticipantForm(request.POST)
+        if form.is_valid():
+            event_id = form.cleaned_data['event_id']
+            user_id = form.cleaned_data['user_id']
+
+            part = EventParticipants.objects.filter(event__id=event_id, user__id=user_id).get()
+            part.status = EventParticipants.StatusChoices.REQUEST_REVOKED
+            part.save()
+            PeriodicTask.objects.filter(name=f"Send notification to {user_id} for {event_id}").update(enabled=False)
+        return HttpResponseRedirect(
+            reverse_lazy('events:list'))
+
+
+class AcceptRequestView(LoginRequiredMixin, views.View):
+    def post(self, request):
+        form = ParticipantForm(request.POST)
         if form.is_valid():
             event_id = form.cleaned_data['event_id']
             user_id = form.cleaned_data['user_id']
             event = get_object_or_404(Event, id=event_id)
-            user = get_object_or_404(get_user_model(), id=user_id)
-            event.participants.remove(user)
-            PeriodicTask.objects.filter(name=f"Send notification to {user.id} for {event.id}").update(enabled=False)
-        return HttpResponseRedirect(
-            reverse_lazy('events:list'))
+            if request.user == event.author:
+                user = get_object_or_404(get_user_model(), id=user_id)
+                part = EventParticipants.objects.filter(user=user, event=event).get()
+                part.status = EventParticipants.StatusChoices.REQUEST_ACCEPTED
+                part.save()
+                if user.telegram_chat_id:
+                    schedule, created = IntervalSchedule.objects.get_or_create(
+                        every=1,
+                        period=IntervalSchedule.SECONDS,
+                    )
+                    PeriodicTask.objects.create(
+                        interval=schedule,
+                        name=f"Send notification to {user.id} for {event.id}",
+                        start_time=event.end - dt.timedelta(minutes=30),
+                        one_off=True,
+                        task="event_manager.celery.send_notification",
+                        args=json.dumps([30, event.title, user.telegram_chat_id]),
+                    )
+            return HttpResponseRedirect(reverse_lazy('events:detail', args=[event.id]))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 class EventsListView(views.ListView):
@@ -127,8 +169,8 @@ class EventsListView(views.ListView):
             'author__username',
             'eventparticipants__user__username',
             'max_participants',
-            )
         )
+    )
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -151,7 +193,7 @@ class EventsListView(views.ListView):
             else:
                 queryset = queryset.order_by(Lower(sort).asc())
         return queryset
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sort'] = self.request.GET.get('sort')
@@ -173,22 +215,31 @@ class DetailEventView(views.DetailView):
             'is_private',
             'author__username',
             'max_participants',
-            )
+        )
     )
 
     def get_context_data(self, **kwargs):
         contex = super().get_context_data(**kwargs)
-        contex["participants"] = (EventParticipants.objects
+        participants = (EventParticipants.objects
                                   .select_related("user")
                                   .filter(event__id=self.object.id)
-                                  .only("present", "user__username", "user__id")).all()[:5]
+                                  .only("present", "user__username", "user__id")).all()
+        accepted_participants = participants.filter(status=EventParticipants.StatusChoices.REQUEST_ACCEPTED)
+        contex["participants"] = accepted_participants[:5]
+        contex["part_count"] = accepted_participants.count()
+        contex["is_sent_request"] = (participants
+                                     .filter(status=EventParticipants.StatusChoices.REQUEST_SENT,
+                                             user=self.request.user)
+                                     .exists())
         return contex
 
 
 class EventParticipantsListView(views.ListView):
     template_name = "events/participants_list.html"
     context_object_name = "participants"
-    queryset = EventParticipants.objects.select_related("user")
+    queryset = (EventParticipants.objects.select_related("user")
+                # .filter(status=EventParticipants.StatusChoices.REQUEST_ACCEPTED)
+                )
     paginate_by = 20
 
     def get_queryset(self):
@@ -213,7 +264,7 @@ def attendance_view(request, pk):
     formset = AttendanceFormSet(
         request.POST or None,
         queryset=EventParticipants.objects.filter(event__id=pk),
-        )
+    )
 
     if request.method == 'POST' and formset.is_valid():
         formset.save()
@@ -223,4 +274,4 @@ def attendance_view(request, pk):
         request,
         'events/attendance.html',
         {'event': event, 'formset': formset},
-        )
+    )

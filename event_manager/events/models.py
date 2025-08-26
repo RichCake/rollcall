@@ -5,6 +5,7 @@ from django.utils import timezone
 from django_celery_beat.models import PeriodicTask
 import datetime as dt
 import logging
+from uuid_utils.compat import uuid4
 
 from categories.models import Category
 from games.models import Game
@@ -28,6 +29,8 @@ class EventManager(models.Manager):
 
 
 class Event(models.Model):
+    id = models.UUIDField(default=uuid4, primary_key=True)
+
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -110,7 +113,7 @@ class Event(models.Model):
         verbose_name = 'мероприятие'
         verbose_name_plural = 'мероприятия'
         indexes = [
-            models.Index(fields=["id"], condition=models.Q("is_private=false"), name="public_events_idx"),
+            models.Index(fields=["id"], condition=models.Q(is_private=False), name="public_events_idx"),
         ]
 
     def __str__(self):
@@ -137,14 +140,10 @@ class Event(models.Model):
 
 class EventParticipants(models.Model):
     class StatusChoices(models.IntegerChoices):
-        WILL_ATTEND = 0, 'Обязательно буду'
-        DONT_KNOW = 1, 'Пока решаю'
-        CANT_GO = 2, 'Не пойду'
-
-    class RoleChoices(models.IntegerChoices):
-        ADMINISTRATOR = 0, 'Администратор'
-        ORGANIZER = 1, 'Организатор'
-        PARTICIPANT = 2, 'Участник'
+        REQUEST_SENT = 0, 'заявка отправлена'
+        INVITE_SENT = 1, 'приглашение отправлено'
+        REQUEST_ACCEPTED = 2, 'заявка принята'
+        REQUEST_REVOKED = 3, 'заявка отозвана'
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -171,7 +170,7 @@ class EventParticipants(models.Model):
     status = models.PositiveSmallIntegerField(
         verbose_name='статус',
         choices=StatusChoices.choices,
-        default=StatusChoices.DONT_KNOW,
+        default=StatusChoices.REQUEST_SENT,
     )
 
     present = models.BooleanField(
@@ -182,12 +181,6 @@ class EventParticipants(models.Model):
     notified = models.BooleanField(
         verbose_name='уведомлен',
         default=False,
-    )
-
-    role = models.PositiveSmallIntegerField(
-        verbose_name='роль',
-        choices=RoleChoices.choices,
-        default=RoleChoices.PARTICIPANT,
     )
 
     class Meta:

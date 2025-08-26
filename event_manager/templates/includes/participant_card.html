@@ -1,0 +1,40 @@
+<div class="col">
+  <div class="card h-100 shadow-sm" style="border-radius: 15px; border: none;">
+    <div class="card-body p-3">
+      <div class="d-flex align-items-center">
+        
+        <div class="flex-shrink-0 me-3">
+          {% if part.user.avatar %}
+            <img src="{{ part.user.avatar.url }}" alt="Аватар {{ part.user.username }}" class="img-fluid" style="width: 70px; height: 70px; object-fit: cover; border-radius: 12px;">
+          {% else %}
+            <div class="d-flex justify-content-center align-items-center bg-light" style="width: 70px; height: 70px; border-radius: 12px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-fill text-secondary" viewBox="0 0 16 16">
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+        
+        <div class="flex-grow-1">
+          <h5 class="mb-1">
+            <a href="{% url 'profiles:detail' pk=part.user.pk %}" class="text-decoration-none text-dark stretched-link">
+              {{ part.user.username }}
+            </a>
+          </h5>
+          <p class="mb-1 text-muted small">
+            {{ part.user.first_name|default_if_none:"" }} {{ part.user.last_name|default_if_none:"" }}
+          </p>
+          <div class="d-flex small">
+            <p class="text-muted mb-0">Рейтинг: <strong>{{ part.user.rating|default_if_none:"N/A"|floatformat:1 }}</strong></p>
+          </div>
+          <div class="mt-2">
+            <span class="badge bg-light text-dark border fw-normal">
+              {{ part.get_status_display }}
+            </span>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
