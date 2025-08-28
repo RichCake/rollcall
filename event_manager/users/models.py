@@ -1,8 +1,10 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from uuid_utils.compat import uuid4
 
 
 class User(AbstractUser):
+    id = models.UUIDField(default=uuid4, primary_key=True)
     avatar = models.ImageField(
         verbose_name='аватарка',
         upload_to='profiles/',
@@ -13,13 +15,8 @@ class User(AbstractUser):
         'адрес электронной почты',
         unique=True,
         )
+    telegram_chat_id = models.CharField(max_length=255, blank=True)
     
     @property
     def rating(self):
-        events = self.events.all()
-        if events:
-            return (
-                len(events.filter(eventparticipants__present=True)) /
-                len(events) * 5
-                )
-        return None
+        return 6

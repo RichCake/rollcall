@@ -1,0 +1,86 @@
+services:
+  tgbot:
+    build: ./tgbot
+    container_name: tgbot
+    command: python3 bot.py
+    env_file:
+      - ./.env
+    depends_on:
+      - django
+
+  django:
+    # Сборка образа для сервиса django из текущей директории
+    build: ./event_manager
+    # Задание имени контейнера для сервиса django
+    container_name: django
+    # Задание команды, которую нужно запустить при запуске контейнера для сервиса django
+    command: python manage.py runserver 0.0.0.0:8000
+    env_file:
+      - ./.env
+    # Открытие порта на хостовой машине и перенаправление на порт в контейнере
+    ports:
+      - 8000:8000
+    volumes:
+      - ./event_manager:/usr/src/app
+    # Зависимость от другого сервиса
+    depends_on:
+      - pgdb
+      - redis
+
+  pgdb:
+    image: postgres
+    environment:
+      POSTGRES_DB: ${PG_DB_NAME}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+    container_name: pgdb
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
+    # Чтобы дождаться запуска postgres. TODO: не работает потому что юзера postgres нет
+#    healthcheck:
+#      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+#      interval: 5s
+#      timeout: 5s
+#      retries: 5
+    restart: on-failure
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - 6379:6379
+
+  celery:
+    build: ./event_manager
+    command: celery -A event_manager worker -l info
+    env_file:
+      - ./.env
+    container_name: celery
+    depends_on:
+      - redis
+
+  celery-beat:
+    build: ./event_manager
+    command: celery -A event_manager beat -l info
+    env_file:
+      - ./.env
+    container_name: celery-beat
+    depends_on:
+      - redis
+
+  flower:
+    container_name: flower
+    build: ./event_manager
+    command: celery -A event_manager.celery flower --basic-auth=admin:${PG_PASSWORD}
+    env_file:
+      - ./.env
+    ports:
+      - 5555:5555
+    depends_on:
+      - celery
+      - celery-beat
+
+volumes:
+  pgdbdata:

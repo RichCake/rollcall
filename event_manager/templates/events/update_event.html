@@ -26,16 +26,24 @@
       </li>
     </ol>
   </nav>
+  <h1 class="my-4">Панель управления</h1>
   <div class="row justify-content-center">
-    <div class="col-10">
-      <hr class="mt-0 mb-4">
-      <h1 class="my-4">Редактировать событие</h1>
+    <div class="col border border-secondary-subtle rounded-4 p-4 me-3">
+      <h3 class="mb-2">Редактирование события</h3>
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
-        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="submit" class="btn btn-primary mt-1">Сохранить</button>
       </form>
+    </div>
+    <div class="col border border-secondary-subtle rounded-4 p-4">
+      <h3 class="mb-2">Управление заявками</h3>
+      {% for part in participants %}
+        {% include "includes/participant_card.html" %}
+      {% endfor %}
     </div>
   </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  {{ form.media }}
 {% endblock %}

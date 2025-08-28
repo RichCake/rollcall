@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Участники события: {{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb p-3 bg-body-tertiary rounded-3">
+      <li class="breadcrumb-item">
+        <a class="link-body-emphasis" href="{% url "homepage:home" %}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+            <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5"/>
+          </svg>
+          <span class="visually-hidden">Home</span>
+        </a>
+      </li>
+      <li class="breadcrumb-item">
+        <a class="link-body-emphasis fw-semibold text-decoration-none" href="{% url "events:list" %}">Список событий</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a class="link-body-emphasis fw-semibold text-decoration-none" href="{% url "events:detail" pk=event.id %}">{{ event.title }}</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        Список участников
+      </li>
+    </ol>
+  </nav>
+
+  <div class="my-4">
+    <h2 class="pb-2 border-bottom">Участники ({{ page_obj.paginator.count }})</h2>
+  </div>
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+    {% for part in participants %}
+      {% include "includes/participant_card.html" with part=part %}
+    {% empty %}
+      <div class="col-12">
+        <p class="text-center text-muted">На данный момент у этого события нет принятых участников.</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if is_paginated %}
+  <nav aria-label="Page navigation" class="mt-5">
+    <ul class="pagination justify-content-center">
+
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page=1" aria-label="Первая">
+            &laquo;
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Предыдущая">
+            &lsaquo;
+          </a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">&laquo;</span>
+        </li>
+        <li class="page-item disabled">
+          <span class="page-link">&lsaquo;</span>
+        </li>
+      {% endif %}
+
+      <li class="page-item active" aria-current="page">
+        <span class="page-link">
+          {{ page_obj.number }}
+          <span class="visually-hidden">(current)</span>
+        </span>
+      </li>
+
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Следующая">
+            &rsaquo;
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Последняя">
+            &raquo;
+          </a>
+        </li>
+      {% else %}
+         <li class="page-item disabled">
+          <span class="page-link">&rsaquo;</span>
+        </li>
+        <li class="page-item disabled">
+          <span class="page-link">&raquo;</span>
+        </li>
+      {% endif %}
+
+    </ul>
+    <p class="text-center text-muted">
+      Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+    </p>
+  </nav>
+  {% endif %}
+
+</div>
+{% endblock %}

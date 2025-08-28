@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.utils import timezone
+from uuid_utils.compat import uuid4
 
-from events.forms import AddParticipantForm, EventForm
+from events.forms import ParticipantForm, EventForm
 
 
 class TestForms(TestCase):
@@ -17,8 +18,8 @@ class TestForms(TestCase):
 
     def test_add_participant_form_valid(self):
         form_data = {
-            'event_id': 1,
+            'event_id': uuid4(),
             'user_id': 1,
         }
-        form = AddParticipantForm(data=form_data)
+        form = ParticipantForm(data=form_data)
         self.assertTrue(form.is_valid())

@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
+{% block head %}{% endblock head %}
+
  {% block title %}Создние событие{% endblock title %}
 
 {% block content %}
@@ -21,15 +23,17 @@
     </ol>
   </nav>
   <div class="row justify-content-center">
-    <div class="col-10">
+    <div class="col-7">
       <hr class="mt-0 mb-4">
       <h1 class="my-4">Создание событие</h1>
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
-        <button type="submit" class="btn btn-primary">Создать</button>
+        <button type="submit" class="btn btn-primary mt-1">Создать</button>
       </form>
     </div>
   </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  {{ form.media }}
 {% endblock %}

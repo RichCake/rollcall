@@ -1,11 +1,16 @@
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
 from django.utils import timezone
+from django_celery_beat.models import PeriodicTask
+import datetime as dt
+import logging
+from uuid_utils.compat import uuid4
 
 from categories.models import Category
+from games.models import Game
+
+logger = logging.getLogger(__name__)
 
 
 class EventManager(models.Manager):
@@ -22,8 +27,23 @@ class EventManager(models.Manager):
             .filter(end__gte=timezone.now())
         )
 
+    def get_events_history(self, user_id: int):
+        return (
+            self.get_queryset()
+            .prefetch_related('participants')
+            .filter(participants__id=user_id)
+        )
+
+    def get_created_events(self, author_id: int):
+        return (
+            self.get_queryset()
+            .filter(author__id=author_id)
+        )
+
 
 class Event(models.Model):
+    id = models.UUIDField(default=uuid4, primary_key=True)
+
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -34,10 +54,12 @@ class Event(models.Model):
     title = models.CharField(
         verbose_name='название',
         max_length=150,
+        help_text="Короткий заголовок. Макс. 150 симв.",
     )
 
     description = models.TextField(
         verbose_name='описание',
+        help_text="Подробное описание",
     )
 
     created = models.DateTimeField(
@@ -87,10 +109,15 @@ class Event(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
-        null=True,
-        blank=True,
         verbose_name='категория',
         related_name='events',
+    )
+
+    game = models.ForeignKey(
+        Game,
+        on_delete=models.CASCADE,
+        verbose_name="игра",
+        related_name="events",
     )
 
     objects = EventManager()
@@ -98,26 +125,38 @@ class Event(models.Model):
     class Meta:
         verbose_name = 'мероприятие'
         verbose_name_plural = 'мероприятия'
+        indexes = [
+            models.Index(fields=["id"], condition=models.Q(is_private=False), name="public_events_idx"),
+        ]
 
     def __str__(self):
         return self.title
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.old_end = self.end
+
     @property
     def is_past_due(self):
+        """
+        Used in templates. Check if event is over
+        :return: bool
+        """
         return timezone.now() > self.end
 
+    def save(self, **kwargs):
+        if self.end != self.old_end:
+            logger.info(f"for {self.pk}", self.end - dt.timedelta(minutes=30))
+            PeriodicTask.objects.filter(name__endswith=f"for {self.pk}").update(start_time=self.end - dt.timedelta(minutes=30), enabled=True)
+        super().save(**kwargs)
 
 
 class EventParticipants(models.Model):
     class StatusChoices(models.IntegerChoices):
-        WILL_ATTEND = 0, 'Обязательно буду'
-        DONT_KNOW = 1, 'Пока решаю'
-        CANT_GO = 2, 'Не пойду'
-
-    class RoleChoices(models.IntegerChoices):
-        ADMINISTRATOR = 0, 'Администратор'
-        ORGANIZER = 1, 'Организатор'
-        PARTICIPANT = 2, 'Участник'
+        REQUEST_SENT = 0, 'заявка отправлена'
+        INVITE_SENT = 1, 'приглашение отправлено'
+        REQUEST_ACCEPTED = 2, 'заявка принята'
+        REQUEST_REVOKED = 3, 'заявка отозвана'
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -144,7 +183,7 @@ class EventParticipants(models.Model):
     status = models.PositiveSmallIntegerField(
         verbose_name='статус',
         choices=StatusChoices.choices,
-        default=StatusChoices.DONT_KNOW,
+        default=StatusChoices.REQUEST_SENT,
     )
 
     present = models.BooleanField(
@@ -157,26 +196,9 @@ class EventParticipants(models.Model):
         default=False,
     )
 
-    role = models.PositiveSmallIntegerField(
-        verbose_name='роль',
-        choices=RoleChoices.choices,
-        default=RoleChoices.PARTICIPANT,
-    )
-
     class Meta:
         verbose_name = 'участник мероприятия'
         verbose_name_plural = 'участники мероприятия'
 
     def __str__(self):
         return f'{self.event} - {self.user}'
-    
-
-@receiver(pre_save, sender=Event)
-def update_notified_on_end_change(sender, instance, *args, **kwargs):
-    if instance.pk:
-        try:
-            old_instance = Event.objects.get(pk=instance.pk)
-            if old_instance.end != instance.end:
-                instance.eventparticipants_set.filter(notified=True).update(notified=False)
-        except Event.DoesNotExist:
-            pass

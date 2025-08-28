@@ -4,7 +4,7 @@
 {% block title %}О пользователе{% endblock title %}
 
 {% block content %}
-  <div class="container py-5">
+  <div class="container">
     <div class="row">
       <div class="col">
         <nav aria-label="breadcrumb">
@@ -32,7 +32,7 @@
       <div class="col-lg-4">
         <div class="card mb-4">
           <div class="card-body text-center">
-            {% if user.first_name %}
+            {% if user.avatar %}
               <img src="{{ user.avatar.url }}" alt="avatar"
                 class="rounded-circle img-fluid" style="width: 150px;">
             {% else %}
@@ -42,13 +42,24 @@
             {% endif %}
             <h5 class="my-3">{{ user.username }}</h5>
             <p class="text-muted mb-1">{{ user.first_name }} {{ user.last_name }}</p>
-            <div class="d-flex justify-content-center mb-2">
+            <div class="d-flex flex-column">
               {% if request.user.id == user.id %}
-                <a class="btn btn-primary" href="{% url "profiles:update" pk=user.id %}">Редактировать</a>
+                <div class="m-2">
+                  <a class="btn btn-primary d-flex text-center" href="{% url 'profiles:update' pk=user.id %}">Редактировать</a>
+                </div>
                 {% if request.user.gamestat %}
-                  <a class="btn btn-secondary ms-1" href="{% url "gamestat:my_stats" %}">Моя статистика</a>
+                <div class="m-2">
+                  <a class="btn btn-secondary text-center d-flex" href="{% url 'gamestat:my_stats' %}">Моя статистика</a>
+                </div>
                 {% else %}
-                  <a class="btn btn-secondary ms-1" href="{% url "gamestat:steam_login" %}">Войти через Steam</a>
+                <div class="m-2">
+                  <a class="btn btn-secondary text-center d-flex" href="{% url 'gamestat:steam_login' %}">Войти через Steam</a>
+                </div>
+                {% endif %}
+                {% if not user.telegran_chat_id %}
+                <div class="m-2">
+                  <a class="btn btn-secondary text-center d-flex" href="https://t.me/rollcall8_bot?start={{ user.id }}" target="_blank">Подключить Телеграм</a>
+                </div>
                 {% endif %}
               {% endif %}
             </div>
@@ -60,7 +71,7 @@
           <div class="card-body">
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Full Name</p>
+                <p class="mb-0">Имя</p>
               </div>
               <div class="col-sm-9">
                 <p class="text-muted mb-0">{{ user.first_name }} {{ user.last_name }}</p>
@@ -69,7 +80,7 @@
             <hr>
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Email</p>
+                <p class="mb-0">Почта</p>
               </div>
               <div class="col-sm-9">
                 <a class="text-muted mb-0" href="mailto:{{ user.email }}">{{ user.email }}</a>
@@ -78,10 +89,23 @@
             <hr>
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Rating</p>
+                <p class="mb-0">Рейтинг (beta)</p>
               </div>
               <div class="col-sm-9">
                 <p class="text-muted mb-0">{{ user.rating|default_if_none:"5,0"|floatformat:2 }}</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Телеграм привязан</p>
+              </div>
+              <div class="col-sm-9">
+                {% if user.telegram_chat_id %}
+                  <p class="text-muted mb-0"><span class="badge bg-success">Да</span></p>
+                {% else %}
+                  <p class="text-muted mb-0"><span class="badge bg-secondary">Нет</span></p>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -146,7 +170,56 @@
           </div>
         </div>
         {% endif %}
-        
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-tab-pane" type="button" role="tab" aria-controls="history-tab-pane" aria-selected="true">Посещенные события</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="created-tab" data-bs-toggle="tab" data-bs-target="#created-tab-pane" type="button" role="tab" aria-controls="created-tab-pane" aria-selected="false">Созданные события</button>
+          </li>
+          {% if request.user == user %}
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="future-tab" data-bs-toggle="tab" data-bs-target="#future-tab-pane" type="button" role="tab" aria-controls="future-tab-pane" aria-selected="false">Предстоящие события</button>
+            </li>
+          {% endif %}
+        </ul>
+        <div class="tab-content border rounded-bottom" id="myTabContent">
+          <div class="tab-pane fade show active" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab" tabindex="0">
+            <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 my-4 mx-2">
+                <div class="col">
+                  {% for event in history %}
+                        {% include "includes/event_card.html" %}
+                  {% empty %}
+                    <h6>Нет событий</h6>
+                  {% endfor %}
+                </div>
+              </div>
+          </div>
+          <div class="tab-pane fade" id="created-tab-pane" role="tabpanel" aria-labelledby="created-tab" tabindex="0">
+            <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 my-4 mx-2">
+                <div class="col">
+                  {% for event in created %}
+                        {% include "includes/event_card.html" %}
+                  {% empty %}
+                    <h6>Нет событий</h6>
+                  {% endfor %}
+                </div>
+              </div>
+          </div>
+          {% if request.user == user %}
+            <div class="tab-pane fade" id="future-tab-pane" role="tabpanel" aria-labelledby="future-tab" tabindex="0">
+              <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 my-4 mx-2">
+                <div class="col">
+                  {% for event in future %}
+                        {% include "includes/event_card.html" %}
+                  {% empty %}
+                    <h6>Нет событий</h6>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
         
         
       </div>
