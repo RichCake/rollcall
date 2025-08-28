@@ -2,8 +2,10 @@ from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 
+@csrf_exempt
 def link_telegram_user(request):
     if request.method == 'POST':
         chat_id = request.POST.get('chat_id')
@@ -15,9 +17,4 @@ def link_telegram_user(request):
         
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'})
-
-
-def get_csrf_token(request):
-    csrf_token = get_token(request)
-    return JsonResponse({'csrf_token': csrf_token})
 

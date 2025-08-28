@@ -194,7 +194,7 @@ class EventsListView(views.ListView):
         return context
 
 
-class DetailEventView(views.DetailView):
+class DetailEventView(LoginRequiredMixin, views.DetailView):
     template_name = 'events/event_detail.html'
     context_object_name = 'event'
     queryset = (

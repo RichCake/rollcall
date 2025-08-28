@@ -1,4 +1,4 @@
-<div class="col">
+<div class="row">
   <div class="card h-100 shadow-sm" style="border-radius: 15px; border: none;">
     <div class="card-body p-3">
       <div class="d-flex align-items-center">
@@ -16,40 +16,44 @@
         </div>
         
         <div class="flex-grow-1">
-          <h5 class="mb-1">
-            <a href="{% url 'profiles:detail' pk=part.user.pk %}" class="text-decoration-none text-dark">
-              {{ part.user.username }}
-            </a>
-          </h5>
-          <p class="mb-1 text-muted small">
-            {{ part.user.first_name|default_if_none:"" }} {{ part.user.last_name|default_if_none:"" }}
-          </p>
-          <div class="d-flex small">
-            <p class="text-muted mb-0">Рейтинг: <strong>{{ part.user.rating|default_if_none:"N/A"|floatformat:1 }}</strong></p>
-          </div>
-          <div class="mt-2">
-            <span class="badge bg-light text-dark border fw-normal">
-              {{ part.get_status_display }}
-            </span>
-          </div>
-          <div>
-            {% if event and event.author == request.user %}
-              {% if part.status == 0 %}
-                <form method="post" action="{% url 'events:accept_request' %}">
-                  {% csrf_token %}
-                  <input type="hidden" name="event_id" value="{{ event.id }}">
-                  <input type="hidden" name="user_id" value="{{ part.user.id }}">
-                  <button type="submit" class="btn btn-success">Принять заявку</button>
-                </form>
-              {% elif part.status == 2 %}
-                <form method="post" action="{% url 'events:revoke_request' %}">
-                  {% csrf_token %}
-                  <input type="hidden" name="event_id" value="{{ event.id }}">
-                  <input type="hidden" name="user_id" value="{{ part.user.id }}">
-                  <button type="submit" class="btn btn-danger">Удалить участника</button>
-                </form>
+          <div class="row align-items-end">
+            <div class="col">
+              <h5 class="mb-1">
+                <a href="{% url 'profiles:detail' pk=part.user.pk %}" class="text-decoration-none text-dark">
+                  {{ part.user.username }}
+                </a>
+              </h5>
+              <p class="mb-1 text-muted small">
+                {{ part.user.first_name|default_if_none:"" }} {{ part.user.last_name|default_if_none:"" }}
+              </p>
+              <div class="d-flex small">
+                <p class="text-muted mb-0">Рейтинг: <strong>{{ part.user.rating|default_if_none:"N/A"|floatformat:1 }}</strong></p>
+              </div>
+              <div class="mt-2">
+                <span class="badge bg-light text-dark border fw-normal">
+                  {{ part.get_status_display }}
+                </span>
+              </div>
+            </div>
+            <div class="col">
+              {% if event and event.author == request.user %}
+                {% if part.status == 0 %}
+                  <form method="post" action="{% url 'events:accept_request' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="event_id" value="{{ event.id }}">
+                    <input type="hidden" name="user_id" value="{{ part.user.id }}">
+                    <button type="submit" class="btn btn-success">Принять заявку</button>
+                  </form>
+                {% elif part.status == 2 %}
+                  <form method="post" action="{% url 'events:revoke_request' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="event_id" value="{{ event.id }}">
+                    <input type="hidden" name="user_id" value="{{ part.user.id }}">
+                    <button type="submit" class="btn btn-danger">Удалить участника</button>
+                  </form>
+                {% endif %}
               {% endif %}
-            {% endif %}
+            </div>
           </div>
         </div>
         

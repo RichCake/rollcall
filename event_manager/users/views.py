@@ -70,4 +70,4 @@ class UserAutocomplete(autocomplete.Select2QuerySetView):
             )
             return queryset
         else:
-            return None
+            return get_user_model().objects.none()

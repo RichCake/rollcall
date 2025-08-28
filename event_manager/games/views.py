@@ -16,4 +16,4 @@ class GameAutocomplete(autocomplete.Select2QuerySetView):
             )
             return queryset
         else:
-            return []
+            return Game.objects.none()

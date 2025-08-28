@@ -18,7 +18,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', default='aaa')
 
 DEBUG = str_to_bool(os.getenv('DJANGO_DEBUG', default='false'))
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'django']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'django', '192.168.178.41']
 
 
 INSTALLED_APPS = [
@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

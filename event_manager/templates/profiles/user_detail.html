@@ -42,16 +42,24 @@
             {% endif %}
             <h5 class="my-3">{{ user.username }}</h5>
             <p class="text-muted mb-1">{{ user.first_name }} {{ user.last_name }}</p>
-            <div class="d-flex justify-content-center mb-2">
+            <div class="d-flex flex-column">
               {% if request.user.id == user.id %}
-                <a class="btn btn-primary" href="{% url "profiles:update" pk=user.id %}">Редактировать</a>
+                <div class="m-2">
+                  <a class="btn btn-primary d-flex text-center" href="{% url 'profiles:update' pk=user.id %}">Редактировать</a>
+                </div>
                 {% if request.user.gamestat %}
-                  <a class="btn btn-secondary ms-1" href="{% url "gamestat:my_stats" %}">Моя статистика</a>
+                <div class="m-2">
+                  <a class="btn btn-secondary text-center d-flex" href="{% url 'gamestat:my_stats' %}">Моя статистика</a>
+                </div>
                 {% else %}
-                  <a class="btn btn-secondary ms-1" href="{% url "gamestat:steam_login" %}">Войти через Steam</a>
+                <div class="m-2">
+                  <a class="btn btn-secondary text-center d-flex" href="{% url 'gamestat:steam_login' %}">Войти через Steam</a>
+                </div>
                 {% endif %}
                 {% if not user.telegran_chat_id %}
-                  <a class="btn btn-secondary ms-1" href="https://t.me/rollcall8_bot?start={{ user.id }}" target="_blank">Подключить Телеграм</a>
+                <div class="m-2">
+                  <a class="btn btn-secondary text-center d-flex" href="https://t.me/rollcall8_bot?start={{ user.id }}" target="_blank">Подключить Телеграм</a>
+                </div>
                 {% endif %}
               {% endif %}
             </div>
@@ -175,28 +183,40 @@
             </li>
           {% endif %}
         </ul>
-        <div class="tab-content" id="myTabContent">
+        <div class="tab-content border rounded-bottom" id="myTabContent">
           <div class="tab-pane fade show active" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab" tabindex="0">
-            {% for event in history %}
-              {% include "includes/event_card.html" %}
-            {% empty %}
-              <p>Нет событий</p>
-            {% endfor %}
+            <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 my-4 mx-2">
+                <div class="col">
+                  {% for event in history %}
+                        {% include "includes/event_card.html" %}
+                  {% empty %}
+                    <h6>Нет событий</h6>
+                  {% endfor %}
+                </div>
+              </div>
           </div>
           <div class="tab-pane fade" id="created-tab-pane" role="tabpanel" aria-labelledby="created-tab" tabindex="0">
-            {% for event in created %}
-              {% include "includes/event_card.html" %}
-            {% empty %}
-              <p>Нет событий</p>
-            {% endfor %}
+            <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 my-4 mx-2">
+                <div class="col">
+                  {% for event in created %}
+                        {% include "includes/event_card.html" %}
+                  {% empty %}
+                    <h6>Нет событий</h6>
+                  {% endfor %}
+                </div>
+              </div>
           </div>
           {% if request.user == user %}
             <div class="tab-pane fade" id="future-tab-pane" role="tabpanel" aria-labelledby="future-tab" tabindex="0">
-            {% for event in future %}
-              {% include "includes/event_card.html" %}
-            {% empty %}
-              <p>Нет событий</p>
-            {% endfor %}
+              <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 my-4 mx-2">
+                <div class="col">
+                  {% for event in future %}
+                        {% include "includes/event_card.html" %}
+                  {% empty %}
+                    <h6>Нет событий</h6>
+                  {% endfor %}
+                </div>
+              </div>
             </div>
           {% endif %}
         </div>
