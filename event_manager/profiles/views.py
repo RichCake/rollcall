@@ -2,7 +2,10 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic import DetailView, ListView, UpdateView
+
+from events.models import Event, EventParticipants
 
 
 class UserListView(ListView):
@@ -15,6 +18,14 @@ class UserDetailView(DetailView):
     template_name = 'profiles/user_detail.html'
     context_object_name = 'user'
     model = get_user_model()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        qs = Event.objects.prefetch_related('participants').filter(participants__id=self.get_object().id)
+        context["history"] = qs.filter(end__lt=timezone.now())
+        context["created"] = Event.objects.get_created_events(self.get_object().id)
+        context["future"] = qs.filter(end__gte=timezone.now())
+        return context
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):

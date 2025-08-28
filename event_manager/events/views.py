@@ -172,6 +172,7 @@ class EventsListView(views.ListView):
             'description',
             'end',
             'author__username',
+            'author__id',
             'eventparticipants__user__username',
             'max_participants',
         )

@@ -27,6 +27,19 @@ class EventManager(models.Manager):
             .filter(end__gte=timezone.now())
         )
 
+    def get_events_history(self, user_id: int):
+        return (
+            self.get_queryset()
+            .prefetch_related('participants')
+            .filter(participants__id=user_id)
+        )
+
+    def get_created_events(self, author_id: int):
+        return (
+            self.get_queryset()
+            .filter(author__id=author_id)
+        )
+
 
 class Event(models.Model):
     id = models.UUIDField(default=uuid4, primary_key=True)

@@ -162,7 +162,44 @@
           </div>
         </div>
         {% endif %}
-        
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-tab-pane" type="button" role="tab" aria-controls="history-tab-pane" aria-selected="true">Посещенные события</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="created-tab" data-bs-toggle="tab" data-bs-target="#created-tab-pane" type="button" role="tab" aria-controls="created-tab-pane" aria-selected="false">Созданные события</button>
+          </li>
+          {% if request.user == user %}
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="future-tab" data-bs-toggle="tab" data-bs-target="#future-tab-pane" type="button" role="tab" aria-controls="future-tab-pane" aria-selected="false">Предстоящие события</button>
+            </li>
+          {% endif %}
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab" tabindex="0">
+            {% for event in history %}
+              {% include "includes/event_card.html" %}
+            {% empty %}
+              <p>Нет событий</p>
+            {% endfor %}
+          </div>
+          <div class="tab-pane fade" id="created-tab-pane" role="tabpanel" aria-labelledby="created-tab" tabindex="0">
+            {% for event in created %}
+              {% include "includes/event_card.html" %}
+            {% empty %}
+              <p>Нет событий</p>
+            {% endfor %}
+          </div>
+          {% if request.user == user %}
+            <div class="tab-pane fade" id="future-tab-pane" role="tabpanel" aria-labelledby="future-tab" tabindex="0">
+            {% for event in future %}
+              {% include "includes/event_card.html" %}
+            {% empty %}
+              <p>Нет событий</p>
+            {% endfor %}
+            </div>
+          {% endif %}
+        </div>
         
         
       </div>

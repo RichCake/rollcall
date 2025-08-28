@@ -12,7 +12,7 @@
       <p>{{ event.description|truncatechars:100 }}</p>
       <p>Дата: {{ event.end }}</p>
     </div>
-    <p>Автор: {% if request.user.username == event.author.username %}Вы{% else %}{{ event.author.username }}{% endif %}</p>
+    <p>Автор: <a href="{% url "profiles:detail" pk=event.author.id %}">{% if request.user.username == event.author.username %}Вы{% else %}{{ event.author.username }}{% endif %}</a></p>
     <p>{{ event.part_count }}{% if event.max_participants %}/{{ event.max_participants }}{% endif %} участников</p>
     {% if request.user.is_authenticated %}
       {% if request.user == event.author %}
