@@ -17,7 +17,7 @@
         
         <div class="flex-grow-1">
           <h5 class="mb-1">
-            <a href="{% url 'profiles:detail' pk=part.user.pk %}" class="text-decoration-none text-dark stretched-link">
+            <a href="{% url 'profiles:detail' pk=part.user.pk %}" class="text-decoration-none text-dark">
               {{ part.user.username }}
             </a>
           </h5>
@@ -31,6 +31,25 @@
             <span class="badge bg-light text-dark border fw-normal">
               {{ part.get_status_display }}
             </span>
+          </div>
+          <div>
+            {% if event and event.author == request.user %}
+              {% if part.status == 0 %}
+                <form method="post" action="{% url 'events:accept_request' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="event_id" value="{{ event.id }}">
+                  <input type="hidden" name="user_id" value="{{ part.user.id }}">
+                  <button type="submit" class="btn btn-success">Принять заявку</button>
+                </form>
+              {% elif part.status == 2 %}
+                <form method="post" action="{% url 'events:revoke_request' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="event_id" value="{{ event.id }}">
+                  <input type="hidden" name="user_id" value="{{ part.user.id }}">
+                  <button type="submit" class="btn btn-danger">Удалить участника</button>
+                </form>
+              {% endif %}
+            {% endif %}
           </div>
         </div>
         

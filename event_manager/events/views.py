@@ -3,7 +3,7 @@ import logging
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count, Prefetch
+from django.db.models import Count, Prefetch, Q
 from django.db.models.functions import Lower
 from django.utils.translation import gettext as _
 from django import forms
@@ -19,6 +19,7 @@ from django.http import Http404
 
 from events.forms import ParticipantForm, AttendanceFormSet, EventForm
 from events.models import Event, EventParticipants
+from events.mixins import AuthorRequiredMixin
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +39,7 @@ class CreateEventView(LoginRequiredMixin, views.CreateView):
         return FormMixin.form_valid(self, form)
 
 
-class UpdateEventView(LoginRequiredMixin, views.UpdateView):
+class UpdateEventView(AuthorRequiredMixin, views.UpdateView):
     template_name = 'events/update_event.html'
     form_class = EventForm
     queryset = (
@@ -58,8 +59,15 @@ class UpdateEventView(LoginRequiredMixin, views.UpdateView):
     def get_success_url(self):
         return reverse_lazy('events:update', args=[self.object.id])
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["participants"] = (EventParticipants.objects
+                                   .filter(event=self.object)
+                                   .select_related("user"))
+        return context
 
-class DeleteEventView(LoginRequiredMixin, views.DeleteView):
+
+class DeleteEventView(AuthorRequiredMixin, views.DeleteView):
     model = Event
     success_url = reverse_lazy('events:list')
     context_object_name = 'event'
@@ -78,8 +86,6 @@ class SendRequestView(LoginRequiredMixin, views.View):
                                      .filter(status=EventParticipants.StatusChoices.REQUEST_ACCEPTED,
                                              event=event)
                                      )
-            logger.info("INFOOOOOOO", user, event)
-            logger.info("INFOOO", event.max_participants and accepted_participants.count() >= event.max_participants, user in event.participants.all())
             if ((event.max_participants and accepted_participants.count() >= event.max_participants)
                     or user in event.participants.all()):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -118,8 +124,7 @@ class RevokeRequestView(LoginRequiredMixin, views.View):
             part.status = EventParticipants.StatusChoices.REQUEST_REVOKED
             part.save()
             PeriodicTask.objects.filter(name=f"Send notification to {user_id} for {event_id}").update(enabled=False)
-        return HttpResponseRedirect(
-            reverse_lazy('events:list'))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 class AcceptRequestView(LoginRequiredMixin, views.View):
@@ -147,7 +152,6 @@ class AcceptRequestView(LoginRequiredMixin, views.View):
                         task="event_manager.celery.send_notification",
                         args=json.dumps([30, event.title, user.telegram_chat_id]),
                     )
-            return HttpResponseRedirect(reverse_lazy('events:detail', args=[event.id]))
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -160,7 +164,8 @@ class EventsListView(views.ListView):
         .select_related('author', 'category')
         .prefetch_related('participants')
         .filter(is_private=False)
-        .annotate(part_count=Count('eventparticipants'))
+        .annotate(part_count=Count('eventparticipants',
+                                   filter=Q(eventparticipants__status=EventParticipants.StatusChoices.REQUEST_ACCEPTED)))
         .only(
             'category__name',
             'title',
@@ -231,6 +236,26 @@ class DetailEventView(views.DetailView):
                                      .filter(status=EventParticipants.StatusChoices.REQUEST_SENT,
                                              user=self.request.user)
                                      .exists())
+        return contex
+
+
+class ControlPanelEventView(views.DetailView):
+    template_name = 'events/control_panel.html'
+    context_object_name = 'event'
+    queryset = (
+        Event.objects
+        .select_related('author', 'category')
+    )
+
+    def get_context_data(self, **kwargs):
+        contex = super().get_context_data(**kwargs)
+        participants = (EventParticipants.objects
+                                  .select_related("user")
+                                  .filter(event__id=self.object.id)
+                                  .only("present", "user__username", "user__id")).all()
+        accepted_participants = participants.filter(status=EventParticipants.StatusChoices.REQUEST_ACCEPTED)
+        contex["participants"] = accepted_participants
+        contex["part_count"] = accepted_participants.count()
         return contex
 
 
