@@ -1,5 +1,6 @@
 import datetime as dt
 
+from dal import autocomplete
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -57,3 +58,16 @@ def activate_view(request, userid):
         messages.info(request, 'Аккаунт уже активирован!')
 
     return render(request, 'users/activate.html')
+
+
+class UserAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        queryset = get_user_model().objects.all()
+
+        if self.q:
+            queryset = (
+                queryset.filter(username__icontains=self.q)
+            )
+            return queryset
+        else:
+            return None

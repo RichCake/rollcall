@@ -15,4 +15,5 @@ urlpatterns = [
     path('revoke_request/', views.RevokeRequestView.as_view(), name='revoke_request'),
     path('accept_request/', views.AcceptRequestView.as_view(), name='accept_request'),
     path('list/', views.EventsListView.as_view(), name='list'),
+    path('search/', views.SearchEventView.as_view(), name='search'),
 ]

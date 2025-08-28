@@ -1,5 +1,5 @@
 from django.contrib.auth import views
-from django.urls import path, reverse_lazy
+from django.urls import path, reverse_lazy, re_path
 
 from users import forms
 from users import views as users_views
@@ -8,7 +8,7 @@ app_name = 'users'
 
 urlpatterns = [
     path(
-        'activate/<int:userid>/',
+        'activate/<uuid:userid>/',
         users_views.activate_view,
         name='activate',
     ),
@@ -73,5 +73,10 @@ urlpatterns = [
             template_name='users/password_reset_complete.html',
         ),
         name='password_reset_complete',
+    ),
+    re_path(
+        r'^user-autocomplete/$',
+        users_views.UserAutocomplete.as_view(),
+        name='user-autocomplete',
     ),
 ]

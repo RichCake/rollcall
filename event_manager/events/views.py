@@ -17,7 +17,7 @@ from django_celery_beat.models import PeriodicTask, IntervalSchedule
 import datetime as dt
 from django.http import Http404
 
-from events.forms import ParticipantForm, AttendanceFormSet, EventForm
+from events.forms import ParticipantForm, AttendanceFormSet, EventForm, SearchEventForm
 from events.models import Event, EventParticipants
 from events.mixins import AuthorRequiredMixin
 
@@ -180,24 +180,12 @@ class EventsListView(views.ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        status = self.request.GET.get('status')
-        author = self.request.GET.get('author')
-        sort = self.request.GET.get('sort')
-        if status:
-            if status == 'status1':
-                queryset = queryset.filter(participants=self.request.user)
-            elif status == 'status2':
-                queryset = queryset.exclude(participants=self.request.user)
-        if author:
-            if author == 'author1':
-                queryset = queryset.filter(author=self.request.user)
-            elif author == 'author2':
-                queryset = queryset.exclude(author=self.request.user)
-        if sort:
-            if sort == 'end':
-                queryset = queryset.order_by('-end')
-            else:
-                queryset = queryset.order_by(Lower(sort).asc())
+        title_contains = self.request.GET.get('title_contains')
+        desc_contains = self.request.GET.get('desc_contains')
+        if title_contains:
+            queryset = queryset.filter(title__icontains=title_contains)
+        if desc_contains:
+            queryset = queryset.filter(description__icontains=desc_contains)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -301,3 +289,9 @@ def attendance_view(request, pk):
         'events/attendance.html',
         {'event': event, 'formset': formset},
     )
+
+
+class SearchEventView(views.FormView):
+    template_name = "events/search_event.html"
+    form_class = SearchEventForm
+    success_url = reverse_lazy("events:list")
