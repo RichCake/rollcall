@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     'games.apps.GamesConfig',
     'categories.apps.CategoriesConfig',
     'profiles.apps.ProfilesConfig',
-    'notifications.apps.NotificationsConfig',
     'crispy_forms',
     'crispy_bootstrap4',
     'django_celery_beat',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 ROOT_URLCONF = 'event_manager.urls'
 
@@ -67,6 +69,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -193,3 +197,12 @@ LOGGING = {
         "level": "INFO",
     },
 }
+
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.telegram.TelegramAuth',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+SOCIAL_AUTH_TELEGRAM_BOT_TOKEN = TG_TOKEN

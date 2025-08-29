@@ -17,17 +17,7 @@ def signup_view(request):
     form = SignUpForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
-            user = form.save()
-            if user.email:
-                send_mail(
-                    'Activate accaunt!',
-                    request.build_absolute_uri(
-                        reverse('users:activate', kwargs={'userid': user.id}),
-                    ),
-                    settings.MAIL,
-                    [user.email],
-                    fail_silently=False,
-                )
+            form.save()
             return redirect('users:signup_success')
 
     return render(

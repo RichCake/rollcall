@@ -39,7 +39,7 @@ class EventForm(forms.ModelForm):
 
 class ParticipantForm(forms.Form):
     event_id = forms.UUIDField()
-    user_id = forms.IntegerField()
+    user_id = forms.UUIDField()
 
 
 class AttendanceForm(forms.ModelForm):

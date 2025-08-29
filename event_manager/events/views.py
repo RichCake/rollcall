@@ -17,6 +17,7 @@ from django_celery_beat.models import PeriodicTask, IntervalSchedule
 import datetime as dt
 from django.http import Http404
 
+from event_manager.celery import send_notification
 from events.forms import ParticipantForm, AttendanceFormSet, EventForm, SearchEventForm
 from events.models import Event, EventParticipants
 from events.mixins import AuthorRequiredMixin
@@ -95,20 +96,6 @@ class SendRequestView(LoginRequiredMixin, views.View):
                 event=event,
                 status=EventParticipants.StatusChoices.REQUEST_SENT,
             )
-
-            # if user.telegram_chat_id:
-            #     schedule, created = IntervalSchedule.objects.get_or_create(
-            #         every=1,
-            #         period=IntervalSchedule.SECONDS,
-            #     )
-            #     PeriodicTask.objects.create(
-            #         interval=schedule,
-            #         name=f"Send notification to {user.id} for {event.id}",
-            #         start_time=event.end - dt.timedelta(minutes=30),
-            #         one_off=True,
-            #         task="event_manager.celery.send_notification",
-            #         args=json.dumps([30, event.title, user.telegram_chat_id]),
-            #     )
             return HttpResponseRedirect(reverse_lazy('events:detail', args=[event.id]))
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -120,9 +107,7 @@ class RevokeRequestView(LoginRequiredMixin, views.View):
             event_id = form.cleaned_data['event_id']
             user_id = form.cleaned_data['user_id']
 
-            part = EventParticipants.objects.filter(event__id=event_id, user__id=user_id).get()
-            part.status = EventParticipants.StatusChoices.REQUEST_REVOKED
-            part.save()
+            EventParticipants.objects.filter(event__id=event_id, user__id=user_id).delete()
             PeriodicTask.objects.filter(name=f"Send notification to {user_id} for {event_id}").update(enabled=False)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -139,7 +124,12 @@ class AcceptRequestView(LoginRequiredMixin, views.View):
                 part = EventParticipants.objects.filter(user=user, event=event).get()
                 part.status = EventParticipants.StatusChoices.REQUEST_ACCEPTED
                 part.save()
-                if user.telegram_chat_id:
+
+                social = user.social_auth.filter(provider="telegram").first()
+                if social:
+                    text = f"Вашу заявку на событие {event.title} приняли!"
+                    send_notification.delay(text, social.uid)
+
                     schedule, created = IntervalSchedule.objects.get_or_create(
                         every=1,
                         period=IntervalSchedule.SECONDS,
@@ -150,7 +140,7 @@ class AcceptRequestView(LoginRequiredMixin, views.View):
                         start_time=event.end - dt.timedelta(minutes=30),
                         one_off=True,
                         task="event_manager.celery.send_notification",
-                        args=json.dumps([30, event.title, user.telegram_chat_id]),
+                        args=json.dumps([f"Через 30 минут будет {event.title}!", social.uid]),
                     )
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -222,8 +212,7 @@ class DetailEventView(LoginRequiredMixin, views.DetailView):
         contex["participants"] = accepted_participants[:5]
         contex["part_count"] = accepted_participants.count()
         contex["is_sent_request"] = (participants
-                                     .filter(status=EventParticipants.StatusChoices.REQUEST_SENT,
-                                             user=self.request.user)
+                                     .filter(user=self.request.user)
                                      .exists())
         return contex
 
@@ -251,9 +240,7 @@ class ControlPanelEventView(views.DetailView):
 class EventParticipantsListView(views.ListView):
     template_name = "events/participants_list.html"
     context_object_name = "participants"
-    queryset = (EventParticipants.objects.select_related("user")
-                # .filter(status=EventParticipants.StatusChoices.REQUEST_ACCEPTED)
-                )
+    queryset = EventParticipants.objects.select_related("user")
     paginate_by = 20
 
     def get_queryset(self):

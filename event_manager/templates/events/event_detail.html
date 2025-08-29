@@ -109,7 +109,7 @@
                 <input type="hidden" name="user_id" value="{{ request.user.id }}">
                 <button type="submit" class="btn btn-secondary">Отозвать заявку</button>
               </form>
-            {% else %}
+            {% elif not is_request_accepted %}
               <form method="post" action="{% url 'events:send_request' %}">
                 {% csrf_token %}
                 <input type="hidden" name="event_id" value="{{ event.id }}">
