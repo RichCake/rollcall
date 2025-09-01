@@ -22,6 +22,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://5.35.127.251",
     "http://5.35.127.251:1337",
     "http://5.35.127.251:80",
+    "http://rollcall.space",
+    "https://rollcall.space",
 ]
 
 INSTALLED_APPS = [
