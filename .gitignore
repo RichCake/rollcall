@@ -139,3 +139,5 @@ dmypy.json
 /event_manager/games_data.json
 /event_manager/event_manager/settings_prod.py
 .env.prod
+nginx/cert.pem
+nginx/key.pem
