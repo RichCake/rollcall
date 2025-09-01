@@ -5,6 +5,8 @@ from django.utils import timezone
 from django_celery_beat.models import PeriodicTask
 import datetime as dt
 import logging
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from uuid_utils.compat import uuid4
 
 from categories.models import Category
@@ -38,6 +40,14 @@ class EventManager(models.Manager):
         return (
             self.get_queryset()
             .filter(author__id=author_id)
+        )
+
+
+def future_datetime(value: timezone.datetime):
+    if value < timezone.now():
+        raise ValidationError(
+            _("%(value)s уже прошло"),
+            params={"value": value.strftime("%d.%m.%y %H:%M:%S")},
         )
 
 
@@ -76,6 +86,7 @@ class Event(models.Model):
         verbose_name='дата',
         help_text='Дата проведения',
         null=True,
+        validators=[future_datetime]
     )
 
     is_private = models.BooleanField(
@@ -147,7 +158,6 @@ class Event(models.Model):
 
     def save(self, **kwargs):
         if self.end != self.old_end:
-            logger.info(f"for {self.pk}", self.end - dt.timedelta(minutes=30))
             PeriodicTask.objects.filter(name__endswith=f"for {self.pk}").update(start_time=self.end - dt.timedelta(minutes=30), enabled=True)
         super().save(**kwargs)
 

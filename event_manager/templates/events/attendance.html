@@ -30,7 +30,7 @@
     <div class="col-md-8">
       <h1 class="my-4">
         <a href="{% url "events:detail" pk=event.id %}"><svg class="bi me-2" width="24" height="24" fill="currentColor"><use xlink:href="#chevron-left"/></svg></a>
-        <span>Перекличка события ID:{{ event.id }} {{ event.title }}</span>
+        <span>Перекличка события {{ event.title }}</span>
       </h1>
       <p><strong>Дата:</strong> {{ event.end }}</p>
       <div class="card">

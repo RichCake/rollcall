@@ -96,7 +96,7 @@ class SendRequestView(LoginRequiredMixin, views.View):
                 event=event,
                 status=EventParticipants.StatusChoices.REQUEST_SENT,
             )
-            social = user.social_auth.filter(provider="telegram").first()
+            social = event.author.social_auth.filter(provider="telegram").first()
             if social:
                 text = f"Вам прислали заявку на событие {event.title}"
                 send_notification.delay(text, social.uid)
@@ -257,7 +257,6 @@ class EventParticipantsListView(views.ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         pk = self.kwargs.get("pk")
-        logger.info(self.request.GET)
         queryset = queryset.filter(event__pk=pk)
         return queryset
 
@@ -270,7 +269,6 @@ class EventParticipantsListView(views.ListView):
 
 def attendance_view(request, pk):
     event = get_object_or_404(Event, id=pk)
-    logger.info("USER", request.user.pk, event.author.pk, request.user.pk != event.author.pk)
     if request.user.pk != event.author.pk:
         raise Http404()
     formset = AttendanceFormSet(
