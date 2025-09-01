@@ -7,6 +7,7 @@ from users import views as users_views
 app_name = 'users'
 
 urlpatterns = [
+    path("login/", views.TemplateView.as_view(template_name="users/login_tg.html"), name="login_tg"),
     path(
         'activate/<uuid:userid>/',
         users_views.activate_view,

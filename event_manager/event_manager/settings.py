@@ -12,7 +12,6 @@ load_dotenv(override=True)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', default='aaa')
 
 DEBUG = str_to_bool(os.getenv('DJANGO_DEBUG', default='false'))
@@ -168,7 +167,7 @@ EMAIL_USE_SSL = False
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
-LOGIN_URL = 'users:login'
+LOGIN_URL = 'users:login_tg'
 LOGIN_REDIRECT_URL = '/'
 
 CELERY_BROKER_URL = 'redis://redis:6379'

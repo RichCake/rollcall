@@ -94,66 +94,6 @@
             {% endif %}
           </div>
         </div>
-        {% if user.gamestat %}
-        <div class="row">
-          <div class="col-md-12">
-            <div class="card mb-4 mb-lg-0">
-              <div class="card-body p-0">
-                <ul class="list-group list-group-flush rounded-3">
-                  <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                    <i class="fas fa-gamepad fa-lg text-warning"></i>
-                    <p class="mb-0">Любимая игра</p>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                    <a href="{{ user.gamestat.favorite_game_url }}">{{ user.gamestat.favorite_game_name }}</a>
-                    <span class="text-muted">({{ user.gamestat.favorite_game_playtime }} ч.)</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="row mt-4">
-          <div class="col-md-6">
-            <div class="card mb-4 mb-lg-0">
-              <div class="card-body p-0">
-                <ul class="list-group list-group-flush rounded-3">
-                  <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                    <i class="fas fa-gamepad fa-lg text-warning"></i>
-                    <p class="mb-0">Топ 5 игр по часам</p>
-                  </li>
-                  {% for game in user.gamestat.top_5_hours %}
-                  <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                    <a href="{{ game.url }}">{{ game.name }}</a>
-                    <span class="text-muted">({{ game.playtime }} ч.)</span>
-                  </li>
-                  {% endfor %}
-                </ul>
-              </div>
-            </div>
-          </div>
-        
-          <div class="col-md-6">
-            <div class="card mb-4 mb-lg-0">
-              <div class="card-body p-0">
-                <ul class="list-group list-group-flush rounded-3">
-                  <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                    <i class="fas fa-gamepad fa-lg text-warning"></i>
-                    <p class="mb-0">Топ 5 игр за последние 2 недели</p>
-                  </li>
-                  {% for game in user.gamestat.top_5_last_2weeks %}
-                  <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                    <a href="{{ game.url }}">{{ game.name }}</a>
-                    <span class="text-muted">({{ game.playtime }} ч.)</span>
-                  </li>
-                  {% endfor %}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% endif %}
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button class="nav-link active" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-tab-pane" type="button" role="tab" aria-controls="history-tab-pane" aria-selected="true">Посещенные события</button>
@@ -165,47 +105,66 @@
             <li class="nav-item" role="presentation">
               <button class="nav-link" id="future-tab" data-bs-toggle="tab" data-bs-target="#future-tab-pane" type="button" role="tab" aria-controls="future-tab-pane" aria-selected="false">Предстоящие события</button>
             </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="unanswered-tab" data-bs-toggle="tab" data-bs-target="#unanswered-tab-pane" type="button" role="tab" aria-controls="unanswered-tab-pane" aria-selected="false">Непринятые заявки</button>
+            </li>
           {% endif %}
         </ul>
         <div class="tab-content border rounded-bottom" id="myTabContent">
           <div class="tab-pane fade show active" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab" tabindex="0">
             <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 my-4 mx-2">
+              {% for event in history %}
                 <div class="col">
-                  {% for event in history %}
-                        {% include "includes/event_card.html" %}
-                  {% empty %}
-                    <h6>Нет событий</h6>
-                  {% endfor %}
+                  {% include "includes/event_card.html" %}
                 </div>
-              </div>
+              {% empty %}
+                <h6>Нет событий</h6>
+              {% endfor %}
+            </div>
           </div>
           <div class="tab-pane fade" id="created-tab-pane" role="tabpanel" aria-labelledby="created-tab" tabindex="0">
             <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 my-4 mx-2">
+              {% for event in created %}
                 <div class="col">
-                  {% for event in created %}
-                        {% include "includes/event_card.html" %}
-                  {% empty %}
-                    <h6>Нет событий</h6>
-                  {% endfor %}
+                  {% include "includes/event_card.html" %}
                 </div>
-              </div>
+              {% empty %}
+                <h6>Нет событий</h6>
+              {% endfor %}
+            </div>
           </div>
           {% if request.user == user %}
-            <div class="tab-pane fade" id="future-tab-pane" role="tabpanel" aria-labelledby="future-tab" tabindex="0">
-              <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 my-4 mx-2">
-                <div class="col">
-                  {% for event in future %}
-                        {% include "includes/event_card.html" %}
-                  {% empty %}
-                    <h6>Нет событий</h6>
-                  {% endfor %}
-                </div>
+          <div class="tab-pane fade" id="future-tab-pane" role="tabpanel" aria-labelledby="future-tab" tabindex="0">
+            {% for event in future %}
+              {% ifchanged %}
+                {% if not forloop.first %}
+                  </div>
+                {% endif %}
+                <h3 class="m-2">{{ event.end|date }}</h3>
+                <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 my-4 mx-2">
+              {% endifchanged %}
+              <div class="col">
+                {% include "includes/event_card.html" %}
               </div>
+            {% empty %}
+              <h6>Нет событий</h6>
+            {% endfor %}
+                </div>
+          </div>
+          <div class="tab-pane fade" id="unanswered-tab-pane" role="tabpanel" aria-labelledby="unanswered-tab" tabindex="0">
+            <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 my-4 mx-2">
+              {% for event in unanswered %}
+                <div class="col">
+                  {% include "includes/event_card.html" %}
+                </div>
+              {% empty %}
+                <h6>Нет событий</h6>
+              {% endfor %}
             </div>
+          </div>
           {% endif %}
+          </div>
         </div>
-        
-        
       </div>
     </div>
   </div>

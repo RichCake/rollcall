@@ -21,11 +21,15 @@ class UserDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        qs = Event.objects.prefetch_related('participants').filter(participants__id=self.get_object().id)
-        context["tg_username"] = self.get_object().social_auth.filter(provider="telegram").first().extra_data["username"]
-        context["history"] = qs.filter(end__lt=timezone.now())
-        context["created"] = Event.objects.get_created_events(self.get_object().id)
-        context["future"] = qs.filter(end__gte=timezone.now())
+
+        user = self.object
+        username = self.object.social_auth.filter(provider="telegram").first().extra_data["username"]
+        context["tg_username"] = username[0] if isinstance(username, list) else username
+
+        context["history"] = Event.objects.get_events_with_info(self.request.user).filter(eventparticipants__user=user, end__lt=timezone.now())
+        context["created"] = Event.objects.get_events_with_info(self.request.user).filter(author=self.object)
+        context["future"] = Event.objects.get_events_with_info(self.request.user).filter(eventparticipants__user=user, end__gte=timezone.now(), eventparticipants__status=EventParticipants.StatusChoices.REQUEST_ACCEPTED).order_by("end")
+        context["unanswered"] = Event.objects.get_events_with_info(self.request.user).filter(eventparticipants__user=user, eventparticipants__status=EventParticipants.StatusChoices.REQUEST_SENT)
         return context
 
 

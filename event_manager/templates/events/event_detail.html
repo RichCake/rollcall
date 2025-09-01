@@ -39,6 +39,7 @@
         <div class="card-body">
           <p class="card-text">{{ event.description }}</p>
           <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Игра: </strong>{{ event.game.name }}</li>
             <li class="list-group-item"><strong>Автор:</strong> <a href="{% url "profiles:detail" pk=event.author.id %}">{{ event.author }}</a></li>
             <li class="list-group-item"><strong>Дата события:</strong> {{ event.end }}</li>
             <li class="list-group-item">

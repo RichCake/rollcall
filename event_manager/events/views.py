@@ -160,39 +160,29 @@ class EventsListView(views.ListView):
     template_name = 'events/event_list.html'
     context_object_name = 'events'
     paginate_by = 12
-    queryset = (
-        Event.objects
-        .select_related('author', 'category')
-        .prefetch_related('participants')
-        .filter(is_private=False)
-        .annotate(part_count=Count('eventparticipants',
-                                   filter=Q(eventparticipants__status=EventParticipants.StatusChoices.REQUEST_ACCEPTED)))
-        .only(
-            'category__name',
-            'title',
-            'description',
-            'end',
-            'author__username',
-            'author__id',
-            'eventparticipants__user__username',
-            'max_participants',
-        )
-    )
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = (
+            Event.objects
+            .get_events_with_info(self.request.user)
+            .filter(is_private=False)
+        )
         title_contains = self.request.GET.get('title_contains')
-        desc_contains = self.request.GET.get('desc_contains')
         if title_contains:
             queryset = queryset.filter(title__icontains=title_contains)
+        desc_contains = self.request.GET.get('desc_contains')
         if desc_contains:
             queryset = queryset.filter(description__icontains=desc_contains)
+        author = self.request.GET.get('author')
+        if author:
+            queryset = queryset.filter(author=author)
+        category = self.request.GET.get('category')
+        if category:
+            queryset = queryset.filter(category=category)
+        game = self.request.GET.get('game')
+        if game:
+            queryset = queryset.filter(game=game)
         return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['sort'] = self.request.GET.get('sort')
-        return context
 
 
 class DetailEventView(LoginRequiredMixin, views.DetailView):

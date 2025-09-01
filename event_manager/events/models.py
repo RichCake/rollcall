@@ -22,25 +22,21 @@ class EventManager(models.Manager):
             .select_related('author', 'category')
             .prefetch_related('participants')
         )
-    
-    def get_future_events(self):
-        return (
-            self.get_public_events()
-            .filter(end__gte=timezone.now())
-        )
 
-    def get_events_history(self, user_id: int):
-        return (
+    def get_events_with_info(self, request_user=None):
+        queryset = (
             self.get_queryset()
+            .select_related('author', 'category', 'game')
             .prefetch_related('participants')
-            .filter(participants__id=user_id)
+            .annotate(part_count=models.Count('eventparticipants',
+                      filter=models.Q(eventparticipants__status=EventParticipants.StatusChoices.REQUEST_ACCEPTED)))
         )
-
-    def get_created_events(self, author_id: int):
-        return (
-            self.get_queryset()
-            .filter(author__id=author_id)
-        )
+        if request_user and request_user.is_authenticated:
+            queryset = (queryset
+                        .annotate(user_status=models.Subquery(EventParticipants.objects
+                                                              .filter(event=models.OuterRef("pk"), user=request_user)
+                                                              .values("status"))))
+        return queryset
 
 
 def future_datetime(value: timezone.datetime):
