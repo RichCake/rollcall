@@ -16,7 +16,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', default='aaa')
 
 DEBUG = str_to_bool(os.getenv('DJANGO_DEBUG', default='false'))
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'django', '192.168.178.41']
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(",")
 
 
 INSTALLED_APPS = [
