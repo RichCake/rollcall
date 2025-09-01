@@ -18,6 +18,9 @@ DEBUG = str_to_bool(os.getenv('DJANGO_DEBUG', default='false'))
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(",")
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://5.35.127.251:1337",
+]
 
 INSTALLED_APPS = [
     'dal',
