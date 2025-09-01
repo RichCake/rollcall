@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-from celery.schedules import crontab
 from dotenv import load_dotenv
 
 
@@ -182,7 +181,7 @@ TG_TOKEN = os.getenv('TG_BOT_TOKEN')
 
 # STEAM
 
-STEAM_API_KEY = 'CABD06FB6653C1104C89CAEA1242FDA7'
+STEAM_API_KEY = os.getenv("STEAM_API_KEY")
 
 LOGGING = {
     "version": 1,

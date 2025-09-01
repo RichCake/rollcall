@@ -22,6 +22,7 @@ class UserDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         qs = Event.objects.prefetch_related('participants').filter(participants__id=self.get_object().id)
+        context["tg_username"] = self.get_object().social_auth.filter(provider="telegram").first().extra_data["username"]
         context["history"] = qs.filter(end__lt=timezone.now())
         context["created"] = Event.objects.get_created_events(self.get_object().id)
         context["future"] = qs.filter(end__gte=timezone.now())

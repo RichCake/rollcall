@@ -96,7 +96,7 @@
         </div>
         <div class="card-footer">
           {% if request.user == event.author %}
-            <a href="{% url 'events:update' pk=event.id %}" class="btn btn-primary">Редактировать</a>
+            <a href="{% url 'events:update' pk=event.id %}" class="btn btn-primary">Панель управления</a>
             {% if event.is_past_due %}
               <a href="{% url 'events:attendance' pk=event.id %}" class="btn btn-success">Отметить присутствующих</a>
             {% endif %}

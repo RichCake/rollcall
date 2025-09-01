@@ -118,6 +118,7 @@ class Event(models.Model):
         on_delete=models.CASCADE,
         verbose_name="игра",
         related_name="events",
+        help_text="Если вашей игры нет напишите \"Custom\" "
     )
 
     objects = EventManager()

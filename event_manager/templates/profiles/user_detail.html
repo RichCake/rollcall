@@ -47,20 +47,6 @@
                 <div class="m-2">
                   <a class="btn btn-primary d-flex text-center" href="{% url 'profiles:update' pk=user.id %}">Редактировать</a>
                 </div>
-                {% if request.user.gamestat %}
-                <div class="m-2">
-                  <a class="btn btn-secondary text-center d-flex" href="{% url 'gamestat:my_stats' %}">Моя статистика</a>
-                </div>
-                {% else %}
-                <div class="m-2">
-                  <a class="btn btn-secondary text-center d-flex" href="{% url 'gamestat:steam_login' %}">Войти через Steam</a>
-                </div>
-                {% endif %}
-                {% if not user.telegran_chat_id %}
-                <div class="m-2">
-                  <a class="btn btn-secondary text-center d-flex" href="https://t.me/rollcall8_bot?start={{ user.id }}" target="_blank">Подключить Телеграм</a>
-                </div>
-                {% endif %}
               {% endif %}
             </div>
           </div>
@@ -83,7 +69,7 @@
                 <p class="mb-0">Почта</p>
               </div>
               <div class="col-sm-9">
-                <a class="text-muted mb-0" href="mailto:{{ user.email }}">{{ user.email }}</a>
+                <a class="text-muted mb-0" href="mailto:{{ user.email }}">{{ user.email|default_if_none:"-" }}</a>
               </div>
             </div>
             <hr>
@@ -95,19 +81,17 @@
                 <p class="text-muted mb-0">{{ user.rating|default_if_none:"5,0"|floatformat:2 }}</p>
               </div>
             </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Телеграм привязан</p>
+            {% if tg_username %}
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Телеграм</p>
+                </div>
+                <div class="col-sm-9">
+                  <a href="https://t.me/{{ tg_username }}" target="_blank">{{ tg_username }}</a>
+                </div>
               </div>
-              <div class="col-sm-9">
-                {% if user.telegram_chat_id %}
-                  <p class="text-muted mb-0"><span class="badge bg-success">Да</span></p>
-                {% else %}
-                  <p class="text-muted mb-0"><span class="badge bg-secondary">Нет</span></p>
-                {% endif %}
-              </div>
-            </div>
+            {% endif %}
           </div>
         </div>
         {% if user.gamestat %}

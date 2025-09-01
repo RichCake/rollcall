@@ -17,7 +17,7 @@
     {% if request.user.is_authenticated %}
       {% if request.user == event.author %}
         <a href="{% url "events:update" pk=event.id %}" class="icon-link">
-          Редактировать
+          Панель управления
           <svg class="bi"><use xlink:href="#chevron-right"/></svg>
         </a>
       {% endif %}

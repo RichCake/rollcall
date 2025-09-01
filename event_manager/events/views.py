@@ -96,6 +96,10 @@ class SendRequestView(LoginRequiredMixin, views.View):
                 event=event,
                 status=EventParticipants.StatusChoices.REQUEST_SENT,
             )
+            social = user.social_auth.filter(provider="telegram").first()
+            if social:
+                text = f"Вам прислали заявку на событие {event.title}"
+                send_notification.delay(text, social.uid)
             return HttpResponseRedirect(reverse_lazy('events:detail', args=[event.id]))
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -106,9 +110,16 @@ class RevokeRequestView(LoginRequiredMixin, views.View):
         if form.is_valid():
             event_id = form.cleaned_data['event_id']
             user_id = form.cleaned_data['user_id']
+            event = get_object_or_404(Event, id=event_id)
+            user = get_object_or_404(get_user_model(), id=user_id)
 
             EventParticipants.objects.filter(event__id=event_id, user__id=user_id).delete()
-            PeriodicTask.objects.filter(name=f"Send notification to {user_id} for {event_id}").update(enabled=False)
+            PeriodicTask.objects.filter(name=f"Send notification to {user_id} for {event_id}").delete()
+            social = user.social_auth.filter(provider="telegram").first()
+            if social:
+                text = f"Ваша заявка на событие {event.title} была удалена либо вами, либо организатором события"
+                send_notification.delay(text, social.uid)
+
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
