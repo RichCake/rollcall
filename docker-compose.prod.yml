@@ -4,20 +4,23 @@ services:
     container_name: tgbot
     command: python3 bot.py
     env_file:
-      - ./.env
+      - ./.env.prod
     depends_on:
       - django
 
   django:
-    build: ./event_manager
+    build: 
+      context: ./event_manager
+      dockerfile: Dockerfile.prod
     container_name: django
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python -m gunicorn event_manager.asgi:application -k uvicorn_worker.UvicornWorker --bind 0.0.0.0:8000
     env_file:
-      - ./.env
-    ports:
-      - 8000:8000
+      - ./.env.prod
+    expose:
+      - 8000
     volumes:
-      - ./event_manager:/usr/src/app
+      - static_volume:/home/app/web/static
+      - media_volume:/home/app/web/media
     depends_on:
       - pgdb
       - redis
@@ -44,38 +47,54 @@ services:
   redis:
     image: redis:alpine
     container_name: redis
-    ports:
-      - 6379:6379
 
   celery:
-    build: ./event_manager
+    build: 
+      context: ./event_manager
+      dockerfile: Dockerfile.prod
     command: celery -A event_manager worker -l info
     env_file:
-      - ./.env
+      - ./.env.prod
     container_name: celery
     depends_on:
       - redis
 
   celery-beat:
-    build: ./event_manager
+    build: 
+      context: ./event_manager
+      dockerfile: Dockerfile.prod
     command: celery -A event_manager beat -l info
     env_file:
-      - ./.env
+      - ./.env.prod
     container_name: celery-beat
     depends_on:
       - redis
 
   flower:
     container_name: flower
-    build: ./event_manager
+    build: 
+      context: ./event_manager
+      dockerfile: Dockerfile.prod
     command: celery -A event_manager.celery flower --basic-auth=admin:${PG_PASSWORD}
     env_file:
-      - ./.env
+      - ./.env.prod
     ports:
       - 5555:5555
     depends_on:
       - celery
       - celery-beat
 
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    volumes:
+      - static_volume:/home/app/web/static
+      - media_volume:/home/app/web/media
+    depends_on:
+      - django
+
 volumes:
   pgdbdata:
+  static_volume:
+  media_volume:

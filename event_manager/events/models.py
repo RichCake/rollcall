@@ -5,6 +5,8 @@ from django.utils import timezone
 from django_celery_beat.models import PeriodicTask
 import datetime as dt
 import logging
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from uuid_utils.compat import uuid4
 
 from categories.models import Category
@@ -20,24 +22,28 @@ class EventManager(models.Manager):
             .select_related('author', 'category')
             .prefetch_related('participants')
         )
-    
-    def get_future_events(self):
-        return (
-            self.get_public_events()
-            .filter(end__gte=timezone.now())
-        )
 
-    def get_events_history(self, user_id: int):
-        return (
+    def get_events_with_info(self, request_user=None):
+        queryset = (
             self.get_queryset()
+            .select_related('author', 'category', 'game')
             .prefetch_related('participants')
-            .filter(participants__id=user_id)
+            .annotate(part_count=models.Count('eventparticipants',
+                      filter=models.Q(eventparticipants__status=EventParticipants.StatusChoices.REQUEST_ACCEPTED)))
         )
+        if request_user and request_user.is_authenticated:
+            queryset = (queryset
+                        .annotate(user_status=models.Subquery(EventParticipants.objects
+                                                              .filter(event=models.OuterRef("pk"), user=request_user)
+                                                              .values("status"))))
+        return queryset
 
-    def get_created_events(self, author_id: int):
-        return (
-            self.get_queryset()
-            .filter(author__id=author_id)
+
+def future_datetime(value: timezone.datetime):
+    if value < timezone.now():
+        raise ValidationError(
+            _("%(value)s уже прошло"),
+            params={"value": value.strftime("%d.%m.%y %H:%M:%S")},
         )
 
 
@@ -76,6 +82,7 @@ class Event(models.Model):
         verbose_name='дата',
         help_text='Дата проведения',
         null=True,
+        validators=[future_datetime]
     )
 
     is_private = models.BooleanField(
@@ -118,6 +125,7 @@ class Event(models.Model):
         on_delete=models.CASCADE,
         verbose_name="игра",
         related_name="events",
+        help_text="Если вашей игры нет напишите \"Custom\" "
     )
 
     objects = EventManager()
@@ -146,7 +154,6 @@ class Event(models.Model):
 
     def save(self, **kwargs):
         if self.end != self.old_end:
-            logger.info(f"for {self.pk}", self.end - dt.timedelta(minutes=30))
             PeriodicTask.objects.filter(name__endswith=f"for {self.pk}").update(start_time=self.end - dt.timedelta(minutes=30), enabled=True)
         super().save(**kwargs)
 

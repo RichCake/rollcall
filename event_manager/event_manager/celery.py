@@ -22,12 +22,11 @@ def long_task(self):
 
 
 @app.task(bind=True)
-def send_notification(self, minutes_to_event, event_title, chat_id):
-    message = f'Через {minutes_to_event} минут будет {event_title}!'
-    url = f'https://api.telegram.org/bot{settings.TG_TOKEN}/sendMessage?chat_id={chat_id}&text={message}'
+def send_notification(self, message, chat_id):
+    url = f'https://api.telegram.org/bot{settings.TG_TOKEN}/sendMessage'
     logger.info(url)
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.post(url, timeout=10, json={"chat_id": chat_id, "text": message})
         data = response.json()
         return data
     except requests.exceptions.Timeout as e:

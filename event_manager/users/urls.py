@@ -1,5 +1,5 @@
 from django.contrib.auth import views
-from django.urls import path, reverse_lazy, re_path
+from django.urls import path, reverse_lazy, re_path, include
 
 from users import forms
 from users import views as users_views
@@ -7,6 +7,7 @@ from users import views as users_views
 app_name = 'users'
 
 urlpatterns = [
+    path("login/", views.TemplateView.as_view(template_name="users/login_tg.html"), name="login_tg"),
     path(
         'activate/<uuid:userid>/',
         users_views.activate_view,

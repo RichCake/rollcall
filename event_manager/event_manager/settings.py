@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-from celery.schedules import crontab
 from dotenv import load_dotenv
 
 
@@ -12,7 +11,6 @@ def str_to_bool(string):
 load_dotenv(override=True)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', default='aaa')
 
@@ -38,10 +36,10 @@ INSTALLED_APPS = [
     'games.apps.GamesConfig',
     'categories.apps.CategoriesConfig',
     'profiles.apps.ProfilesConfig',
-    'notifications.apps.NotificationsConfig',
     'crispy_forms',
     'crispy_bootstrap4',
     'django_celery_beat',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +51,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 ROOT_URLCONF = 'event_manager.urls'
 
@@ -67,6 +67,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -165,7 +167,7 @@ EMAIL_USE_SSL = False
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
-LOGIN_URL = 'users:login'
+LOGIN_URL = 'users:login_tg'
 LOGIN_REDIRECT_URL = '/'
 
 CELERY_BROKER_URL = 'redis://redis:6379'
@@ -178,7 +180,7 @@ TG_TOKEN = os.getenv('TG_BOT_TOKEN')
 
 # STEAM
 
-STEAM_API_KEY = 'CABD06FB6653C1104C89CAEA1242FDA7'
+STEAM_API_KEY = os.getenv("STEAM_API_KEY")
 
 LOGGING = {
     "version": 1,
@@ -193,3 +195,14 @@ LOGGING = {
         "level": "INFO",
     },
 }
+
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.telegram.TelegramAuth',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+SOCIAL_AUTH_TELEGRAM_BOT_TOKEN = TG_TOKEN
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:1337"]

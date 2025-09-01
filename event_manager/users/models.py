@@ -13,7 +13,7 @@ class User(AbstractUser):
     )
     email = models.EmailField(
         'адрес электронной почты',
-        unique=True,
+        blank=True,
         )
     telegram_chat_id = models.CharField(max_length=255, blank=True)
     

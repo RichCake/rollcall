@@ -7,13 +7,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('homepage.urls')),
     path('event/', include('events.urls')),
-    path('notifications/', include('notifications.urls')),
     path('profile/', include('profiles.urls')),
+    path("auth/", include('social_django.urls', namespace="social")),
     path('auth/', include('users.urls')),
     path('auth/', include('django.contrib.auth.urls')),
     path('gamestat/', include('gamestat.urls')),
     path('games/', include('games.urls')),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     urlpatterns += [path('__debug__/', include('debug_toolbar.urls'))]
