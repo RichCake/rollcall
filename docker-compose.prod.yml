@@ -88,11 +88,32 @@ services:
     build: ./nginx
     ports:
       - 80:80
+      - 443:443
     volumes:
       - static_volume:/home/app/web/static
       - media_volume:/home/app/web/media
+      # монтируем директорию nginx и сертификат с ключом
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/cert.pem:/etc/cert.pem
+      - ./nginx/key.pem:/etc/key.pem
     depends_on:
       - django
+
+  certbot:
+    ports:
+      - 6000:80
+    env_file:
+      - .env.prod
+    # и снова мониторуем директорию nginx
+    volumes:
+      - ./nginx/:/etc/nginx/
+    build:
+      context: ./certbot
+      dockerfile: Dockerfile
+      # задаем переменные среды
+      args:
+        DOMAIN_EMAIL: ${DOMAIN_EMAIL}
+        DOMAIN_URL: ${DOMAIN_URL}
 
 volumes:
   pgdbdata:
