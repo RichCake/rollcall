@@ -13,7 +13,7 @@ services:
       context: ./event_manager
       dockerfile: Dockerfile.prod
     container_name: django
-    command: python -m gunicorn --keyfile=./key.pem --certfile=./cert.pem event_manager.asgi:application -k uvicorn_worker.UvicornWorker --bind 0.0.0.0:8000
+    command: python -m gunicorn event_manager.asgi:application -k uvicorn_worker.UvicornWorker --bind 0.0.0.0:8000
     env_file:
       - ./.env.prod
     expose:
