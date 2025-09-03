@@ -52,11 +52,10 @@ def activate_view(request, userid):
 
 class UserAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        queryset = get_user_model().objects.all()
-
         if self.q:
             queryset = (
-                queryset.filter(username__icontains=self.q)
+                get_user_model().objects
+                .filter(username__icontains=self.q)
             )
             return queryset
         else:

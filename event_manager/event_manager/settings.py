@@ -183,6 +183,13 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_RESULT_EXPIRES = 18000
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://redis:6379",
+    }
+}
+
 TG_TOKEN = os.getenv('TG_BOT_TOKEN')
 
 # STEAM

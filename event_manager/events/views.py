@@ -3,15 +3,10 @@ import logging
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count, Prefetch, Q
-from django.db.models.functions import Lower
-from django.utils.translation import gettext as _
-from django import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 import django.views.generic as views
-from django.utils import timezone
 from django.views.generic.edit import FormMixin
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
 import datetime as dt
@@ -88,7 +83,7 @@ class SendRequestView(LoginRequiredMixin, views.View):
                                              event=event)
                                      )
             if ((event.max_participants and accepted_participants.count() >= event.max_participants)
-                    or user in event.participants.all()):
+                    or event.participants.filter(eventparticipants__user=user).exists()):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             EventParticipants.objects.create(
@@ -190,7 +185,7 @@ class DetailEventView(LoginRequiredMixin, views.DetailView):
     context_object_name = 'event'
     queryset = (
         Event.objects
-        .select_related('author', 'category')
+        .select_related('author', 'category', 'game')
         .only(
             'category__name',
             'title',
@@ -198,8 +193,10 @@ class DetailEventView(LoginRequiredMixin, views.DetailView):
             'created',
             'end',
             'is_private',
+            'author__id',
             'author__username',
             'max_participants',
+            'game__name',
         )
     )
 

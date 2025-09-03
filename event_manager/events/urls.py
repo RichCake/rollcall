@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from events import views
 
@@ -7,7 +8,7 @@ app_name = 'events'
 urlpatterns = [
     path('create/', views.CreateEventView.as_view(), name='create'),
     path('<uuid:pk>/update/', views.UpdateEventView.as_view(), name='update'),
-    path('<uuid:pk>/detail/', views.DetailEventView.as_view(), name='detail'),
+    path('<uuid:pk>/detail/', cache_page(60 * 15)(views.DetailEventView.as_view()), name='detail'),
     path('<uuid:pk>/participants_list/', views.EventParticipantsListView.as_view(), name='participants_list'),
     path('<uuid:pk>/delete/', views.DeleteEventView.as_view(), name='delete'),
     path('<uuid:pk>/attendance/', views.attendance_view, name='attendance'),
