@@ -1,41 +1,47 @@
+import datetime as dt
+import logging
+
+from categories.models import Category
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
-from django_celery_beat.models import PeriodicTask
-import datetime as dt
-import logging
-from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from uuid_utils.compat import uuid4
-
-from categories.models import Category
+from django_celery_beat.models import PeriodicTask
 from games.models import Game
+from uuid_utils.compat import uuid4
 
 logger = logging.getLogger(__name__)
 
 
 class EventManager(models.Manager):
     def get_public_events(self):
-        return (
-            self.get_queryset()
-            .select_related('author', 'category')
-            .prefetch_related('participants')
-        )
+        return self.get_queryset().select_related("author", "category").prefetch_related("participants")
 
     def get_events_with_info(self, request_user=None):
         queryset = (
             self.get_queryset()
-            .select_related('author', 'category', 'game')
-            .prefetch_related('participants')
-            .annotate(part_count=models.Count('eventparticipants',
-                      filter=models.Q(eventparticipants__status=EventParticipants.StatusChoices.REQUEST_ACCEPTED)))
+            .select_related("author", "category", "game")
+            .prefetch_related("participants")
+            .annotate(
+                part_count=models.Count(
+                    "eventparticipants",
+                    filter=models.Q(
+                        eventparticipants__status=EventParticipants.StatusChoices.REQUEST_ACCEPTED,
+                    ),
+                ),
+            )
         )
         if request_user and request_user.is_authenticated:
-            queryset = (queryset
-                        .annotate(user_status=models.Subquery(EventParticipants.objects
-                                                              .filter(event=models.OuterRef("pk"), user=request_user)
-                                                              .values("status"))))
+            queryset = queryset.annotate(
+                user_status=models.Subquery(
+                    EventParticipants.objects.filter(
+                        event=models.OuterRef("pk"),
+                        user=request_user,
+                    ).values("status"),
+                ),
+            )
         return queryset
 
 
@@ -53,54 +59,52 @@ class Event(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='created_events',
-        verbose_name='автор',
+        related_name="created_events",
+        verbose_name="автор",
     )
 
     title = models.CharField(
-        verbose_name='название',
+        verbose_name="название",
         max_length=150,
         help_text="Короткий заголовок. Макс. 150 симв.",
     )
 
     description = models.TextField(
-        verbose_name='описание',
+        verbose_name="описание",
         help_text="Подробное описание",
     )
 
     created = models.DateTimeField(
-        verbose_name='создано',
+        verbose_name="создано",
         auto_now_add=True,
     )
 
     updated = models.DateTimeField(
-        verbose_name='изменено',
+        verbose_name="изменено",
         auto_now=True,
     )
 
     end = models.DateTimeField(
-        verbose_name='дата',
-        help_text='Дата проведения',
+        verbose_name="дата",
+        help_text="Дата проведения",
         null=True,
-        validators=[future_datetime]
+        validators=[future_datetime],
     )
 
     is_private = models.BooleanField(
-        verbose_name='приватное',
-        help_text='Доступ из профиля',
+        verbose_name="приватное",
+        help_text="Доступ из профиля",
         default=False,
     )
 
     is_canceled = models.BooleanField(
-        verbose_name='отменено',
+        verbose_name="отменено",
         default=False,
     )
 
     max_participants = models.PositiveIntegerField(
-        verbose_name='максимальное количество участников',
-        help_text=(
-                'Укажите кол-во участников, или оставьте пустым'
-            ),
+        verbose_name="максимальное количество участников",
+        help_text=("Укажите кол-во участников, или оставьте пустым"),
         blank=True,
         null=True,
         validators=[MinValueValidator(1)],
@@ -108,16 +112,16 @@ class Event(models.Model):
 
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        through='EventParticipants',
-        related_name='events',
+        through="EventParticipants",
+        related_name="events",
         blank=True,
     )
 
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
-        verbose_name='категория',
-        related_name='events',
+        verbose_name="категория",
+        related_name="events",
     )
 
     game = models.ForeignKey(
@@ -125,16 +129,20 @@ class Event(models.Model):
         on_delete=models.CASCADE,
         verbose_name="игра",
         related_name="events",
-        help_text="Если вашей игры нет напишите \"Custom\" "
+        help_text='Если вашей игры нет напишите "Custom" ',
     )
 
     objects = EventManager()
 
     class Meta:
-        verbose_name = 'мероприятие'
-        verbose_name_plural = 'мероприятия'
+        verbose_name = "мероприятие"
+        verbose_name_plural = "мероприятия"
         indexes = [
-            models.Index(fields=["id"], condition=models.Q(is_private=False), name="public_events_idx"),
+            models.Index(
+                fields=["id"],
+                condition=models.Q(is_private=False),
+                name="public_events_idx",
+            ),
         ]
 
     def __str__(self):
@@ -144,6 +152,16 @@ class Event(models.Model):
         super().__init__(*args, **kwargs)
         self.old_end = self.end
 
+    def save(self, **kwargs):
+        if self.end != self.old_end:
+            PeriodicTask.objects.filter(
+                name__endswith=f"for {self.pk}",
+            ).update(
+                start_time=self.end - dt.timedelta(minutes=30),
+                enabled=True,
+            )
+        super().save(**kwargs)
+
     @property
     def is_past_due(self):
         """
@@ -152,60 +170,55 @@ class Event(models.Model):
         """
         return timezone.now() > self.end
 
-    def save(self, **kwargs):
-        if self.end != self.old_end:
-            PeriodicTask.objects.filter(name__endswith=f"for {self.pk}").update(start_time=self.end - dt.timedelta(minutes=30), enabled=True)
-        super().save(**kwargs)
-
 
 class EventParticipants(models.Model):
     class StatusChoices(models.IntegerChoices):
-        REQUEST_SENT = 0, 'заявка отправлена'
-        INVITE_SENT = 1, 'приглашение отправлено'
-        REQUEST_ACCEPTED = 2, 'заявка принята'
-        REQUEST_REVOKED = 3, 'заявка отозвана'
+        REQUEST_SENT = 0, "заявка отправлена"
+        INVITE_SENT = 1, "приглашение отправлено"
+        REQUEST_ACCEPTED = 2, "заявка принята"
+        REQUEST_REVOKED = 3, "заявка отозвана"
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        verbose_name='участник',
+        verbose_name="участник",
     )
 
     event = models.ForeignKey(
         Event,
         on_delete=models.CASCADE,
-        verbose_name='мероприятие',
+        verbose_name="мероприятие",
     )
 
     created = models.DateTimeField(
-        verbose_name='создано',
+        verbose_name="создано",
         auto_now_add=True,
     )
 
     updated = models.DateTimeField(
-        verbose_name='изменено',
+        verbose_name="изменено",
         auto_now=True,
     )
 
     status = models.PositiveSmallIntegerField(
-        verbose_name='статус',
+        verbose_name="статус",
         choices=StatusChoices.choices,
         default=StatusChoices.REQUEST_SENT,
     )
 
     present = models.BooleanField(
-        verbose_name='присутствовал',
+        verbose_name="присутствовал",
         default=True,
     )
 
     notified = models.BooleanField(
-        verbose_name='уведомлен',
+        verbose_name="уведомлен",
         default=False,
     )
 
     class Meta:
-        verbose_name = 'участник мероприятия'
-        verbose_name_plural = 'участники мероприятия'
+        verbose_name = "участник мероприятия"
+        verbose_name_plural = "участники мероприятия"
 
     def __str__(self):
-        return f'{self.event} - {self.user}'
+        return f"{self.event} - {self.user}"

@@ -3,16 +3,16 @@ from django.db import models
 
 class Category(models.Model):
     name = models.CharField(
-        'название',
+        "название",
         max_length=50,
-        help_text='Напишите название категории. Максимум 50 символов',
+        help_text="Напишите название категории. Максимум 50 символов",
         unique=True,
     )
 
     class Meta:
-        verbose_name = 'категория'
-        verbose_name_plural = 'категории'
-        ordering = ['name']
+        verbose_name = "категория"
+        verbose_name_plural = "категории"
+        ordering = ["name"]
 
     def __str__(self):
         return self.name

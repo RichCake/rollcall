@@ -1,0 +1,138 @@
+[project]
+name = "rollcall"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiohappyeyeballs==2.6.1",
+    "aiohttp==3.12.15",
+    "aiosignal==1.4.0",
+    "amqp==5.2.0",
+    "asgiref==3.8.1",
+    "attrs==25.3.0",
+    "billiard==4.2.1",
+    "celery==5.3.6",
+    "certifi==2024.8.30",
+    "charset-normalizer==3.4.0",
+    "click==8.1.7",
+    "click-didyoumean==0.3.1",
+    "click-plugins==1.1.1",
+    "click-repl==0.3.0",
+    "crispy-bootstrap4==2024.1",
+    "cron-descriptor==1.4.5",
+    "django==4.2.10",
+    "django-autocomplete-light==3.12.1",
+    "django-betterforms==2.0.0",
+    "django-celery-beat==2.6.0",
+    "django-crispy-forms==2.1",
+    "django-timezone-field==7.0",
+    "flower==2.0.1",
+    "frozenlist==1.7.0",
+    "hiredis>=3.2.1",
+    "huey==2.5.0",
+    "humanize==4.12.3",
+    "idna==3.10",
+    "iniconfig==2.1.0",
+    "kombu==5.4.2",
+    "multidict==6.6.4",
+    "packaging==25.0",
+    "parameterized==0.9.0",
+    "pillow==10.3.0",
+    "pluggy==1.6.0",
+    "prometheus-client==0.22.1",
+    "prompt-toolkit==3.0.48",
+    "propcache==0.3.2",
+    "psycopg==3.1.18",
+    "psycopg-binary==3.1.18",
+    "pygments==2.19.2",
+    "python-crontab==3.2.0",
+    "python-dateutil==2.9.0.post0",
+    "python-dotenv==1.0.1",
+    "pytz==2025.2",
+    "redis[hiredis]>=6.4.0",
+    "requests==2.31.0",
+    "six==1.16.0",
+    "social-auth-app-django>=5.4.3",
+    "sqlparse==0.5.1",
+    "tornado==6.5.2",
+    "typing-extensions==4.12.2",
+    "tzdata==2024.2",
+    "urllib3==2.2.3",
+    "uuid-utils==0.11.0",
+    "vine==5.1.0",
+    "wcwidth==0.2.13",
+    "wheel==0.45.1",
+    "yarl==1.20.1",
+]
+
+[dependency-groups]
+dev = [
+    {include-group = "lint"},
+    "django-debug-toolbar>=4.3.0",
+]
+lint = [
+    "ruff>=0.12.12",
+]
+prod = [
+    "gunicorn>=23.0.0",
+    "uvicorn>=0.35.0",
+    "uvicorn-worker>=0.3.0",
+]
+tgbot = [
+    "pytelegrambotapi==4.28.0",
+    "python-dotenv==1.0.1",
+    "requests==2.31.0",
+]
+
+
+[tool.ruff]
+
+line-length = 120
+target-version = "py312"
+
+extend-exclude = [
+    "migrations",
+    "locale",
+    "fixtures",
+    "static_dev",
+    "media",
+]
+
+[tool.ruff.lint]
+
+select = [
+    "F",  # Pyflakes
+    "E",  # pcodestyle
+    "I",  # isort
+    "N",  # pep8-naming
+    "B",  # flake8-bugbear
+    "A",  # flake8-builtins
+    "COM",  # flake8-commas
+    "C4",  # flake8-comprehensions
+    "DJ",  # flake8-django
+    "ISC",  # flake8-implicit-str-concat
+    "ICN",  # flake8-import-conventions
+    "T20",  # flake8-print
+    "Q",  # flake8-quotes
+    "RET",  # flake8-return
+    "PTH",  # flake8-use-pathlib
+    "FIX",  # flake8-fixme
+    "ERA",  # eradicate
+]
+
+ignore = [
+    "COM812",
+    "PTH123",
+    "T201",
+]
+
+[tool.ruff.format]
+
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+known-first-party = ["event_manager"]
+

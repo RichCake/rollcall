@@ -1,12 +1,9 @@
 import datetime as dt
 
 from dal import autocomplete
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import TemplateView
 
@@ -15,20 +12,20 @@ from users.forms import SignUpForm
 
 def signup_view(request):
     form = SignUpForm(request.POST or None)
-    if request.method == 'POST':
+    if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect('users:signup_success')
+            return redirect("users:signup_success")
 
     return render(
         request,
-        'users/signup.html',
-        {'form': form},
+        "users/signup.html",
+        {"form": form},
     )
 
 
 class SignupSuccessView(TemplateView):
-    template_name = 'users/signup_done.html'
+    template_name = "users/signup_done.html"
 
 
 def activate_view(request, userid):
@@ -38,25 +35,22 @@ def activate_view(request, userid):
         if user.date_joined > twelve_hours:
             user.is_active = True
             user.save()
-            messages.success(request, 'Вы активировали аккаунт. Можете войти!')
+            messages.success(request, "Вы активировали аккаунт. Можете войти!")
         else:
             messages.error(
                 request,
-                'Срок действия ссылки истек. Зарегиструруйтесь заново.',
+                "Срок действия ссылки истек. Зарегиструруйтесь заново.",
             )
     else:
-        messages.info(request, 'Аккаунт уже активирован!')
+        messages.info(request, "Аккаунт уже активирован!")
 
-    return render(request, 'users/activate.html')
+    return render(request, "users/activate.html")
 
 
 class UserAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         if self.q:
-            queryset = (
-                get_user_model().objects
-                .filter(username__icontains=self.q)
+            return get_user_model().objects.filter(
+                username__icontains=self.q,
             )
-            return queryset
-        else:
-            return get_user_model().objects.none()
+        return get_user_model().objects.none()

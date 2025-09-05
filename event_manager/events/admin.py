@@ -1,7 +1,6 @@
 from django.contrib import admin
 
 from events import models
-from events.forms import EventForm
 
 
 class ParticipantsInline(admin.TabularInline):
@@ -23,6 +22,4 @@ class EventAdmin(admin.ModelAdmin):
         models.Event.is_private.field.name,
         models.Event.is_canceled.field.name,
     )
-    raw_id_fields = (
-        models.Event.game.field.name,
-    )
+    raw_id_fields = (models.Event.game.field.name,)

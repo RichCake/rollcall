@@ -1,83 +1,87 @@
 from django.contrib.auth import views
-from django.urls import path, reverse_lazy, re_path, include
+from django.urls import path, re_path, reverse_lazy
 
 from users import forms
 from users import views as users_views
 
-app_name = 'users'
+app_name = "users"
 
 urlpatterns = [
-    path("login/", views.TemplateView.as_view(template_name="users/login_tg.html"), name="login_tg"),
     path(
-        'activate/<uuid:userid>/',
+        "login/",
+        views.TemplateView.as_view(template_name="users/login_tg.html"),
+        name="login_tg",
+    ),
+    path(
+        "activate/<uuid:userid>/",
         users_views.activate_view,
-        name='activate',
+        name="activate",
     ),
-    path('signup/', users_views.signup_view, name='signup'),
+    path("signup/", users_views.signup_view, name="signup"),
     path(
-        'signup/done/',
+        "signup/done/",
         users_views.SignupSuccessView.as_view(),
-        name='signup_success',
+        name="signup_success",
     ),
     path(
-        'login/',
+        "login/",
         views.LoginView.as_view(
-            template_name='users/login.html',
+            template_name="users/login.html",
             form_class=forms.AuthEmailForm,
         ),
-        name='login',
+        name="login",
     ),
     path(
-        'logout/',
-        views.LogoutView.as_view(template_name='users/logout.html'),
-        name='logout',
+        "logout/",
+        views.LogoutView.as_view(template_name="users/logout.html"),
+        name="logout",
     ),
     path(
-        'password_change/',
+        "password_change/",
         views.PasswordChangeView.as_view(
-            template_name='users/password_change.html',
-            success_url=reverse_lazy('users:password_change_done'),
+            template_name="users/password_change.html",
+            success_url=reverse_lazy("users:password_change_done"),
         ),
-        name='password_change',
+        name="password_change",
     ),
     path(
-        'password_change/done/',
+        "password_change/done/",
         views.PasswordChangeDoneView.as_view(
-            template_name='users/password_change_done.html',
+            template_name="users/password_change_done.html",
         ),
-        name='password_change_done',
+        name="password_change_done",
     ),
     path(
-        'password_reset/',
+        "password_reset/",
         views.PasswordResetView.as_view(
-            template_name='users/password_reset.html',
+            template_name="users/password_reset.html",
         ),
-        name='password_reset',
+        name="password_reset",
     ),
     path(
-        'password_reset/done/',
+        "password_reset/done/",
         views.PasswordResetDoneView.as_view(
-            template_name='users/password_reset_done.html',
+            template_name="users/password_reset_done.html",
         ),
-        name='password_reset_done',
+        name="password_reset_done",
     ),
     path(
-        'reset/<uidb64>/<token>/',
+        "reset/<uidb64>/<token>/",
         views.PasswordResetConfirmView.as_view(
-            template_name='users/password_reset_confirm.html',
+            template_name="users/password_reset_confirm.html",
         ),
-        name='password_reset_confirm',
+        name="password_reset_confirm",
     ),
     path(
-        'reset/done/',
+        "reset/done/",
         views.PasswordResetCompleteView.as_view(
-            template_name='users/password_reset_complete.html',
+            template_name="users/password_reset_complete.html",
         ),
-        name='password_reset_complete',
+        name="password_reset_complete",
     ),
     re_path(
-        r'^user-autocomplete/$',
+        r"^user-autocomplete/$",
         users_views.UserAutocomplete.as_view(),
-        name='user-autocomplete',
+        name="user-autocomplete",
     ),
 ]

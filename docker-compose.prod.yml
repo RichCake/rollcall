@@ -1,6 +1,8 @@
 services:
   tgbot:
-    build: ./tgbot
+    build:
+      context: ./
+      dockerfile: ./tgbot/Dockerfile
     container_name: tgbot
     command: python3 bot.py
     env_file:
@@ -10,8 +12,8 @@ services:
 
   django:
     build: 
-      context: ./event_manager
-      dockerfile: Dockerfile.prod
+      context: ./
+      dockerfile: ./event_manager/Dockerfile.prod
     container_name: django
     command: python -m gunicorn event_manager.asgi:application -k uvicorn_worker.UvicornWorker --bind 0.0.0.0:8000
     env_file:
@@ -50,8 +52,8 @@ services:
 
   celery:
     build: 
-      context: ./event_manager
-      dockerfile: Dockerfile.prod
+      context: ./
+      dockerfile: ./event_manager/Dockerfile.prod
     command: celery -A event_manager worker -l info
     env_file:
       - ./.env.prod
@@ -61,8 +63,8 @@ services:
 
   celery-beat:
     build: 
-      context: ./event_manager
-      dockerfile: Dockerfile.prod
+      context: ./
+      dockerfile: ./event_manager/Dockerfile.prod
     command: celery -A event_manager beat -l info
     env_file:
       - ./.env.prod
@@ -73,8 +75,8 @@ services:
   flower:
     container_name: flower
     build: 
-      context: ./event_manager
-      dockerfile: Dockerfile.prod
+      context: ./
+      dockerfile: ./event_manager/Dockerfile.prod
     command: celery -A event_manager.celery flower --basic-auth=admin:${PG_PASSWORD}
     env_file:
       - ./.env.prod

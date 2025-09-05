@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.postgres.indexes import GinIndex
+from django.db import models
 
 
 class Game(models.Model):
@@ -10,11 +10,15 @@ class Game(models.Model):
     )
 
     class Meta:
-        verbose_name = 'игра'
-        verbose_name_plural = 'игры'
-        ordering = ['name']
+        verbose_name = "игра"
+        verbose_name_plural = "игры"
+        ordering = ["name"]
         indexes = [
-            GinIndex(name="trgm_idx", fields=["name"], opclasses=["gin_trgm_ops"]),
+            GinIndex(
+                name="trgm_idx",
+                fields=["name"],
+                opclasses=["gin_trgm_ops"],
+            ),
         ]
 
     def __str__(self):

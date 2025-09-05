@@ -5,24 +5,24 @@ from django.db.models import Q
 class SignUpForm(forms.UserCreationForm):
     class Meta(forms.UserCreationForm.Meta):
         model = get_user_model()
-        fields = ['username', 'password1', 'password2', 'email']
+        fields = ["username", "password1", "password2", "email"]
 
 
 class ChangeForm(forms.UserChangeForm):
     class Meta:
         model = get_user_model()
-        fields = ['username', 'email']
+        fields = ["username", "email"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields.pop('password')
+        self.fields.pop("password")
 
 
 class AuthEmailForm(forms.AuthenticationForm):
     def clean(self):
         user_model = get_user_model()
-        username = self.cleaned_data.get('username')
-        password = self.cleaned_data.get('password')
+        username = self.cleaned_data.get("username")
+        password = self.cleaned_data.get("password")
 
         user_model = get_user_model()
         try:

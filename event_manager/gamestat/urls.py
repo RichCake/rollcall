@@ -2,14 +2,14 @@ from django.urls import path
 
 from gamestat import views
 
-app_name = 'gamestat'
+app_name = "gamestat"
 
 urlpatterns = [
-    path('steam/login/', views.SteamLoginView.as_view(), name='steam_login'),
+    path("steam/login/", views.SteamLoginView.as_view(), name="steam_login"),
     path(
-        'steam/callback/',
+        "steam/callback/",
         views.SteamCallbackView.as_view(),
-        name='steam_callback',
+        name="steam_callback",
     ),
-    path('my-stats/', views.GameStatView.as_view(), name='my_stats'),
+    path("my-stats/", views.GameStatView.as_view(), name="my_stats"),
 ]

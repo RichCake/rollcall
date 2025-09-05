@@ -1,6 +1,8 @@
 services:
   tgbot:
-    build: ./tgbot
+    build:
+      context: ./
+      dockerfile: ./tgbot/Dockerfile
     container_name: tgbot
     command: python3 bot.py
     env_file:
@@ -9,18 +11,19 @@ services:
       - django
 
   django:
-    build: ./event_manager
+    build:
+      context: ./
+      dockerfile: ./event_manager/Dockerfile
     container_name: django
-    command: python manage.py runserver 0.0.0.0:8000
+    command: uv run python manage.py runserver 0.0.0.0:8000
     env_file:
       - ./.env
     ports:
       - 8000:8000
-    volumes:
-      - ./event_manager:/usr/src/app
     depends_on:
       - pgdb
       - redis
+      - flower
 
   pgdb:
     image: postgres
@@ -48,7 +51,9 @@ services:
       - 6379:6379
 
   celery:
-    build: ./event_manager
+    build:
+      context: ./
+      dockerfile: ./event_manager/Dockerfile
     command: celery -A event_manager worker -l info
     env_file:
       - ./.env
@@ -57,7 +62,9 @@ services:
       - redis
 
   celery-beat:
-    build: ./event_manager
+    build:
+      context: ./
+      dockerfile: ./event_manager/Dockerfile
     command: celery -A event_manager beat -l info
     env_file:
       - ./.env
@@ -67,7 +74,9 @@ services:
 
   flower:
     container_name: flower
-    build: ./event_manager
+    build:
+      context: ./
+      dockerfile: ./event_manager/Dockerfile
     command: celery -A event_manager.celery flower --basic-auth=admin:${PG_PASSWORD}
     env_file:
       - ./.env

@@ -1,6 +1,8 @@
 import json
 import os
 import time
+from pathlib import Path
+
 import requests
 from dotenv import load_dotenv
 
@@ -14,7 +16,7 @@ BASE_URL = "https://www.giantbomb.com/api/games/"
 
 
 def get_last_offset():
-    if os.path.exists(PROGRESS_FILE):
+    if Path.exists(PROGRESS_FILE):
         with open(PROGRESS_FILE, "r") as f:
             return int(f.read().strip())
     return 0
@@ -34,14 +36,19 @@ def fetch_page(offset, retries=5):
         "offset": offset,
     }
     headers = {
-        "User-Agent": "RollCall/1.0"
+        "User-Agent": "RollCall/1.0",
     }
-    for attempt in range(retries):
+    for _attempt in range(retries):
         try:
-            response = requests.get(BASE_URL, params=params, headers=headers, timeout=30)
+            response = requests.get(
+                BASE_URL,
+                params=params,
+                headers=headers,
+                timeout=30,
+            )
             if response.status_code == 200:
                 return response.json()
-            elif response.status_code == 429:
+            if response.status_code == 429:
                 print("429 Too Many Requests, ждём 60 секунд...")
                 time.sleep(60)
             else:
