@@ -1054,10 +1054,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "django-debug-toolbar" },
-    { name = "gunicorn" },
     { name = "ruff" },
-    { name = "uvicorn" },
-    { name = "uvicorn-worker" },
 ]
 lint = [
     { name = "ruff" },
@@ -1139,10 +1136,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "django-debug-toolbar", specifier = ">=4.3.0" },
-    { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "ruff", specifier = ">=0.12.12" },
-    { name = "uvicorn", specifier = ">=0.35.0" },
-    { name = "uvicorn-worker", specifier = ">=0.3.0" },
 ]
 lint = [{ name = "ruff", specifier = ">=0.12.12" }]
 prod = [
