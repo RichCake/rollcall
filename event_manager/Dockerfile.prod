@@ -20,7 +20,7 @@ WORKDIR $APP_HOME
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-RUN uv sync --locked --no-default-groups
+RUN uv sync --locked --no-default-groups --group prod
 
 ENV PATH="/usr/src/app/.venv/bin:$PATH"
 
