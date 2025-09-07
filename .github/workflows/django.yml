@@ -1,0 +1,32 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.12]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+      
+    - uses: actions/setup-python@v6
+      with:
+        python-version-file: '.python-version'
+      
+    - name: Install the project
+      run: uv sync --locked
+      
+    - name: Run Tests
+      run: cd event_manager ; uv run python manage.py test
