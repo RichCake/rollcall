@@ -170,8 +170,10 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 LOGIN_URL = "users:login_tg"
 LOGIN_REDIRECT_URL = "/"
 
-CELERY_BROKER_URL = "redis://redis:6379"
-CELERY_RESULT_BACKEND = "redis://redis:6379"
+REDIS_HOST = os.getenv("REDIS_HOST", default="localhost")
+
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:6379"
+CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:6379"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_RESULT_EXPIRES = 18000
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
@@ -179,7 +181,7 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://redis:6379",
+        "LOCATION": f"redis://{REDIS_HOST}:6379",
     },
 }
 
