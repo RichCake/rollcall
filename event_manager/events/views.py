@@ -196,7 +196,7 @@ class EventsListView(views.ListView):
         game = self.request.GET.get("game")
         if game:
             queryset = queryset.filter(game=game)
-        return queryset
+        return queryset.order_by("-created")
 
 
 class DetailEventView(LoginRequiredMixin, views.DetailView):

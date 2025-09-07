@@ -3,6 +3,8 @@ from django.test import TestCase
 from django.utils import timezone
 
 from events.models import Event, EventParticipants
+from categories.models import Category
+from games.models import Game
 
 
 class TestModels(TestCase):
@@ -12,12 +14,16 @@ class TestModels(TestCase):
             email="testuser@example.com",
             password="testpassword",
         )
+        self.category = Category.objects.create(name="test category")
+        self.game = Game.objects.create(name="test game")
         self.event = Event.objects.create(
             title="Test Event",
             description="This is a test event",
             end=timezone.now() + timezone.timedelta(days=1),
             author=self.user,
             max_participants=10,
+            category=self.category,
+            game=self.game,
         )
 
     def test_event_creation(self):
@@ -28,6 +34,8 @@ class TestModels(TestCase):
             end=timezone.now() + timezone.timedelta(days=1),
             author=self.user,
             max_participants=10,
+            category=self.category,
+            game=self.game,
         )
         self.assertEqual(Event.objects.count(), count + 1)
         self.assertEqual(event.title, "Test Event")
@@ -41,5 +49,5 @@ class TestModels(TestCase):
         self.assertEqual(EventParticipants.objects.count(), count + 1)
         self.assertEqual(
             event_participant.status,
-            EventParticipants.StatusChoices.DONT_KNOW,
+            EventParticipants.StatusChoices.REQUEST_SENT,
         )

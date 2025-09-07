@@ -558,12 +558,6 @@ wheels = [
 ]
 
 [[package]]
-name = "huey"
-version = "2.5.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/0a/55/dca3dbf1693463f07a8737e970e3bdd22598f10d4efb6d11627daad20a5b/huey-2.5.0.tar.gz", hash = "sha256:2ffb52fb5c46a1b0d53c79d59df3622312b27e2ab68d81a580985a8ea4ca3480", size = 831816, upload-time = "2023-09-20T12:48:32.859Z" }
-
-[[package]]
 name = "humanize"
 version = "4.12.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1015,7 +1009,6 @@ dependencies = [
     { name = "flower" },
     { name = "frozenlist" },
     { name = "hiredis" },
-    { name = "huey" },
     { name = "humanize" },
     { name = "idna" },
     { name = "iniconfig" },
@@ -1097,7 +1090,6 @@ requires-dist = [
     { name = "flower", specifier = "==2.0.1" },
     { name = "frozenlist", specifier = "==1.7.0" },
     { name = "hiredis", specifier = ">=3.2.1" },
-    { name = "huey", specifier = "==2.5.0" },
     { name = "humanize", specifier = "==4.12.3" },
     { name = "idna", specifier = "==3.10" },
     { name = "iniconfig", specifier = "==2.1.0" },

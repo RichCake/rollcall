@@ -30,7 +30,6 @@ dependencies = [
     "flower==2.0.1",
     "frozenlist==1.7.0",
     "hiredis>=3.2.1",
-    "huey==2.5.0",
     "humanize==4.12.3",
     "idna==3.10",
     "iniconfig==2.1.0",
