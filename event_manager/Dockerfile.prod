@@ -20,6 +20,10 @@ WORKDIR $APP_HOME
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+RUN uv sync --locked --no-default-groups --group prod
+
+ENV PATH="$APP_HOME/.venv/bin:$PATH"
+
 COPY /event_manager/entrypoint.sh .
 RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh
 RUN chmod +x  $APP_HOME/entrypoint.sh
@@ -29,9 +33,5 @@ COPY /event_manager/ $APP_HOME
 RUN chown -R app:app $APP_HOME
 
 USER app
-
-RUN uv sync --locked --no-default-groups --group prod
-
-ENV PATH="/usr/src/app/.venv/bin:$PATH"
 
 ENTRYPOINT ["./entrypoint.sh"]
