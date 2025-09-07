@@ -16,7 +16,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", default="aaa")
 
 DEBUG = str_to_bool(os.getenv("DJANGO_DEBUG", default="false"))
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", default="*").split(",")
 
 CSRF_TRUSTED_ORIGINS = [
     "http://5.35.127.251",
@@ -83,9 +83,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "event_manager.wsgi.application"
 
-PG_DB_NAME = os.getenv("PG_DB_NAME")
-PG_USER = os.getenv("PG_USER")
-PG_PASSWORD = os.getenv("PG_PASSWORD")
+PG_DB_NAME = os.getenv("PG_DB_NAME", default="postgres")
+PG_USER = os.getenv("PG_USER", default="postgres")
+PG_PASSWORD = os.getenv("PG_PASSWORD", default="postgres")
+PG_HOST = os.getenv("PG_HOST", default="localhost")
+PG_PORT = os.getenv("PG_PORT", default="5432")
 
 DATABASES = {
     "default": {
@@ -93,8 +95,8 @@ DATABASES = {
         "NAME": PG_DB_NAME,
         "USER": PG_USER,
         "PASSWORD": PG_PASSWORD,
-        "HOST": "pgdb",
-        "PORT": "5432",
+        "HOST": PG_HOST,
+        "PORT": PG_PORT,
     },
 }
 
