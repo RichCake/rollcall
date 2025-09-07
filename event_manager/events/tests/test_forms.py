@@ -1,10 +1,10 @@
+from categories.models import Category
 from django.test import TestCase
 from django.utils import timezone
+from games.models import Game
 from uuid_utils.compat import uuid4
 
-from categories.models import Category
 from events.forms import EventForm, ParticipantForm
-from games.models import Game
 
 
 class TestForms(TestCase):

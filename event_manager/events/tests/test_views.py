@@ -1,13 +1,13 @@
 from http import HTTPStatus
 
+from categories.models import Category
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
-
-from categories.models import Category
-from events.models import Event
 from games.models import Game
+
+from events.models import Event
 
 
 class TestViews(TestCase):
@@ -104,14 +104,6 @@ class TestViews(TestCase):
         self.assertEqual(response.context["event"], self.event)
 
     def test_attendance_view(self):
-        event = Event.objects.create(
-            title="Test Event",
-            description="This is a test event",
-            end=timezone.now() + timezone.timedelta(days=1),
-            author=self.user,
-            category=self.category,
-            game=self.game,
-        )
         self.client.force_login(self.user)
         response = self.client.get(
             reverse("events:attendance", args=[self.event.pk]),

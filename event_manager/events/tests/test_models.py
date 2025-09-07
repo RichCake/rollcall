@@ -1,10 +1,10 @@
+from categories.models import Category
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
+from games.models import Game
 
 from events.models import Event, EventParticipants
-from categories.models import Category
-from games.models import Game
 
 
 class TestModels(TestCase):
