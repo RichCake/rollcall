@@ -18,6 +18,37 @@
   <title>{% block title %}RollCall{% endblock %}</title>
 </head>
 <body>
+  <div class="modal" id="cookieModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Файлы cookie</h5>
+        </div>
+        <div class="modal-body">
+          <p>
+            Используя сайт, вы предоставляете согласие на обработку ваших персональных данных для авторизации и аутентификации.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button id="cookieAccept" type="button" class="btn btn-primary" data-bs-dismiss="modal">Понятно</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (!document.cookie.includes("rollcall_seen_cookie_banner=true")) {
+        let cookieModal = new bootstrap.Modal(document.getElementById("cookieModal"));
+        cookieModal.show();
+
+        document.getElementById("cookieAccept").addEventListener("click", function () {
+          document.cookie = "rollcall_seen_cookie_banner=true; path=/; max-age=" + 60 * 60 * 24 * 365;
+        });
+      }
+    });
+  </script>
+
   <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
     <symbol id="chevron-right" viewBox="0 0 16 16">
       <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
